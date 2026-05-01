@@ -183,3 +183,11 @@ Isso indica que o tarball contém arquivos fora da allowlist definida para publi
 ### Falha no `npm run smoke:pack`
 
 Isso indica que o pacote empacotado não está conseguindo executar o ciclo real de `install/update/remove`. Corrija antes da release.
+
+# Release
+```
+git tag -d v0.1.2
+git fetch origin --tags --force
+npm version 0.1.3
+git push origin main --follow-tags
+```
