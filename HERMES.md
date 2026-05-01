@@ -14,7 +14,7 @@ O princípio cardinal é **zero inferência**: nenhum agente assume ou supõe. T
 
 Dois pilares de infraestrutura sustentam a operação:
 
-- **`_codesteer/`** — repositório canônico de toda a squad. Agents, skills e templates existem aqui como source of truth. IDEs são destinos de deploy gerados por um script Python, nunca fontes.
+- **`_codesteer-hermes/`** — repositório canônico de toda a squad. Agents, skills e templates existem aqui como source of truth. IDEs são destinos de deploy gerados por um script Python, nunca fontes.
 - **`_hermes/{scope-slug}/`** — isolamento total por sessão. Cada análise gera um slug determinístico e legível, garantindo que múltiplas sessões paralelas coexistam sem conflito e que o histórico seja auditável no git.
 
 **Compatibilidade:** Claude Code (nativa, máximo aproveitamento de hooks), Kiro, Cursor, GitHub Copilot Coding Agent.
@@ -28,7 +28,7 @@ Dois pilares de infraestrutura sustentam a operação:
 | **Zero Inferência** | Clarifier bloqueia o pipeline até toda ambiguidade ser resolvida. Nenhum agente downstream recebe contexto incompleto. |
 | **Fan-out só em read-only** | Fases 2 e 3 são paralelas e read-only sobre o artefato-alvo. Fases 4, 5 e 6 são sempre agente único sequencial. |
 | **Isolamento por sessão** | `_hermes/{scope-slug}/` garante coexistência de múltiplas sessões sem conflito de arquivos. O slug é determinístico e legível por humano. |
-| **Fonte canônica única** | `_codesteer/` é o único lugar onde agents, skills e templates existem como source of truth. IDEs são destinos de deploy, nunca fontes. |
+| **Fonte canônica única** | `_codesteer-hermes/` é o único lugar onde agents, skills e templates existem como source of truth. IDEs são destinos de deploy, nunca fontes. |
 | **Frontmatter como configuração** | O corpo do agente é separado do frontmatter IDE-específico. Atualizar instruções não exige conhecer o formato de cada IDE. |
 | **Symlink para skills** | Skills não têm variação IDE-específica; symlinks diretos evitam qualquer duplicação. |
 | **Deploy determinístico** | `deploy.py` é idempotente, auditável via log, e detecta edições manuais nos arquivos de destino. |
@@ -512,11 +512,11 @@ Sessão: app-ecommerce-checkout-20260501  |  Nível: L2
 **Single Responsibility:** Transformar os artefatos validados em documentos SDD formatados, organizados e referenciados cruzadamente, conforme o nível selecionado.
 
 **Missão:**
-SDD-Writer é o único agente que produz os artefatos finais entregues ao usuário. Lê exclusivamente os arquivos consolidados do Synthesizer — nunca os arquivos `raw/`. Segue os templates de `_codesteer/templates/{l1|l2|l3}/` para garantir consistência de formato entre sessões. Gera um `sdd-index.md` com referências cruzadas entre todos os documentos.
+SDD-Writer é o único agente que produz os artefatos finais entregues ao usuário. Lê exclusivamente os arquivos consolidados do Synthesizer — nunca os arquivos `raw/`. Segue os templates de `_codesteer-hermes/templates/{l1|l2|l3}/` para garantir consistência de formato entre sessões. Gera um `sdd-index.md` com referências cruzadas entre todos os documentos.
 
 **Protocolo de escrita:**
 1. Lê `_hermes/{scope-slug}/session.yaml` para confirmar nível e artefatos esperados
-2. Para cada artefato do nível: lê fonte(s) correspondente(s), aplica template de `_codesteer/templates/`, escreve documento final em `_hermes/{scope-slug}/sdd/`
+2. Para cada artefato do nível: lê fonte(s) correspondente(s), aplica template de `_codesteer-hermes/templates/`, escreve documento final em `_hermes/{scope-slug}/sdd/`
 3. Insere referências cruzadas (ex: BR-042 referencia Tabela `orders`, Tela `checkout`)
 4. Gera `sdd-index.md` com sumário de todos os documentos, número de itens por seção e links
 5. Apresenta ao usuário o índice completo para aprovação final
@@ -532,7 +532,7 @@ SDD-Writer é o único agente que produz os artefatos finais entregues ao usuár
 
 ## 5. Skills Library
 
-Todas as skills residem canonicamente em `_codesteer/skills/` e são distribuídas para as IDEs via symlink pelo `deploy.py`. O formato segue o standard agentskills.io: cada skill é uma pasta com um `SKILL.md` obrigatório.
+Todas as skills residem canonicamente em `_codesteer-hermes/skills/` e são distribuídas para as IDEs via symlink pelo `deploy.py`. O formato segue o standard agentskills.io: cada skill é uma pasta com um `SKILL.md` obrigatório.
 
 | Skill | Agente Principal | Conteúdo Central |
 |---|---|---|
@@ -550,14 +550,14 @@ Todas as skills residem canonicamente em `_codesteer/skills/` e são distribuíd
 
 ---
 
-## 6. Fonte Canônica: `_codesteer/`
+## 6. Fonte Canônica: `_codesteer-hermes/`
 
 ### 6.1 Estrutura de Diretórios
 
-`_codesteer/` é o repositório canônico de toda a squad HERMES. Nenhum agente, skill ou template existe em outro lugar sem ser gerado a partir daqui. As IDEs nunca são a fonte — são destinos de deploy.
+`_codesteer-hermes/` é o repositório canônico de toda a squad HERMES. Nenhum agente, skill ou template existe em outro lugar sem ser gerado a partir daqui. As IDEs nunca são a fonte — são destinos de deploy.
 
 ```
-_codesteer/
+_codesteer-hermes/
 ├── agents/                         ← corpos canônicos dos agentes (sem frontmatter)
 │   ├── conductor.md
 │   ├── clarifier.md
@@ -634,13 +634,13 @@ _codesteer/
 └── AGENTS.md                       ← contexto canônico da squad (carregado a cada turno)
 ```
 
-**Invariante garantida:** qualquer arquivo fora de `_codesteer/` que pertença à squad HERMES é um artefato gerado — nunca editado manualmente. O `deploy.py` detecta edições manuais nos arquivos de destino via hash check e emite `⚠️ arquivo modificado fora do deploy script`.
+**Invariante garantida:** qualquer arquivo fora de `_codesteer-hermes/` que pertença à squad HERMES é um artefato gerado — nunca editado manualmente. O `deploy.py` detecta edições manuais nos arquivos de destino via hash check e emite `⚠️ arquivo modificado fora do deploy script`.
 
 ---
 
 ### 6.2 Formato dos IDE Config YAMLs
 
-**Conceito:** cada arquivo `ide-configs/{ide}/{agent}.yaml` define **apenas o frontmatter IDE-específico**. O corpo do agente — missão, protocolo, guardrails — permanece exclusivamente em `_codesteer/agents/{agent}.md`. O deploy script combina `frontmatter (do YAML) + corpo (do canonical .md)` e escreve o arquivo final na localização esperada pela IDE.
+**Conceito:** cada arquivo `ide-configs/{ide}/{agent}.yaml` define **apenas o frontmatter IDE-específico**. O corpo do agente — missão, protocolo, guardrails — permanece exclusivamente em `_codesteer-hermes/agents/{agent}.md`. O deploy script combina `frontmatter (do YAML) + corpo (do canonical .md)` e escreve o arquivo final na localização esperada pela IDE.
 
 #### `_defaults.yaml` — defaults por IDE
 
@@ -694,7 +694,7 @@ disallowed_tools:
   - WebSearch
 ```
 
-*Arquivo gerado em `.claude/agents/clarifier.md`:* frontmatter acima + corpo de `_codesteer/agents/clarifier.md`.
+*Arquivo gerado em `.claude/agents/clarifier.md`:* frontmatter acima + corpo de `_codesteer-hermes/agents/clarifier.md`.
 
 ---
 
@@ -743,25 +743,25 @@ Skills não têm frontmatter IDE-específico — o `SKILL.md` é auto-contido. A
 
 | IDE | Symlink destino |
 |---|---|
-| Claude Code | `skillsPath` no `settings.json` aponta para `_codesteer/skills/` |
-| Kiro | `_codesteer/skills/{skill}/SKILL.md` → `.kiro/steering/hermes-{skill}.md` |
-| Cursor | `_codesteer/skills/{skill}/SKILL.md` → `.cursor/rules/hermes-{skill}.mdc` |
-| Copilot | `_codesteer/skills/{skill}/SKILL.md` → `.github/instructions/hermes-{skill}.instructions.md` |
+| Claude Code | `skillsPath` no `settings.json` aponta para `_codesteer-hermes/skills/` |
+| Kiro | `_codesteer-hermes/skills/{skill}/SKILL.md` → `.kiro/steering/hermes-{skill}.md` |
+| Cursor | `_codesteer-hermes/skills/{skill}/SKILL.md` → `.cursor/rules/hermes-{skill}.mdc` |
+| Copilot | `_codesteer-hermes/skills/{skill}/SKILL.md` → `.github/instructions/hermes-{skill}.instructions.md` |
 
 **`AGENTS.md` e `CLAUDE.md`:**
 ```
 [raiz do repo]
-├── AGENTS.md  →  symlink para _codesteer/AGENTS.md
+├── AGENTS.md  →  symlink para _codesteer-hermes/AGENTS.md
 └── CLAUDE.md  →  symlink para AGENTS.md
 ```
 
-Regra de mão única: edita-se `_codesteer/AGENTS.md`, nunca `AGENTS.md` ou `CLAUDE.md` diretamente.
+Regra de mão única: edita-se `_codesteer-hermes/AGENTS.md`, nunca `AGENTS.md` ou `CLAUDE.md` diretamente.
 
 ---
 
 ### 6.4 Arquitetura do Deploy Script
 
-O `deploy.py` é o único ponto de mutação do sistema de configuração. Reside em `_codesteer/deploy/`.
+O `deploy.py` é o único ponto de mutação do sistema de configuração. Reside em `_codesteer-hermes/deploy/`.
 
 **`config.yaml` — controle de targets:**
 ```yaml
@@ -809,22 +809,22 @@ ide_configs_dir: "../ide-configs"
 - Lê `config.yaml` e instancia o adapter de cada IDE habilitada
 - Executa na ordem: `validate → deploy_agents → deploy_skills → create_symlinks`
 - Suporta flags: `--dry-run` (mostra o que seria feito sem escrever nada), `--ide claude-code` (deploy seletivo), `--force` (sobrescreve mesmo se idêntico), `--validate` (hash check sem deploy)
-- Gera log de cada execução em `_codesteer/deploy/.deploy-log.yaml`
+- Gera log de cada execução em `_codesteer-hermes/deploy/.deploy-log.yaml`
 
 Cada `adapters/{ide}.py`:
 1. `validate()` — verifica que canonical files existem e são válidos; aborta se não
 2. `deploy_agent(agent_name)` — merge de `_defaults.yaml` + `{agent}.yaml` → frontmatter → concatena com `agents/{agent}.md` → escreve no destino
 3. `deploy_skill(skill_name)` — cria ou atualiza symlink de `skills/{skill}/SKILL.md` para o destino IDE
-4. `create_main_symlinks()` — `AGENTS.md → _codesteer/AGENTS.md`; `CLAUDE.md → AGENTS.md`
+4. `create_main_symlinks()` — `AGENTS.md → _codesteer-hermes/AGENTS.md`; `CLAUDE.md → AGENTS.md`
 5. `update_settings()` — para Claude Code: atualiza `.claude/settings.json` com `skillsPath` e lista de agents
 
 **Ciclo de atualização:**
 ```
-1. Editar _codesteer/agents/{agent}.md
-2. Rodar: python _codesteer/deploy/deploy.py --ide claude-code --ide cursor
+1. Editar _codesteer-hermes/agents/{agent}.md
+2. Rodar: python _codesteer-hermes/deploy/deploy.py --ide claude-code --ide cursor
 3. Deploy script regenera os arquivos IDE com o corpo atualizado
 4. git commit: "feat(hermes): update {agent} — descrição da mudança"
-   → mudança rastreável em _codesteer/agents/ (fonte)
+   → mudança rastreável em _codesteer-hermes/agents/ (fonte)
    → arquivos IDE são derivados, versionados como evidência
 ```
 
@@ -835,7 +835,7 @@ Cada `adapters/{ide}.py`:
 | Capacidade | Claude Code | Kiro | Cursor | Copilot |
 |---|---|---|---|---|
 | **Agents canônicos** | `.claude/agents/` (gerado por deploy.py) | `.kiro/steering/` (gerado) | `.cursor/rules/` (gerado) | `.github/agents/` (gerado) |
-| **Skills** | `skillsPath` → `_codesteer/skills/` | Symlinks em `.kiro/steering/` | Symlinks em `.cursor/rules/` | Symlinks em `.github/instructions/` |
+| **Skills** | `skillsPath` → `_codesteer-hermes/skills/` | Symlinks em `.kiro/steering/` | Symlinks em `.cursor/rules/` | Symlinks em `.github/instructions/` |
 | **Conductor como StateGraph** | Hooks nativos (13 eventos) | `postSpecTask` hooks | MCP server proxy | MCP server proxy |
 | **Fan-out de workers** | Subagents nativos | Tasks paralelas | Background Agents | Custom agents |
 | **HITL Gates** | `Stop` hook + prompt | `preSpecTask` hook | Rules + pausa manual | PR review gate |
@@ -843,7 +843,7 @@ Cada `adapters/{ide}.py`:
 | **Playwright-CLI** | MCP tool (Playwright MCP) | MCP tool | MCP tool | GitHub Actions |
 | **Hooks determinísticos** | 13 eventos de ciclo de vida | `preToolUse`, `postToolUse` | Nenhum (só rules) | Nenhum in-IDE |
 
-**Recomendação:** Claude Code oferece a implementação mais completa — hooks determinísticos, subagents de primeira classe e `skillsPath` nativo que aponta diretamente para `_codesteer/skills/`. Kiro é segunda opção. Cursor e Copilot operam com degradação graceful via MCP como ponto de gating.
+**Recomendação:** Claude Code oferece a implementação mais completa — hooks determinísticos, subagents de primeira classe e `skillsPath` nativo que aponta diretamente para `_codesteer-hermes/skills/`. Kiro é segunda opção. Cursor e Copilot operam com degradação graceful via MCP como ponto de gating.
 
 ---
 
@@ -869,10 +869,10 @@ Engenharia reversa é intrinsecamente custosa em tokens — o artefato inteiro p
 
 ## 9. Estrutura Completa de Arquivos
 
-### `_codesteer/` — fonte canônica
+### `_codesteer-hermes/` — fonte canônica
 
 ```
-_codesteer/
+_codesteer-hermes/
 ├── AGENTS.md                         ← contexto canônico; symlinked ← raiz/AGENTS.md ← raiz/CLAUDE.md
 ├── agents/                           ← 13 corpos canônicos de agente
 ├── skills/                           ← 9 skill folders (agentskills.io standard)
@@ -942,24 +942,24 @@ _hermes/
 Sequência para onboarding de um novo repositório na squad HERMES:
 
 ```
-1. Adicionar _codesteer/ à raiz do repo (clone direto ou git submodule)
+1. Adicionar _codesteer-hermes/ à raiz do repo (clone direto ou git submodule)
 
-2. Editar _codesteer/deploy/config.yaml
+2. Editar _codesteer-hermes/deploy/config.yaml
    → habilitar apenas as IDEs usadas no projeto
    → confirmar caminhos de root relativos
 
 3. Simular o deploy
-   python _codesteer/deploy/deploy.py --dry-run
+   python _codesteer-hermes/deploy/deploy.py --dry-run
    → revisar o que será criado antes de qualquer escrita
 
 4. Executar o deploy
-   python _codesteer/deploy/deploy.py
+   python _codesteer-hermes/deploy/deploy.py
    → cria estrutura em .claude/, .cursor/, .kiro/, .github/ (IDEs habilitadas)
    → cria AGENTS.md e CLAUDE.md como symlinks
    → atualiza .claude/settings.json com skillsPath e lista de agents
 
 5. Commitar no git
-   git add _codesteer/ AGENTS.md CLAUDE.md .claude/ .cursor/ .kiro/ .github/
+   git add _codesteer-hermes/ AGENTS.md CLAUDE.md .claude/ .cursor/ .kiro/ .github/
    git commit -m "feat: setup HERMES squad v2"
 
 6. Primeira sessão
@@ -975,13 +975,13 @@ Sequência para onboarding de um novo repositório na squad HERMES:
 
 | Ação | Comando |
 |---|---|
-| Deploy completo em todas as IDEs | `python _codesteer/deploy/deploy.py` |
-| Deploy seletivo para uma IDE | `python _codesteer/deploy/deploy.py --ide claude-code` |
-| Simular sem escrever nada | `python _codesteer/deploy/deploy.py --dry-run` |
-| Forçar sobrescrita | `python _codesteer/deploy/deploy.py --force` |
-| Verificar integridade (hash check) | `python _codesteer/deploy/deploy.py --validate` |
-| Atualizar instrução de um agente | Editar `_codesteer/agents/{agent}.md` → deploy |
-| Atualizar frontmatter de um IDE | Editar `_codesteer/ide-configs/{ide}/{agent}.yaml` → deploy |
+| Deploy completo em todas as IDEs | `python _codesteer-hermes/deploy/deploy.py` |
+| Deploy seletivo para uma IDE | `python _codesteer-hermes/deploy/deploy.py --ide claude-code` |
+| Simular sem escrever nada | `python _codesteer-hermes/deploy/deploy.py --dry-run` |
+| Forçar sobrescrita | `python _codesteer-hermes/deploy/deploy.py --force` |
+| Verificar integridade (hash check) | `python _codesteer-hermes/deploy/deploy.py --validate` |
+| Atualizar instrução de um agente | Editar `_codesteer-hermes/agents/{agent}.md` → deploy |
+| Atualizar frontmatter de um IDE | Editar `_codesteer-hermes/ide-configs/{ide}/{agent}.yaml` → deploy |
 | Adicionar novo agente em todas as IDEs | Criar `agents/{agent}.md` + configs por IDE → deploy |
 
 ---
@@ -1006,22 +1006,22 @@ Sequência para onboarding de um novo repositório na squad HERMES:
 
 ---
 
-## Apêndice — Diagrama de Relações `_codesteer/` × IDEs
+## Apêndice — Diagrama de Relações `_codesteer-hermes/` × IDEs
 
 ```
-_codesteer/agents/{agent}.md  ─────────────────────────────────────────┐
+_codesteer-hermes/agents/{agent}.md  ─────────────────────────────────────────┐
                                                                         │ corpo canônico
-_codesteer/ide-configs/                                                 │
+_codesteer-hermes/ide-configs/                                                 │
   claude-code/{agent}.yaml  ──┐                                        │
   kiro/{agent}.yaml          ─┤── deploy.py (frontmatter + corpo) ────>├── .claude/agents/{agent}.md
   cursor/{agent}.yaml        ─┤                                        ├── .kiro/steering/hermes-{agent}.md
   copilot/{agent}.yaml       ─┘                                        ├── .cursor/rules/hermes-{agent}.mdc
                                                                         └── .github/agents/hermes-{agent}.agent.md
 
-_codesteer/skills/{skill}/SKILL.md ── symlink ──> .claude/ (via settings.json)
+_codesteer-hermes/skills/{skill}/SKILL.md ── symlink ──> .claude/ (via settings.json)
                                    ── symlink ──> .kiro/steering/hermes-{skill}.md
                                    ── symlink ──> .cursor/rules/hermes-{skill}.mdc
                                    ── symlink ──> .github/instructions/hermes-{skill}.instructions.md
 
-_codesteer/AGENTS.md ── symlink ──> [raiz]/AGENTS.md ── symlink ──> [raiz]/CLAUDE.md
+_codesteer-hermes/AGENTS.md ── symlink ──> [raiz]/AGENTS.md ── symlink ──> [raiz]/CLAUDE.md
 ```
