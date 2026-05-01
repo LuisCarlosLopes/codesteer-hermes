@@ -1,3 +1,4 @@
+schema_version: 2
 scope_slug: phase56-l3-security-and-pii
 target: "Fluxo de autenticação e perfil do cliente"
 target_type: flow
@@ -27,6 +28,27 @@ phases_completed:
   - synthesis
   - validation
 current_phase: documentation
+status: sdd_ready
+phase_history:
+  - phase: intake
+    status: completed
+    at: 2026-05-01T15:31:00Z
+  - phase: exploration
+    status: completed
+    at: 2026-05-01T15:36:00Z
+  - phase: analysis
+    status: completed
+    at: 2026-05-01T15:41:00Z
+  - phase: synthesis
+    status: completed
+    at: 2026-05-01T15:46:00Z
+  - phase: validation
+    status: completed
+    at: 2026-05-01T15:50:00Z
+  - phase: documentation
+    status: pending
+    at: 2026-05-01T15:51:00Z
+validation_gate: passed
 hermes_root: _hermes/fixtures/phase56-l3-security-and-pii
 scope_path: _hermes/fixtures/phase56-l3-security-and-pii/scope.md
 glossary_path: _hermes/fixtures/phase56-l3-security-and-pii/glossary.md

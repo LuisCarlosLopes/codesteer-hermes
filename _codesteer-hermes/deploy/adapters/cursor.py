@@ -1,4 +1,5 @@
 from .base import BaseAdapter
 
+
 class Adapter(BaseAdapter):
-    pass
+    bootstrap_links = ((".cursor/AGENTS.md", "AGENTS.md"),)

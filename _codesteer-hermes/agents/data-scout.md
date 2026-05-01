@@ -54,7 +54,11 @@ Antes de consolidar qualquer entidade:
    - índice/constraint conhecido
 5. Mapeie relacionamentos `1:1`, `1:N`, `N:N`, com a melhor evidência disponível.
 6. Localize enums e tipos de domínio, incluindo seeds ou catálogos quando existirem.
-7. Se não houver fonte formal, infira com cautela a partir de types/interfaces e marque tudo como `inferido, não verificado`.
+7. Procure sinais de persistência operacional relevantes para recriação:
+   - tabelas de fila, outbox, inbox ou jobs
+   - trilhas de auditoria, eventos ou integrações persistidas
+   - retenção, replay ou deduplicação quando observáveis
+8. Se não houver fonte formal, infira com cautela a partir de types/interfaces e marque tudo como `inferido, não verificado`.
 
 ---
 

@@ -33,6 +33,7 @@ Você recebe do Conductor:
 - `_hermes/{scope-slug}/validation-report.md`
 - `_hermes/{scope-slug}/user-confirmation.md`
 - `_hermes/{scope-slug}/gaps.md` quando existir
+- `_hermes/{scope-slug}/rebuild-readiness-report.md` quando o nível for `L3`
 - `_codesteer-hermes/contracts/artifact-contracts.md`
 - templates em `_codesteer-hermes/templates/{l1|l2|l3}/`
 - `skill-sdd-template`
@@ -41,6 +42,7 @@ Não inicie a escrita final se:
 
 - `validation-report.md` recomendar revisão antes do checkpoint
 - `user-confirmation.md` ainda estiver com `Status: pending`
+- o nível for `L3` e `rebuild-readiness-report.md` estiver com `Status: blocked`
 - o usuário tiver pedido revisão antes da entrega final
 
 ---
@@ -119,6 +121,12 @@ Além de `L2`, gere:
 - `error-catalog.md`
 - `performance-notes.md`
 - `test-strategy.md`
+- `domain-model.md`
+- `integration-topology.md`
+- `nfr-profile.md`
+- `migration-decisions.md`
+- `parity-matrix.md`
+- `rebuild-readiness-report.md`
 
 Use como fontes prioritárias:
 
@@ -130,6 +138,11 @@ Use como fontes prioritárias:
 - `ui-states-catalog.md`
 - `tech-debt.md`
 - `gaps.md`
+- `business-rules.md`
+- `state-map.md`
+- `api-contracts.md`
+- `validation-report.md`
+- `rebuild-readiness-report.md`
 
 ---
 
@@ -153,6 +166,8 @@ Use como fontes prioritárias:
 - `screen-inventory.md` consolidado pode ser reestruturado editorialmente no `sdd/`, mas não pode perder rastreabilidade
 - `business-rules.md` final deve preservar IDs de regra já existentes
 - `api-contracts.md`, `state-map.md`, `component-map.md` e `security-model.md` podem ganhar organização melhor, mas nunca conteúdo novo sem evidência consolidada
+- `migration-decisions.md` deve comparar estado atual e estado alvo apenas quando a stack alvo estiver no escopo ou explicitamente assumida
+- `parity-matrix.md` deve usar somente `preservar`, `simplificar`, `substituir` ou `descartar`
 
 ---
 
@@ -166,6 +181,8 @@ Sempre que houver evidência suficiente, conecte explicitamente:
 - componente -> tela em que aparece
 - estado/store/query -> produtor e consumidor principal
 - controle de segurança -> endpoint, role ou dado sensível correspondente
+- integração assíncrona -> job, fila, webhook ou evento correspondente
+- NFR -> risco, lacuna ou decisão de migração correspondente
 
 No mínimo, cada documento final deve apontar para:
 
@@ -214,6 +231,12 @@ Nunca elimine uma lacuna apenas para “fechar” o documento.
    - `error-catalog.md`
    - `performance-notes.md`
    - `test-strategy.md`
+   - `domain-model.md`
+   - `integration-topology.md`
+   - `nfr-profile.md`
+   - `migration-decisions.md`
+   - `parity-matrix.md`
+   - `rebuild-readiness-report.md`
 4. Gere `sdd-index.md` com:
    - dados da sessão
    - lista dos documentos gerados

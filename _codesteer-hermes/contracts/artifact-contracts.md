@@ -40,8 +40,9 @@ Excecoes permitidas:
 - `remediation-requests.md`
 - `validation-report.md`
 - `user-confirmation.md`
+- `rebuild-readiness-report.md`
 
-Esses cinco artefatos tem estrutura propria definida ao final deste documento.
+Esses artefatos tem estrutura propria definida ao final deste documento.
 
 ## 2. Convencoes de evidência
 
@@ -243,7 +244,34 @@ Valores de `status`:
 - `FALHA`
 - `NÃO APLICÁVEL`
 
-## 11. Estrutura de `user-confirmation.md`
+## 11. Estrutura de `rebuild-readiness-report.md`
+
+```markdown
+# Rebuild Readiness Report
+
+## Resumo
+- Status: ready | partial | blocked
+- Escopo avaliado:
+- Prontidão funcional:
+- Prontidão operacional:
+
+## Avaliação por dimensão
+| dimensão | status | evidência | observações |
+
+## Bloqueios e lacunas
+- ...
+
+## Recomendação
+- ...
+```
+
+Valores de `status`:
+
+- `ready`
+- `partial`
+- `blocked`
+
+## 12. Estrutura de `user-confirmation.md`
 
 ```markdown
 # User Confirmation
@@ -257,14 +285,46 @@ Valores de `status`:
 
 ## Resposta do usuário
 {texto do usuário ou "pendente"}
-
-## Próxima ação
-- ...
 ```
+
+## 13. Regras de validação executável
+
+O validador automático da HERMES deve verificar no mínimo:
+
+- presença dos arquivos obrigatórios por nível
+- presença e ordem das seções obrigatórias
+- `session.yaml` com:
+  - `schema_version`
+  - `status`
+  - `phase_history`
+  - `validation_gate`
+- `validation-report.md` com checklist e status válidos
+- `user-confirmation.md` com `Status` em `pending`, `approved` ou `needs_revision`
+- `rebuild-readiness-report.md` em sessões `L3` com `validation_gate: passed`
+- rejeição de evidência genérica isolada, como:
+  - `na UI`
+  - `na API`
+  - `no código`
+
+Estados permitidos de sessão:
+
+- `in_progress`
+- `validated`
+- `sdd_ready`
+- `blocked`
+- `archived`
+
+Estados permitidos de `validation_gate`:
+
+- `not_started`
+- `pending`
+- `passed`
+- `failed`
+- `blocked_by_rebuild_readiness`
 
 O `Validator` pode criar o arquivo com `Status: pending`. O `Conductor` e quem atualiza a resposta real do usuario.
 
-## 12. Camada final `sdd/`
+## 14. Camada final `sdd/`
 
 A raiz de `_hermes/{scope-slug}/` e a base consolidada e auditavel da sessao.
 O diretorio `_hermes/{scope-slug}/sdd/` e a camada editorial final entregue ao usuario.
@@ -275,7 +335,7 @@ Regras:
 - o `Validator` valida a base consolidada, nao a redacao final do `sdd/`
 - o `SDD-Writer` le apenas a base consolidada e gera o pacote final
 
-## 13. Artefatos finais por nível
+## 15. Artefatos finais por nível
 
 Todo pacote final em `sdd/` deve conter:
 
@@ -309,8 +369,14 @@ Além de `L2`:
 - `error-catalog.md`
 - `performance-notes.md`
 - `test-strategy.md`
+- `domain-model.md`
+- `integration-topology.md`
+- `nfr-profile.md`
+- `migration-decisions.md`
+- `parity-matrix.md`
+- `rebuild-readiness-report.md`
 
-## 14. Mapeamento consolidado -> pacote final
+## 16. Mapeamento consolidado -> pacote final
 
 | Consolidado | Documento final |
 |---|---|
@@ -330,6 +396,12 @@ Além de `L2`:
 | `ui-states-catalog.md` + `gaps.md` | `error-catalog.md` |
 | `tech-stack.md` + `tech-debt.md` + `gaps.md` | `performance-notes.md` |
 | `validation-report.md` + `gaps.md` + artefatos consolidados | `test-strategy.md` |
+| `business-rules.md` + `db-schema.md` + `state-map.md` | `domain-model.md` |
+| `api-contracts.md` + `state-map.md` + `security-model.md` | `integration-topology.md` |
+| `performance-notes.md` + `security-model.md` + `validation-report.md` | `nfr-profile.md` |
+| `tech-stack.md` + `integration-topology.md` + `rebuild-readiness-report.md` | `migration-decisions.md` |
+| `main-flows.md` + `business-rules.md` + `migration-decisions.md` | `parity-matrix.md` |
+| `validation-report.md` + `gaps.md` + `security-model.md` + `performance-notes.md` | `rebuild-readiness-report.md` |
 
 O `SDD-Writer` pode combinar mais fontes do que as listadas acima, mas nunca pode ignorar a base consolidada
 obrigatoria de cada documento.

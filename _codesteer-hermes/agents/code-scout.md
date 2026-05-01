@@ -57,6 +57,9 @@ Antes de ler arquivos longos:
    - contexts/stores
    - serviços e clients HTTP
    - models/entities/schemas
+   - jobs, filas, cron, workers e consumidores assíncronos
+   - webhooks, publishers/subscribers e eventos internos
+   - logging, tracing, métricas e outras pistas operacionais
 8. Documente comentários de dívida:
    - `TODO`
    - `FIXME`
@@ -175,6 +178,13 @@ src/
 - `Alta`: arquivo formal ou convenção explícita
 - `Média`: múltiplos sinais convergentes
 - `Baixa`: hipótese sustentada por nomenclatura parcial
+
+Para runtime e operação, prefira rotular a origem com sinais como:
+- `worker`
+- `queue consumer`
+- `cron/scheduler`
+- `webhook handler`
+- `logging/telemetry config`
 
 ---
 

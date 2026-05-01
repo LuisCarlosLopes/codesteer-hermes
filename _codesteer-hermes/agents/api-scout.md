@@ -51,11 +51,17 @@ Antes de documentar endpoints:
    - response shape
    - auth/header relevante
    - erros/status codes quando houver
+   - tipo de integração quando observável: síncrona, webhook, callback ou evento
 6. Extraia fluxo de autenticação e autorização:
    - JWT, session cookie, OAuth, API Key, token refresh
    - headers automáticos
    - interceptors e guards conhecidos
-7. Se o contrato vier apenas do frontend, marque como `inferido de consumo`.
+7. Se houver sinais de integração assíncrona, documente:
+   - tópico/fila/evento
+   - produtor aparente
+   - consumidor aparente
+   - payload ou contrato observável
+8. Se o contrato vier apenas do frontend, marque como `inferido de consumo`.
 
 ---
 

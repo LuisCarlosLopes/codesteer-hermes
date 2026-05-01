@@ -32,6 +32,8 @@ Também já estão especificados e alinhados:
 - `Validator`
 - `SDD-Writer`
 - separação entre base consolidada e pacote final `sdd/`
+- validação executável dos contratos com fixtures
+- camada `L3` expandida para replatforming e `rebuild readiness`
 
 ## Limites atuais
 
@@ -42,16 +44,19 @@ Está implementado hoje no deploy:
 - geração dos arquivos de agentes por IDE com frontmatter + corpo canônico
 - symlink de skills para os destinos configurados
 - criação de `_hermes/` e `_hermes/.sessions-index.yaml`
+- `.deploy-log.yaml` com manifesto por IDE
+- detecção de drift por assinatura dos artefatos gerados
+- `--validate` para auditoria e `--force` para sobrescrita consciente
+- symlinks principais por IDE, incluindo `CLAUDE.md`
+- adapters com comportamento explícito por IDE
 
 Ainda não está implementado de ponta a ponta:
 
-- detecção de drift por hash nos artefatos gerados
-- `.deploy-log.yaml`
-- criação dos symlinks principais `AGENTS.md` / `CLAUDE.md`
 - atualização automática de `.claude/settings.json`
-- adapters específicos por IDE com comportamento além do `BaseAdapter`
+- pilotos reais automatizados de ponta a ponta
+- geração automática do pacote final `sdd/` a partir das fixtures
 
-Em outras palavras: a camada documental e contratual da squad está forte; a camada operacional de deploy ainda está parcial.
+Em outras palavras: a camada documental e contratual da squad continua forte e a base operacional do deploy já saiu do estado parcial, mas ainda faltam validação em campo e automação completa da esteira.
 
 ## Estrutura do repositório
 

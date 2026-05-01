@@ -1,4 +1,8 @@
 from .base import BaseAdapter
 
+
 class Adapter(BaseAdapter):
-    pass
+    bootstrap_links = (("CLAUDE.md", "AGENTS.md"),)
+
+    def agent_filename(self, agent):
+        return f"{agent}.md"

@@ -92,6 +92,12 @@ O usuário escolhe o nível no início da sessão, na Fase 1. O Conductor usa es
 - `error-catalog.md` — Estados de erro por tela e por operação
 - `performance-notes.md` — Pontos críticos de performance identificados
 - `test-strategy.md` — Cobertura existente, gaps, estratégia sugerida
+- `domain-model.md` — Capacidades, agregados, entidades e invariantes relevantes para recriação
+- `integration-topology.md` — APIs, jobs, filas, webhooks, eventos e dependências operacionais
+- `nfr-profile.md` — Performance, disponibilidade, observabilidade, segurança operacional e restrições
+- `migration-decisions.md` — Comparação entre stack atual, legado e stack alvo
+- `parity-matrix.md` — Classificação explícita entre preservar, simplificar, substituir ou descartar
+- `rebuild-readiness-report.md` — Gate formal para recriação em outra tecnologia
 - `sdd-index.md` — Índice mestre com referências cruzadas entre todos os artefatos do pacote final
 
 **Estimativa de consumo:** ~400–800k tokens por sessão completa.

@@ -1,3 +1,4 @@
+schema_version: 2
 scope_slug: phase56-l2-endpoint-context
 target: "Módulo de relatórios administrativos"
 target_type: module
@@ -25,6 +26,24 @@ phases_completed:
   - analysis
   - synthesis
 current_phase: validation
+status: in_progress
+phase_history:
+  - phase: intake
+    status: completed
+    at: 2026-05-01T15:16:00Z
+  - phase: exploration
+    status: completed
+    at: 2026-05-01T15:21:00Z
+  - phase: analysis
+    status: completed
+    at: 2026-05-01T15:25:00Z
+  - phase: synthesis
+    status: completed
+    at: 2026-05-01T15:30:00Z
+  - phase: validation
+    status: in_progress
+    at: 2026-05-01T15:31:00Z
+validation_gate: pending
 hermes_root: _hermes/fixtures/phase56-l2-endpoint-context
 scope_path: _hermes/fixtures/phase56-l2-endpoint-context/scope.md
 glossary_path: _hermes/fixtures/phase56-l2-endpoint-context/glossary.md

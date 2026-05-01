@@ -1,40 +1,221 @@
+import argparse
+import hashlib
+import importlib
 import os
 import sys
-import yaml
-import argparse
+from datetime import datetime, timezone
 from pathlib import Path
-import importlib
+
+import yaml
+
+
+DEPLOY_SCHEMA_VERSION = 1
+DEPLOY_CONTRACT_VERSION = "hermes-deploy-v1"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_DIR = BASE_DIR.parent
+DEPLOY_LOG_PATH = ROOT_DIR / ".deploy-log.yaml"
+SESSIONS_INDEX_PATH = ROOT_DIR / "_hermes" / ".sessions-index.yaml"
+
+
+def utc_now():
+    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
 
 def load_yaml(path):
-    if not os.path.exists(path): return {}
-    with open(path, 'r') as f:
-        return yaml.safe_load(f) or {}
+    if not os.path.exists(path):
+        return {}
+    with open(path, "r", encoding="utf-8") as handle:
+        return yaml.safe_load(handle) or {}
+
+
+def dump_yaml(path, payload):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as handle:
+        yaml.safe_dump(payload, handle, allow_unicode=True, sort_keys=False)
+
+
+def sha256_text(content):
+    return hashlib.sha256(content.encode("utf-8")).hexdigest()
+
+
+def relative_path(path):
+    return str(path.relative_to(ROOT_DIR))
+
 
 def get_adapter(ide_name, ide_config):
-    module_name = ide_name.replace('-', '_')
-    try:
-        module = importlib.import_module(f"adapters.{module_name}")
-        return module.Adapter(ide_name, ide_config, BASE_DIR, ROOT_DIR)
-    except Exception as e:
-        print(f"Erro ao carregar adapter para {ide_name}: {e}")
+    module_name = ide_name.replace("-", "_")
+    module = importlib.import_module(f"adapters.{module_name}")
+    return module.Adapter(ide_name, ide_config, BASE_DIR, ROOT_DIR)
+
+
+def load_deploy_log():
+    payload = load_yaml(DEPLOY_LOG_PATH)
+    if not payload:
+        return {
+            "schema_version": DEPLOY_SCHEMA_VERSION,
+            "contract_version": DEPLOY_CONTRACT_VERSION,
+            "updated_at": None,
+            "targets": {},
+            "runs": [],
+        }
+
+    payload.setdefault("schema_version", DEPLOY_SCHEMA_VERSION)
+    payload.setdefault("contract_version", DEPLOY_CONTRACT_VERSION)
+    payload.setdefault("updated_at", None)
+    payload.setdefault("targets", {})
+    payload.setdefault("runs", [])
+    return payload
+
+
+def ensure_hermes_root(validate_only=False, dry_run=False):
+    hermes_dir = ROOT_DIR / "_hermes"
+
+    if validate_only:
+        issues = []
+        if not hermes_dir.exists():
+            issues.append("Diretório _hermes/ ausente.")
+        if not SESSIONS_INDEX_PATH.exists():
+            issues.append("_hermes/.sessions-index.yaml ausente.")
+        else:
+            data = load_yaml(SESSIONS_INDEX_PATH)
+            if not isinstance(data.get("sessions"), list):
+                issues.append("_hermes/.sessions-index.yaml deve conter a chave `sessions` como lista.")
+        return issues
+
+    if dry_run:
+        print("[DRY-RUN] Verificaria _hermes/ e _hermes/.sessions-index.yaml.")
+        return []
+
+    hermes_dir.mkdir(parents=True, exist_ok=True)
+    if not SESSIONS_INDEX_PATH.exists():
+        dump_yaml(SESSIONS_INDEX_PATH, {"sessions": []})
+        print("[Hermes] Criado _hermes/.sessions-index.yaml")
+    else:
+        data = load_yaml(SESSIONS_INDEX_PATH)
+        if not isinstance(data.get("sessions"), list):
+            raise ValueError("_hermes/.sessions-index.yaml precisa conter `sessions` como lista.")
+        print("[Hermes] _hermes/.sessions-index.yaml já existe — mantido.")
+    return []
+
+
+def get_actual_signature(operation):
+    path = Path(operation["path"])
+    kind = operation["kind"]
+
+    if not path.exists() and not path.is_symlink():
         return None
 
-def ensure_hermes_root(dry_run=False):
-    """Garante que _hermes/ e .sessions-index.yaml existam uma única vez no deploy."""
-    hermes_dir = ROOT_DIR / '_hermes'
-    sessions_index = hermes_dir / '.sessions-index.yaml'
+    if kind in {"skill", "bootstrap"}:
+        if not path.is_symlink():
+            return {"kind": kind, "signature": None, "is_symlink": False}
+        target = os.readlink(path)
+        return {"kind": kind, "signature": sha256_text(target), "is_symlink": True}
+
+    content = path.read_text(encoding="utf-8")
+    return {"kind": kind, "signature": sha256_text(content), "is_symlink": False}
+
+
+def classify_operation(operation, target_state, force):
+    path = operation["path"]
+    desired_signature = operation["signature"]
+    previous_entry = target_state.get(path)
+    actual = get_actual_signature(operation)
+
+    if actual and actual["signature"] == desired_signature:
+        return "unchanged", actual
+
+    if actual is None:
+        return "create", actual
+
+    previous_signature = previous_entry.get("signature") if previous_entry else None
+    if previous_signature and actual["signature"] == previous_signature:
+        return "update", actual
+
+    if force:
+        return "force", actual
+
+    return "drift", actual
+
+
+def apply_operation(operation, status, dry_run):
+    path = Path(operation["path"])
     if dry_run:
-        print(f"[DRY-RUN] Verificaria _hermes/ e _hermes/.sessions-index.yaml.")
         return
-    hermes_dir.mkdir(parents=True, exist_ok=True)
-    if not sessions_index.exists():
-        sessions_index.write_text('sessions: []\n')
-        print(f"[Hermes] Criado _hermes/.sessions-index.yaml")
-    else:
-        print(f"[Hermes] _hermes/.sessions-index.yaml já existe — mantido.")
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+
+    if operation["kind"] in {"skill", "bootstrap"}:
+        if path.exists() or path.is_symlink():
+            if path.is_dir() and not path.is_symlink():
+                raise ValueError(f"Destino de symlink é um diretório real: {path}")
+            path.unlink()
+        os.symlink(operation["link_target"], path)
+        return
+
+    if path.is_symlink():
+        path.unlink()
+    path.write_text(operation["content"], encoding="utf-8")
+
+
+def record_run(log_payload, ide_name, mode, results):
+    summary = {
+        "timestamp": utc_now(),
+        "ide": ide_name,
+        "mode": mode,
+        "created": results.count("create"),
+        "updated": results.count("update"),
+        "forced": results.count("force"),
+        "unchanged": results.count("unchanged"),
+        "drifted": results.count("drift"),
+        "status": "error" if "drift" in results else "ok",
+    }
+    log_payload["runs"].append(summary)
+    log_payload["runs"] = log_payload["runs"][-50:]
+    log_payload["updated_at"] = summary["timestamp"]
+
+
+def deploy_target(adapter, agents, skills, args, log_payload):
+    operations = adapter.plan_operations(agents, skills)
+    target_state = log_payload.setdefault("targets", {}).setdefault(adapter.ide_name, {}).setdefault("files", {})
+
+    results = []
+    issues = []
+    next_state = dict(target_state)
+
+    for operation in operations:
+        status, actual = classify_operation(operation, target_state, args.force)
+        results.append(status)
+
+        label = f"[{adapter.ide_name}] {status.upper()} {relative_path(Path(operation['path']))}"
+        if status == "drift":
+            previous_signature = target_state.get(operation["path"], {}).get("signature")
+            issues.append(
+                f"{label} — conteúdo atual diverge do último deploy conhecido"
+                f" (anterior={previous_signature}, atual={actual['signature']}, desejado={operation['signature']})."
+            )
+            print(label)
+            continue
+
+        print(label)
+        if not args.validate:
+            apply_operation(operation, status, args.dry_run)
+
+        next_state[operation["path"]] = {
+            "kind": operation["kind"],
+            "source": operation["source"],
+            "signature": operation["signature"],
+        }
+
+    if not args.validate and not args.dry_run and not issues:
+        log_payload["targets"][adapter.ide_name]["files"] = next_state
+        record_run(log_payload, adapter.ide_name, "force" if args.force else "deploy", results)
+
+    if args.validate:
+        record_run(log_payload, adapter.ide_name, "validate", results)
+
+    return issues
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -44,37 +225,55 @@ def main():
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args()
 
-    # Append adapters to sys.path so we can import them
-    sys.path.append(str(BASE_DIR / 'deploy'))
+    sys.path.append(str(BASE_DIR / "deploy"))
 
     print("Iniciando deploy HERMES...")
     if args.dry_run:
         print("[DRY-RUN] Nenhuma alteração será escrita no disco.")
+    if args.validate:
+        print("[VALIDATE] Apenas auditoria do deploy e da estrutura base será executada.")
 
-    # Garante estrutura _hermes/ antes de qualquer deploy de IDE
-    ensure_hermes_root(args.dry_run)
+    issues = ensure_hermes_root(validate_only=args.validate, dry_run=args.dry_run)
+    for issue in issues:
+        print(f"[ERRO] {issue}")
 
-    config = load_yaml(BASE_DIR / 'deploy' / 'config.yaml')
-    targets = config.get('targets', {})
-    
-    agents = [f.stem for f in (BASE_DIR / 'agents').glob('*.md')]
-    skills = [d.name for d in (BASE_DIR / 'skills').iterdir() if d.is_dir()]
+    config = load_yaml(BASE_DIR / "deploy" / "config.yaml")
+    targets = config.get("targets", {})
+    agents = sorted(f.stem for f in (BASE_DIR / "agents").glob("*.md"))
+    skills = sorted(d.name for d in (BASE_DIR / "skills").iterdir() if d.is_dir())
+    log_payload = load_deploy_log()
 
-    if args.ide:
-        if args.ide in targets:
-            adapter = get_adapter(args.ide, targets[args.ide])
-            if adapter and targets[args.ide].get('enabled'):
-                adapter.deploy(agents, skills, args.dry_run)
-        else:
-            print(f"IDE {args.ide} not found in config.")
-    else:
-        for ide_name, ide_config in targets.items():
-            if not ide_config.get('enabled'): continue
-            adapter = get_adapter(ide_name, ide_config)
-            if adapter:
-                adapter.deploy(agents, skills, args.dry_run)
+    target_names = [args.ide] if args.ide else [name for name, conf in targets.items() if conf.get("enabled")]
+
+    for ide_name in target_names:
+        if ide_name not in targets:
+            issues.append(f"IDE {ide_name} não encontrada em config.yaml.")
+            continue
+
+        try:
+            adapter = get_adapter(ide_name, targets[ide_name])
+        except Exception as exc:
+            issues.append(f"Erro ao carregar adapter para {ide_name}: {exc}")
+            continue
+
+        validation_errors = adapter.validate()
+        issues.extend(validation_errors)
+        if validation_errors:
+            continue
+
+        issues.extend(deploy_target(adapter, agents, skills, args, log_payload))
+
+    if not args.validate and not args.dry_run and not issues:
+        dump_yaml(DEPLOY_LOG_PATH, log_payload)
+        print(f"[Hermes] Deploy log atualizado em {relative_path(DEPLOY_LOG_PATH)}")
+
+    if issues:
+        print("Deploy finalizado com pendências.")
+        return 1
 
     print("Deploy finalizado com sucesso.")
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

@@ -1,4 +1,5 @@
 from .base import BaseAdapter
 
+
 class Adapter(BaseAdapter):
-    pass
+    bootstrap_links = ((".github/copilot-instructions.md", "AGENTS.md"),)

@@ -1,9 +1,14 @@
+import hashlib
 import os
-import yaml
-import shutil
 from pathlib import Path
 
+import yaml
+
+
 class BaseAdapter:
+    contract_version = "hermes-deploy-v1"
+    bootstrap_links = ()
+
     def __init__(self, ide_name, config, base_dir, root_dir):
         self.ide_name = ide_name
         self.config = config
@@ -11,100 +16,93 @@ class BaseAdapter:
         self.root_dir = Path(root_dir)
 
     def load_yaml(self, path):
-        if not os.path.exists(path): return {}
-        with open(path, 'r') as f:
-            return yaml.safe_load(f) or {}
+        if not os.path.exists(path):
+            return {}
+        with open(path, "r", encoding="utf-8") as handle:
+            return yaml.safe_load(handle) or {}
 
     def generate_frontmatter(self, defaults, specific):
         merged = {**defaults, **specific}
-        # Remove newlines residuais de block scalars YAML (ex: description com `>`)
-        cleaned = {k: v.strip() if isinstance(v, str) else v for k, v in merged.items()}
-        return f"---\n{yaml.dump(cleaned, allow_unicode=True)}---\n"
+        cleaned = {key: value.strip() if isinstance(value, str) else value for key, value in merged.items()}
+        return f"---\n{yaml.safe_dump(cleaned, allow_unicode=True, sort_keys=False)}---\n"
 
     def validate(self):
-        if not (self.base_dir / 'agents').exists():
-            print(f"[{self.ide_name}] Erro: Diretório canônico de agentes não encontrado.")
-            return False
-        if not (self.base_dir / 'skills').exists():
-            print(f"[{self.ide_name}] Erro: Diretório canônico de skills não encontrado.")
-            return False
-        return True
+        errors = []
+        if not (self.base_dir / "agents").exists():
+            errors.append(f"[{self.ide_name}] Diretório canônico de agentes não encontrado.")
+        if not (self.base_dir / "skills").exists():
+            errors.append(f"[{self.ide_name}] Diretório canônico de skills não encontrado.")
+        if "agents_dir" not in self.config or "skills_dir" not in self.config:
+            errors.append(f"[{self.ide_name}] Configuração incompleta: agents_dir e skills_dir são obrigatórios.")
+        return errors
 
-    def deploy_agents(self, agents, dry_run=False):
-        agents_dir = self.root_dir / self.config['agents_dir']
-        if not dry_run:
-            agents_dir.mkdir(parents=True, exist_ok=True)
-            
-        ide_defaults_path = self.base_dir / 'ide-configs' / self.ide_name / '_defaults.yaml'
+    def sha256_text(self, content):
+        return hashlib.sha256(content.encode("utf-8")).hexdigest()
+
+    def relative_link_target(self, source, destination_parent):
+        return os.path.relpath(source, destination_parent)
+
+    def default_agent_filename(self, agent):
+        prefix = self.config.get("skill_prefix", "hermes-")
+        suffix = self.config.get("skill_suffix", ".md")
+        return f"{prefix}{agent}{suffix}"
+
+    def agent_filename(self, agent):
+        return self.default_agent_filename(agent)
+
+    def skill_link_name(self, skill):
+        prefix = self.config.get("skill_prefix", "hermes-")
+        return f"{prefix}{skill}"
+
+    def render_agent(self, agent):
+        ide_defaults_path = self.base_dir / "ide-configs" / self.ide_name / "_defaults.yaml"
         defaults = self.load_yaml(ide_defaults_path)
-        
-        for agent in agents:
-            agent_config_path = self.base_dir / 'ide-configs' / self.ide_name / f"{agent}.yaml"
-            agent_md_path = self.base_dir / 'agents' / f"{agent}.md"
-            
-            specific = self.load_yaml(agent_config_path)
-            frontmatter = self.generate_frontmatter(defaults, specific)
-            
-            body = ""
-            if agent_md_path.exists():
-                body = agent_md_path.read_text()
-                
-            final_content = frontmatter + "\n" + body
-            
-            suffix = self.config.get('skill_suffix', '.md')
-            
-            # Special case for Claude
-            if self.ide_name == "claude-code":
-                target_path = agents_dir / f"{agent}.md"
-            else:
-                target_path = agents_dir / f"hermes-{agent}{suffix}"
-            
-            if not dry_run:
-                target_path.write_text(final_content)
-            print(f"  [Agent] Written to {target_path.relative_to(self.root_dir)}")
+        specific = self.load_yaml(self.base_dir / "ide-configs" / self.ide_name / f"{agent}.yaml")
+        body = (self.base_dir / "agents" / f"{agent}.md").read_text(encoding="utf-8")
+        return self.generate_frontmatter(defaults, specific) + "\n" + body
 
-    def deploy_skills(self, skills, dry_run=False):
-        skills_dir = self.root_dir / self.config['skills_dir']
-        if not dry_run:
-            skills_dir.mkdir(parents=True, exist_ok=True)
-        
-        for skill in skills:
-            source = self.base_dir / 'skills' / skill
-            target = skills_dir / f"hermes-{skill}"
-            
-            if not dry_run:
-                if target.is_symlink() or target.exists():
-                    if target.is_symlink(): target.unlink()
-                    elif target.is_dir(): shutil.rmtree(target)
-                    else: target.unlink()
-                rel_path = os.path.relpath(source, target.parent)
-                os.symlink(rel_path, target)
-            print(f"  [Skill] Symlinked {target.relative_to(self.root_dir)} -> {source.relative_to(self.root_dir)}")
+    def plan_agent_operation(self, agent):
+        target_path = self.root_dir / self.config["agents_dir"] / self.agent_filename(agent)
+        content = self.render_agent(agent)
+        return {
+            "kind": "agent",
+            "path": str(target_path),
+            "source": str((self.base_dir / "agents" / f"{agent}.md").relative_to(self.root_dir)),
+            "signature": self.sha256_text(content),
+            "content": content,
+        }
 
-    def create_main_symlinks(self, dry_run=False):
-        pass
+    def plan_skill_operation(self, skill):
+        source = self.base_dir / "skills" / skill
+        target = self.root_dir / self.config["skills_dir"] / self.skill_link_name(skill)
+        link_target = self.relative_link_target(source, target.parent)
+        return {
+            "kind": "skill",
+            "path": str(target),
+            "source": str(source.relative_to(self.root_dir)),
+            "signature": self.sha256_text(link_target),
+            "link_target": link_target,
+        }
 
-    def create_hermes_skeleton(self, dry_run=False):
-        """Garante que _hermes/ e .sessions-index.yaml existam na raiz do projeto."""
-        hermes_dir = self.root_dir / '_hermes'
-        sessions_index = hermes_dir / '.sessions-index.yaml'
+    def plan_bootstrap_operations(self):
+        operations = []
+        for relative_path, target_reference in self.bootstrap_links:
+            destination = self.root_dir / relative_path
+            target = self.root_dir / target_reference
+            link_target = self.relative_link_target(target, destination.parent)
+            operations.append(
+                {
+                    "kind": "bootstrap",
+                    "path": str(destination),
+                    "source": target_reference,
+                    "signature": self.sha256_text(link_target),
+                    "link_target": link_target,
+                }
+            )
+        return operations
 
-        if not dry_run:
-            # Cria _hermes/ se não existir
-            hermes_dir.mkdir(parents=True, exist_ok=True)
-
-            # Inicializa .sessions-index.yaml vazio se não existir
-            if not sessions_index.exists():
-                sessions_index.write_text('sessions: []\n')
-                print(f"  [Hermes] Criado {sessions_index.relative_to(self.root_dir)}")
-            else:
-                print(f"  [Hermes] {sessions_index.relative_to(self.root_dir)} já existe — mantido.")
-        else:
-            print(f"  [DRY-RUN] Criaria _hermes/ e _hermes/.sessions-index.yaml se não existissem.")
-
-    def deploy(self, agents, skills, dry_run=False):
-        print(f"Deploying for IDE: {self.ide_name}")
-        if not self.validate(): return
-        self.deploy_agents(agents, dry_run)
-        self.deploy_skills(skills, dry_run)
-        self.create_main_symlinks(dry_run)
+    def plan_operations(self, agents, skills):
+        operations = [self.plan_agent_operation(agent) for agent in agents]
+        operations.extend(self.plan_skill_operation(skill) for skill in skills)
+        operations.extend(self.plan_bootstrap_operations())
+        return operations

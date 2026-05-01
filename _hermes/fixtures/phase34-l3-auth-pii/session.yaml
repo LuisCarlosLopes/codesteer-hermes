@@ -1,3 +1,4 @@
+schema_version: 2
 scope_slug: phase34-l3-auth-pii
 target: "Módulo de autenticação e perfil do usuário"
 target_type: module
@@ -25,6 +26,21 @@ phases_completed:
   - exploration
   - analysis
 current_phase: synthesis
+status: in_progress
+phase_history:
+  - phase: intake
+    status: completed
+    at: 2026-05-01T12:16:00Z
+  - phase: exploration
+    status: completed
+    at: 2026-05-01T12:24:00Z
+  - phase: analysis
+    status: completed
+    at: 2026-05-01T12:30:00Z
+  - phase: synthesis
+    status: in_progress
+    at: 2026-05-01T12:32:00Z
+validation_gate: not_started
 hermes_root: _hermes/fixtures/phase34-l3-auth-pii
 scope_path: _hermes/fixtures/phase34-l3-auth-pii/scope.md
 glossary_path: _hermes/fixtures/phase34-l3-auth-pii/glossary.md

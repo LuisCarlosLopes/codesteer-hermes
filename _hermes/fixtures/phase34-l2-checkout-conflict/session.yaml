@@ -1,3 +1,4 @@
+schema_version: 2
 scope_slug: phase34-l2-checkout-conflict
 target: "Fluxo de checkout de um app web de e-commerce"
 target_type: flow
@@ -24,6 +25,21 @@ phases_completed:
   - exploration
   - analysis
 current_phase: synthesis
+status: in_progress
+phase_history:
+  - phase: intake
+    status: completed
+    at: 2026-05-01T12:01:00Z
+  - phase: exploration
+    status: completed
+    at: 2026-05-01T12:10:00Z
+  - phase: analysis
+    status: completed
+    at: 2026-05-01T12:18:00Z
+  - phase: synthesis
+    status: in_progress
+    at: 2026-05-01T12:20:00Z
+validation_gate: not_started
 hermes_root: _hermes/fixtures/phase34-l2-checkout-conflict
 scope_path: _hermes/fixtures/phase34-l2-checkout-conflict/scope.md
 glossary_path: _hermes/fixtures/phase34-l2-checkout-conflict/glossary.md

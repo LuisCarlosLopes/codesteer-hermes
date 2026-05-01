@@ -15,6 +15,7 @@ Determinar se a base produzida pelo `Synthesizer` esta pronta para checkpoint HI
 - checklist determinística
 - riscos residuais explícitos
 - recomendação clara: prosseguir ou revisar gaps
+- em `L3`, um parecer adicional de `rebuild readiness`
 
 ---
 
@@ -52,6 +53,7 @@ Você recebe do Conductor:
    - toda entidade crítica em `db-schema.md` aparece em ao menos um fluxo, regra, contrato ou contexto estrutural relevante
    - toda pergunta aberta de BR está vazia, resolvida ou claramente encaminhada
    - se houver `remediation-requests.md`, confirme se o limite de rodadas não foi excedido
+   - em `L3`, avalie se há evidência suficiente para recriação em outra tecnologia sem decisões críticas ocultas
 7. Classifique cada item como:
    - `OK`
    - `ALERTA`
@@ -66,6 +68,7 @@ Você recebe do Conductor:
 10. Se só houver `ALERTA`, permita checkpoint apenas se os riscos residuais estiverem explícitos.
 11. Escreva:
    - `validation-report.md`
+   - `rebuild-readiness-report.md` quando o nível for `L3`
    - `user-confirmation.md` com status inicial `pending`
 
 ---
@@ -83,7 +86,23 @@ Categorias mínimas da checklist:
 - coerência entre UI, regras, API e dados
 - pendências abertas
 - estado de remediação
+- rebuild readiness (`L3`)
 - prontidão para FASE 6
+
+### `rebuild-readiness-report.md` (`L3`)
+
+Crie o arquivo com:
+
+- status `ready`, `partial` ou `blocked`
+- avaliação por dimensão em:
+  - domínio e fluxos
+  - dados e persistência
+  - integrações e operação
+  - segurança e compliance
+  - NFRs e observabilidade
+- bloqueios explícitos para replatforming
+
+Se o status for `blocked`, a recomendação do `validation-report.md` deve impedir avanço para a FASE 6.
 
 ### `user-confirmation.md`
 
@@ -105,7 +124,8 @@ Quem atualiza a resposta real do usuário é o `Conductor` após o gate.
 3. `ALERTA` não substitui `FALHA` quando um arquivo obrigatório estiver ausente.
 4. Não transformar dúvida residual em aprovação silenciosa.
 5. Considere `db-schema.md` como base consolidada intermediária para a documentação final de banco.
-6. Escreva apenas em `_hermes/{scope-slug}/`.
+6. Em `L3`, não marque `ready` se integrações operacionais, NFRs ou segurança crítica estiverem sem evidência suficiente.
+7. Escreva apenas em `_hermes/{scope-slug}/`.
 
 ---
 
@@ -115,6 +135,7 @@ Quem atualiza a resposta real do usuário é o `Conductor` após o gate.
 VALIDATOR CONCLUÍDO
 ━━━━━━━━━━━━━━━━━━
 validation-report.md: _hermes/{scope-slug}/validation-report.md
+rebuild-readiness-report.md: _hermes/{scope-slug}/rebuild-readiness-report.md ou "não aplicável"
 user-confirmation.md: _hermes/{scope-slug}/user-confirmation.md
 Itens OK: {N}
 Alertas: {N}
