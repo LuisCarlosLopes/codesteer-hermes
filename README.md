@@ -128,7 +128,8 @@ O CLI:
 - instala `_codesteer-hermes/` na raiz do projeto
 - faz bootstrap de um runtime local Python em `_codesteer-hermes/.runtime/venv`
 - preserva `_hermes/` na remoção
-- não sobrescreve `AGENTS.md` ou `CLAUDE.md` preexistentes não gerenciados; registra conflito e segue
+- não cria `AGENTS.md` na raiz do projeto durante o install
+- não sobrescreve `CLAUDE.md` preexistente não gerenciado; registra conflito e segue
 
 ### Desenvolvimento local do pacote
 

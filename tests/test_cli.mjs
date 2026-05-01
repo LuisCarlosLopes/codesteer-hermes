@@ -35,10 +35,11 @@ test("install creates bundle, manifest and selected IDE artifacts", () => {
   assert.equal(fs.existsSync(path.join(projectDir, "_codesteer-hermes")), true);
   assert.equal(fs.existsSync(path.join(projectDir, ".codex", "agents")), true);
   assert.equal(fs.existsSync(path.join(projectDir, ".cursor", "agents")), true);
+  assert.equal(fs.existsSync(path.join(projectDir, "AGENTS.md")), false);
   assert.equal(fs.existsSync(path.join(projectDir, "_hermes", ".sessions-index.yaml")), true);
 });
 
-test("install preserves unmanaged AGENTS.md as conflict", () => {
+test("install preserves unmanaged AGENTS.md untouched", () => {
   const projectDir = makeProject();
   fs.writeFileSync(path.join(projectDir, "AGENTS.md"), "manual agents\n", "utf8");
 
@@ -48,8 +49,7 @@ test("install preserves unmanaged AGENTS.md as conflict", () => {
     fs.readFileSync(path.join(projectDir, ".codesteer-hermes-install.json"), "utf8"),
   );
   assert.equal(fs.readFileSync(path.join(projectDir, "AGENTS.md"), "utf8"), "manual agents\n");
-  assert.equal(manifest.conflicts.length > 0, true);
-  assert.equal(manifest.conflicts.some((item) => item.path === "AGENTS.md"), true);
+  assert.equal(manifest.conflicts.some((item) => item.path === "AGENTS.md"), false);
 });
 
 test("update keeps selected IDEs in sync and removes deselected artifacts", () => {
