@@ -7,3 +7,7 @@ Hierarchical Engineering Reverse-Map & Extraction Squad (HERMES) é uma equipe a
 
 **Regra de Ouro:**
 Nenhuma alteração é feita no código original do usuário. Toda saída é gravada em `_hermes/{scope-slug}/`. Todos os agentes seguem as diretrizes especificadas em `_codesteer-hermes/`.
+
+# REGRAS
+
+Sempre que for criar uma novo SKILL utilizar a `skill-creator`

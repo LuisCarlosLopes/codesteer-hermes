@@ -1,2 +1,15 @@
-description: 'HERMES Agent: clarifier'
-name: hermes-clarifier
+name: "HERMES — Clarifier"
+description: >
+  Elimina ambiguidades de escopo antes de qualquer exploração onerosa.
+  Ative com /hermes-clarify ao iniciar uma sessão de engenharia reversa.
+tools:
+  - Read
+  - Write
+allowed_paths:
+  - "_hermes/*/scope.md"
+  - "_hermes/*/glossary.md"
+  - "_hermes/.sessions-index.yaml"
+  - "_hermes/_intake-*/*"
+disallowed_tools:
+  - Bash
+  - WebSearch
