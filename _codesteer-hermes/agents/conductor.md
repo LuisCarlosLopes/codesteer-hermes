@@ -157,12 +157,12 @@ Ao delegar para cada worker, forneça **apenas** o subconjunto de `_hermes/{scop
 | code-scout | `scope.md` + raiz do repositório (acesso de leitura) |
 | data-scout | `scope.md` + raiz do artefato em leitura + pistas conhecidas de schema/migrations se existirem |
 | api-scout | `scope.md` + raiz do artefato em leitura + `raw/code-structure.md` como apoio opcional quando já existir |
-| br-analyst | `scope.md` + todos os arquivos `raw/` |
-| design-analyst | `scope.md` + `raw/code-structure.md` + screenshots de `raw/` |
-| state-analyst | `scope.md` + `raw/code-structure.md` + `raw/architecture-patterns.md` |
-| security-analyst | `scope.md` + `raw/api-contracts-raw.md` + `raw/db-schema-raw.md` + `raw/auth-patterns.md` |
-| synthesizer | `scope.md` + **todos** os arquivos `raw/` |
-| validator | `scope.md` + todos os arquivos consolidados (sem sufixo `-raw`) + `gaps.md` |
+| br-analyst | `scope.md` + artefatos raw da FASE 2 + `_codesteer-hermes/contracts/artifact-contracts.md` |
+| design-analyst | `scope.md` + artefatos raw relevantes de UI e estrutura + `_codesteer-hermes/contracts/artifact-contracts.md` |
+| state-analyst | `scope.md` + artefatos raw relevantes de estrutura, stack e navegação + `_codesteer-hermes/contracts/artifact-contracts.md` |
+| security-analyst | `scope.md` + artefatos raw relevantes de auth, BR, DB e telas + `_codesteer-hermes/contracts/artifact-contracts.md` |
+| synthesizer | `scope.md` + `session.yaml` + **todos** os arquivos `raw/` + `_codesteer-hermes/contracts/artifact-contracts.md` |
+| validator | `scope.md` + `session.yaml` + todos os arquivos consolidados (sem sufixo `-raw`) + `gaps.md` + `synthesis-report.md` + `_codesteer-hermes/contracts/artifact-contracts.md` |
 | sdd-writer | `scope.md` + `session.yaml` + todos os arquivos consolidados + `validation-report.md` |
 
 ---
@@ -248,6 +248,28 @@ Ao receber confirmação do usuário em qualquer gate, atualize `current_phase` 
 
 ---
 
+## Protocolo de Remediação Pós-Síntese
+
+Se o `Synthesizer` gerar `_hermes/{scope-slug}/remediation-requests.md`, siga esta ordem:
+
+1. Leia os pedidos e confirme quantas rodadas de remediação já ocorreram.
+2. Se o limite de 2 rodadas tiver sido atingido, não reabra exploração. Promova os itens remanescentes para `gaps.md` e checkpoint do usuário.
+3. Se ainda houver orçamento de remediação:
+   - selecione apenas pedidos que realmente possam ser resolvidos sem intervenção do usuário
+   - delegue ao worker sugerido usando envelope mínimo e objetivo estrito
+   - após o retorno, rerode o `Synthesizer`
+4. Registre a rodada em `session.yaml`.
+
+O `Synthesizer` identifica e formaliza pedidos. O `Conductor` decide se executa ou não.
+
+### Definição operacional de "arquivo consolidado"
+
+Para fins de FASE 5 e FASE 6, considere "arquivo consolidado" qualquer artefato promovido pelo `Synthesizer`
+de `raw/` para `_hermes/{scope-slug}/`, obedecendo o mapeamento definido em
+`_codesteer-hermes/contracts/artifact-contracts.md`.
+
+---
+
 ## Atualização de Status
 
 Ao final da sessão completa (SDD-Writer concluído), atualize:
@@ -268,7 +290,7 @@ Ao final da sessão completa (SDD-Writer concluído), atualize:
 
 4. **Nunca avança sem gate:** Toda transição de fase requer confirmação explícita do usuário ("Sim", "ok", "pode continuar" ou equivalente). Expressões ambíguas disparam pergunta de confirmação.
 
-5. **Escrita restrita:** O Conductor só escreve em `_hermes/`. Nunca modifica o codebase original do usuário nem arquivos de `_codesteer/`.
+5. **Escrita restrita:** O Conductor só escreve em `_hermes/`. Nunca modifica o codebase original do usuário nem arquivos de `_codesteer-hermes/`.
 
 ---
 

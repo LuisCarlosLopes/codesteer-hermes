@@ -1,3 +1,4 @@
 always_apply: false
 ide: cursor
 rule_type: Agent Requested
+model: inherit

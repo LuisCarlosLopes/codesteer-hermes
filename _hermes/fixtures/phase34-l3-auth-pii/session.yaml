@@ -1,0 +1,30 @@
+scope_slug: phase34-l3-auth-pii
+target: "Módulo de autenticação e perfil do usuário"
+target_type: module
+level: L3
+source:
+  type: source_code
+  path: ../sample/saas-auth
+created_at: 2026-05-01T12:15:00Z
+agents_active:
+  - conductor
+  - clarifier
+  - ui-scout
+  - code-scout
+  - data-scout
+  - api-scout
+  - br-analyst
+  - design-analyst
+  - state-analyst
+  - security-analyst
+  - synthesizer
+  - validator
+  - sdd-writer
+phases_completed:
+  - intake
+  - exploration
+  - analysis
+current_phase: synthesis
+hermes_root: _hermes/fixtures/phase34-l3-auth-pii
+scope_path: _hermes/fixtures/phase34-l3-auth-pii/scope.md
+glossary_path: _hermes/fixtures/phase34-l3-auth-pii/glossary.md
