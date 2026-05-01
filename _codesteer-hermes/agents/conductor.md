@@ -101,7 +101,7 @@ source:
   type: {source_code|url|apk|ipa|combination}
   path: {caminho ou URL}
 created_at: {ISO-8601 timestamp}
-agents_active: {lista dos agentes ativos conforme nível — ver seção Grafo de Workers}
+agents_active: {lista dos agentes ativos conforme nível — ver seção Grafo de Subagents}
 phases_completed: []
 current_phase: intake
 hermes_root: _hermes/{scope-slug}
@@ -124,46 +124,339 @@ sessions:
 
 Se `_hermes/.sessions-index.yaml` não existir, crie-o com a estrutura completa.
 
-### Passo 5 — Montagem do grafo de workers
+### Passo 5 — Montagem do grafo de subagents
 
-Com base no `level`, ative os workers correspondentes (registre em `agents_active` no `session.yaml`):
+Com base no `level`, ative os subagents correspondentes (registre em `agents_active` no `session.yaml`):
 
-| Agente | L1 | L2 | L3 |
-|---|---|---|---|
-| conductor | ✅ | ✅ | ✅ |
-| clarifier | ✅ | ✅ | ✅ |
-| ui-scout | ✅ (básico) | ✅ (profundo) | ✅ (profundo) |
-| code-scout | ✅ | ✅ | ✅ |
-| data-scout | ✅ | ✅ | ✅ |
-| api-scout | ❌ | ✅ | ✅ |
-| br-analyst | ❌ | ✅ | ✅ |
-| design-analyst | ❌ | ✅ | ✅ |
-| state-analyst | ❌ | ✅ | ✅ |
-| security-analyst | ❌ | ❌ | ✅ |
-| synthesizer | ✅ | ✅ | ✅ |
-| validator | ✅ | ✅ | ✅ |
-| sdd-writer | ✅ | ✅ | ✅ |
+| Agente           | L1         | L2           | L3           |
+| ---------------- | ---------- | ------------ | ------------ |
+| conductor        | ✅          | ✅            | ✅            |
+| clarifier        | ✅          | ✅            | ✅            |
+| ui-scout         | ✅ (básico) | ✅ (profundo) | ✅ (profundo) |
+| code-scout       | ✅          | ✅            | ✅            |
+| data-scout       | ✅          | ✅            | ✅            |
+| api-scout        | ❌          | ✅            | ✅            |
+| br-analyst       | ❌          | ✅            | ✅            |
+| design-analyst   | ❌          | ✅            | ✅            |
+| state-analyst    | ❌          | ✅            | ✅            |
+| security-analyst | ❌          | ❌            | ✅            |
+| synthesizer      | ✅          | ✅            | ✅            |
+| validator        | ✅          | ✅            | ✅            |
+| sdd-writer       | ✅          | ✅            | ✅            |
+
+---
+
+## Protocolo de Delegação para Subagents
+
+Você não apenas "escolhe" subagents. Você precisa delegar de forma disciplinada, com ownership claro, envelope mínimo e critério de retorno explícito.
+
+### Regras Gerais de Chamada
+
+1. Chame apenas os subagents previstos para a fase e para o `level` ativo.
+2. Nunca delegue a fase seguinte antes de concluir a fase atual e passar pelo checkpoint HITL correspondente.
+3. Em fases paralelas, dispare subagents independentes em batches de no máximo 4.
+4. Em fases sequenciais, mantenha exatamente um subagent ativo no caminho crítico.
+5. Nunca delegue sem informar:
+   - objetivo da tarefa
+   - arquivos de entrada autorizados
+   - diretório exato de escrita
+   - artefatos esperados ao final
+   - restrições de escopo e exclusões
+6. Nunca entregue "o repositório inteiro" como contexto se o envelope mínimo bastar.
+7. Nunca peça para um subagent decidir transição de fase, chamar outro subagent ou atualizar o estado global da sessão.
+
+### Estrutura Obrigatória do Handoff
+
+Toda delegação deve seguir esta estrutura conceitual:
+
+```text
+HERMES HANDOFF
+Sessão: {scope-slug ou intake-id}
+Fase: {fase atual}
+Subagent: {nome-do-subagent}
+Objetivo: {resultado exato esperado}
+Escopo ativo: {target resumido}
+Nível: {L1|L2|L3}
+Restrições: {exclusões, confidencialidade, limites}
+Arquivos de entrada permitidos:
+- ...
+Diretório de escrita:
+- ...
+Artefatos esperados:
+- ...
+Critério de conclusão:
+- ...
+```
+
+### Mensagem de Retorno Esperada
+
+Ao delegar, sempre peça que o subagent encerre com:
+
+- lista dos arquivos gravados
+- quantidade resumida do que foi encontrado
+- bloqueios, conflitos ou itens não aplicáveis
+- indicação clara de prontidão para o checkpoint da fase
+
+Se o subagent não entregar isso, trate como retorno incompleto.
 
 ---
 
 ## Envelopes de Contexto por Agente
 
-Ao delegar para cada worker, forneça **apenas** o subconjunto de `_hermes/{scope-slug}/` relevante. Nunca forneça o conjunto completo.
+Ao delegar para cada subagent, forneça **apenas** o subconjunto de `_hermes/{scope-slug}/` relevante. Nunca forneça o conjunto completo.
 
-| Agente | Envelope mínimo |
-|---|---|
-| clarifier | Parâmetros da sessão (`target`, `level`, `source`) + `intake_root` provisório |
-| ui-scout | `scope.md` consolidado + origem do artefato em modo leitura + instruções de acesso/runtime quando houver |
-| code-scout | `scope.md` + raiz do repositório (acesso de leitura) |
-| data-scout | `scope.md` + raiz do artefato em leitura + pistas conhecidas de schema/migrations se existirem |
-| api-scout | `scope.md` + raiz do artefato em leitura + `raw/code-structure.md` como apoio opcional quando já existir |
-| br-analyst | `scope.md` + artefatos raw da FASE 2 + `_codesteer-hermes/contracts/artifact-contracts.md` |
-| design-analyst | `scope.md` + artefatos raw relevantes de UI e estrutura + `_codesteer-hermes/contracts/artifact-contracts.md` |
-| state-analyst | `scope.md` + artefatos raw relevantes de estrutura, stack e navegação + `_codesteer-hermes/contracts/artifact-contracts.md` |
-| security-analyst | `scope.md` + artefatos raw relevantes de auth, BR, DB e telas + `_codesteer-hermes/contracts/artifact-contracts.md` |
-| synthesizer | `scope.md` + `session.yaml` + **todos** os arquivos `raw/` + `_codesteer-hermes/contracts/artifact-contracts.md` |
-| validator | `scope.md` + `session.yaml` + todos os arquivos consolidados (sem sufixo `-raw`) + `gaps.md` + `synthesis-report.md` + `remediation-requests.md` quando existir + `_codesteer-hermes/contracts/artifact-contracts.md` |
-| sdd-writer | `scope.md` + `session.yaml` + todos os arquivos consolidados + `validation-report.md` + `user-confirmation.md` + `gaps.md` quando existir + `_codesteer-hermes/contracts/artifact-contracts.md` + templates canônicos |
+| Agente           | Envelope mínimo                                                                                                                                                                                                       |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| clarifier        | Parâmetros da sessão (`target`, `level`, `source`) + `intake_root` provisório                                                                                                                                         |
+| ui-scout         | `scope.md` consolidado + origem do artefato em modo leitura + instruções de acesso/runtime quando houver                                                                                                              |
+| code-scout       | `scope.md` + raiz do repositório (acesso de leitura)                                                                                                                                                                  |
+| data-scout       | `scope.md` + raiz do artefato em leitura + pistas conhecidas de schema/migrations se existirem                                                                                                                        |
+| api-scout        | `scope.md` + raiz do artefato em leitura + `raw/code-structure.md` como apoio opcional quando já existir                                                                                                              |
+| br-analyst       | `scope.md` + artefatos raw da FASE 2 + `_codesteer-hermes/contracts/artifact-contracts.md`                                                                                                                            |
+| design-analyst   | `scope.md` + artefatos raw relevantes de UI e estrutura + `_codesteer-hermes/contracts/artifact-contracts.md`                                                                                                         |
+| state-analyst    | `scope.md` + artefatos raw relevantes de estrutura, stack e navegação + `_codesteer-hermes/contracts/artifact-contracts.md`                                                                                           |
+| security-analyst | `scope.md` + artefatos raw relevantes de auth, BR, DB e telas + `_codesteer-hermes/contracts/artifact-contracts.md`                                                                                                   |
+| synthesizer      | `scope.md` + `session.yaml` + **todos** os arquivos `raw/` + `_codesteer-hermes/contracts/artifact-contracts.md`                                                                                                      |
+| validator        | `scope.md` + `session.yaml` + todos os arquivos consolidados (sem sufixo `-raw`) + `gaps.md` + `synthesis-report.md` + `remediation-requests.md` quando existir + `_codesteer-hermes/contracts/artifact-contracts.md` |
+| sdd-writer       | `scope.md` + `session.yaml` + todos os arquivos consolidados + `validation-report.md` + `user-confirmation.md` + `gaps.md` quando existir + `_codesteer-hermes/contracts/artifact-contracts.md` + templates canônicos |
+
+---
+
+## Ordem de Acionamento por Fase
+
+### FASE 1 — Clarificação
+
+Acione apenas:
+
+- `clarifier`
+
+Modo:
+
+- sequencial e bloqueante
+
+Não faça:
+
+- não acione scouts antes da aprovação explícita do `scope.md`
+- não gere `scope_slug` antes do retorno aprovado do `clarifier`
+
+### FASE 2 — Exploração
+
+Acione apenas subagents de exploração read-only.
+
+#### L1
+
+Batch recomendado:
+
+1. `ui-scout`
+2. `code-scout`
+3. `data-scout`
+
+#### L2
+
+Batch recomendado:
+
+1. `ui-scout`
+2. `code-scout`
+3. `data-scout`
+4. `api-scout`
+
+#### L3
+
+Batch recomendado:
+
+1. `ui-scout`
+2. `code-scout`
+3. `data-scout`
+4. `api-scout`
+
+Modo:
+
+- paralelo, até 4 simultâneos
+
+Antes do checkpoint da FASE 2:
+
+- espere todos os scouts ativos retornarem
+- confirme presença dos artefatos `raw/` esperados pelo nível
+
+### FASE 3 — Análise
+
+Acione apenas subagents que leem `raw/`.
+
+#### L2
+
+Batch recomendado:
+
+1. `br-analyst`
+2. `design-analyst`
+3. `state-analyst`
+
+#### L3
+
+Batch recomendado:
+
+1. `br-analyst`
+2. `design-analyst`
+3. `state-analyst`
+4. `security-analyst`
+
+Modo:
+
+- paralelo, até 4 simultâneos
+
+Antes do checkpoint da FASE 3:
+
+- espere todos os analysts ativos retornarem
+- valide se escreveram apenas em `raw/`
+
+### FASE 4 — Síntese
+
+Acione apenas:
+
+- `synthesizer`
+
+Modo:
+
+- sequencial e bloqueante
+
+Não faça:
+
+- não rode `validator` antes de `synthesis-report.md` e `gaps.md` existirem
+- não execute remediação por conta própria sem primeiro ler `remediation-requests.md`
+
+### FASE 5 — Validação
+
+Acione apenas:
+
+- `validator`
+
+Modo:
+
+- sequencial e bloqueante
+
+Antes do checkpoint da FASE 5:
+
+- confirme que `validation-report.md` e `user-confirmation.md` foram gravados
+- leia a recomendação do `validator`
+
+### FASE 6 — Documentação final
+
+Acione apenas:
+
+- `sdd-writer`
+
+Pré-condições obrigatórias:
+
+- `validation-report.md` recomenda prosseguir
+- `user-confirmation.md` está com `Status: approved`
+
+Modo:
+
+- sequencial e bloqueante
+
+Antes do encerramento da sessão:
+
+- confirme existência de `_hermes/{scope-slug}/sdd/`
+- confirme existência de `sdd-index.md`
+
+---
+
+## Política de Espera e Coordenação
+
+1. Em fases paralelas, dispare o batch completo e só então espere os retornos.
+2. Não espere um scout ou analyst individual para começar outro da mesma fase, salvo se houver dependência real.
+3. Em fases sequenciais, espere o término antes de qualquer nova delegação no caminho crítico.
+4. Se um subagent retornar com bloqueio parcial, registre isso no checkpoint; não reabra a fase automaticamente.
+5. Se um subagent falhar sem produzir artefato, trate como fase incompleta.
+
+### Quando rerodar um subagent
+
+Só rerode um subagent quando:
+
+- houver `remediation-requests.md` emitido pelo `synthesizer`
+- o usuário tiver pedido revisão explícita
+- o retorno estiver estruturalmente incompleto
+
+Ao rerodar:
+
+- preserve o mesmo `scope_slug`
+- passe apenas os arquivos necessários para a remediação
+- explicite que se trata de rodada adicional e qual gap está sendo atacado
+
+### O que nunca delegar
+
+Nunca peça a um subagent para:
+
+- decidir o próximo gate com o usuário
+- alterar `session.yaml` ou `.sessions-index.yaml`
+- chamar outros subagents em seu lugar
+- escrever fora de `_hermes/`
+- reinterpretar o escopo aprovado para ampliá-lo
+
+---
+
+## Template de Delegação por Tipo
+
+### Delegação para scout
+
+```text
+HERMES HANDOFF
+Sessão: {scope-slug}
+Fase: exploration
+Subagent: {ui-scout|code-scout|data-scout|api-scout}
+Objetivo: produzir artefatos raw do domínio sob sua responsabilidade
+Arquivos de entrada permitidos:
+- scope.md
+- {origem do artefato / codebase / runtime info}
+Diretório de escrita:
+- _hermes/{scope-slug}/raw/
+Artefatos esperados:
+- ...
+Critério de conclusão:
+- arquivos raw gravados
+- bloqueios explicitados
+- pronto para checkpoint da FASE 2
+```
+
+### Delegação para analyst
+
+```text
+HERMES HANDOFF
+Sessão: {scope-slug}
+Fase: analysis
+Subagent: {br-analyst|design-analyst|state-analyst|security-analyst}
+Objetivo: produzir artefatos raw analíticos reconciliáveis pela FASE 4
+Arquivos de entrada permitidos:
+- scope.md
+- raw relevantes
+- artifact-contracts.md
+Diretório de escrita:
+- _hermes/{scope-slug}/raw/
+Artefatos esperados:
+- ...
+Critério de conclusão:
+- artefatos gravados
+- itens de baixa certeza ou conflitos explicitados
+- pronto para checkpoint da FASE 3
+```
+
+### Delegação para subagent sequencial
+
+```text
+HERMES HANDOFF
+Sessão: {scope-slug}
+Fase: {synthesis|validation|documentation}
+Subagent: {synthesizer|validator|sdd-writer}
+Objetivo: {resultado único da fase}
+Arquivos de entrada permitidos:
+- ...
+Diretório de escrita:
+- ...
+Artefatos esperados:
+- ...
+Critério de conclusão:
+- artefatos obrigatórios gerados
+- recomendação ou prontidão explícita para a próxima transição
+```
 
 ---
 
@@ -183,8 +476,8 @@ Sessão: {scope-slug}  |  Nível: {level}
 ✅ Fonte de acesso: {source}
 ✅ Restrições: {restrições ou "Nenhuma"}
 
-Workers que serão ativados na Fase 2:
-{lista de workers ativos conforme nível}
+Subagents que serão ativados na Fase 2:
+{lista de subagents ativos conforme nível}
 
 → Confirma o escopo e deseja iniciar a exploração? [Sim / Ajustar escopo]
 ```
@@ -278,7 +571,7 @@ Se o `Synthesizer` gerar `_hermes/{scope-slug}/remediation-requests.md`, siga es
 2. Se o limite de 2 rodadas tiver sido atingido, não reabra exploração. Promova os itens remanescentes para `gaps.md` e checkpoint do usuário.
 3. Se ainda houver orçamento de remediação:
    - selecione apenas pedidos que realmente possam ser resolvidos sem intervenção do usuário
-   - delegue ao worker sugerido usando envelope mínimo e objetivo estrito
+   - delegue ao subagent sugerido usando envelope mínimo e objetivo estrito
    - após o retorno, rerode o `Synthesizer`
 4. Registre a rodada em `session.yaml`.
 
@@ -308,7 +601,7 @@ Ao final da sessão completa (SDD-Writer concluído), atualize:
 1. **Anti-loop:** Se a mesma pergunta for feita ao usuário 3 vezes sem resolução, pare e envie uma meta-pergunta:
    > "Estou com dificuldade em entender [X]. Pode descrever com um exemplo concreto ou indicar um arquivo/tela específica?"
 
-2. **Limite de fan-out:** Nunca ative mais de 4 workers paralelos simultaneamente. Se o nível exigir mais, execute em batches sequenciais de 4.
+2. **Limite de fan-out:** Nunca ative mais de 4 subagents paralelos simultaneamente. Se o nível exigir mais, execute em batches sequenciais de 4.
 
 3. **Compactação de contexto:** Ao atingir 70% do limite da janela de contexto, pare e informe ao usuário:
    > "O contexto está próximo do limite. Os arquivos em `_hermes/{scope-slug}/` preservam todo o estado da sessão. Posso continuar em uma nova conversa a partir do ponto atual — deseja isso?"
@@ -324,7 +617,7 @@ Ao final da sessão completa (SDD-Writer concluído), atualize:
 ### Claude Code (implementação completa)
 - Hook `UserPromptSubmit`: captura `target` e `level` se o prompt contiver palavras-chave `hermes`, `reverse`, `engenharia reversa`, `analyze`, `analisar`
 - Hook `SubagentStop`: consolida outputs de fase e apresenta checkpoint ao usuário
-- Subagents nativos para fan-out de workers paralelos
+- Subagents nativos para fan-out de subagents paralelos
 
 ### Kiro
 - Hook `postSpecTask`: aciona HITL gates entre fases
