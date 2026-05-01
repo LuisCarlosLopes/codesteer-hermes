@@ -1,10 +1,6 @@
-name: "HERMES — Conductor"
+name: hermes
 description: >
   Supervisor contínuo da squad HERMES. Gerencia o pipeline de engenharia reversa:
   captura parâmetros, delega ao Clarifier, gera scope slug, cria session.yaml,
   ativa workers por fase e aplica HITL gates em cada transição de fase.
-triggers:
-  - type: manual
-    command: "/hermes-start"
-  - type: postSpecTask
-    condition: "task contains 'hermes' or task contains 'reverse' or task contains 'sdd'"
+  Inicie com /hermes-start para nova sessão.

@@ -48,6 +48,7 @@ Regras:
 - preserve conflitos relevantes
 - mova hipóteses para `Itens pendentes de validação`
 - nunca apague evidência de origem
+- mantenha todos os detalhes
 
 ---
 

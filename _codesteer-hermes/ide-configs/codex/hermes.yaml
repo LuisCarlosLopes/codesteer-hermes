@@ -1,4 +1,4 @@
-name: "HERMES — Conductor"
+name: hermes
 description: >
   Supervisor contínuo da squad HERMES. Gerencia o pipeline de engenharia reversa:
   captura parâmetros, delega ao Clarifier, gera scope slug, cria session.yaml,

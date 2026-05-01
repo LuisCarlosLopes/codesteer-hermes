@@ -13,7 +13,7 @@
 - Impacto: alto
 - Arquivos afetados: db-schema.md
 - Ação recomendada: reabrir `Data-Scout` e rerodar `Synthesizer`
-- Responsável sugerido: conductor
+- Responsável sugerido: hermes
 - Status: pending
 
 ## Decisões de consolidação impactadas

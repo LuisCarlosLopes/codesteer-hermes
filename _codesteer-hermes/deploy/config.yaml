@@ -5,6 +5,8 @@ targets:
     agents_dir: ".claude/agents"
     skills_strategy: symlink
     skills_dir: ".claude/skills"
+    agent_prefix: "hermes-"
+    agent_suffix: ".md"
     skill_prefix: "hermes-"
     skill_suffix: ".md"
 
@@ -13,6 +15,8 @@ targets:
     root: "../../"
     agents_dir: ".kiro/steering"
     skills_dir: ".kiro/skills"
+    agent_prefix: "hermes-"
+    agent_suffix: ".md"
     skill_prefix: "hermes-"
     skill_suffix: ".md"
 
@@ -21,6 +25,8 @@ targets:
     root: "../../"
     agents_dir: ".cursor/agents"
     skills_dir: ".cursor/skills"
+    agent_prefix: "hermes-"
+    agent_suffix: ".mdc"
     skill_prefix: "hermes-"
     skill_suffix: ".mdc"
 
@@ -29,6 +35,8 @@ targets:
     root: "../../"
     agents_dir: ".github/agents"
     skills_dir: ".github/skills"
+    agent_prefix: "hermes-"
+    agent_suffix: ".agent.md"
     skill_prefix: "hermes-"
     skill_suffix: ".instructions.md"
 
@@ -37,6 +45,8 @@ targets:
     root: "../../"
     agents_dir: ".agent/agents"
     skills_dir: ".agent/skills"
+    agent_prefix: "hermes-"
+    agent_suffix: ".md"
     skill_prefix: "hermes-"
     skill_suffix: ".md"
 
@@ -45,6 +55,8 @@ targets:
     root: "../../"
     agents_dir: ".codex/agents"
     skills_dir: ".codex/skill"
+    agent_prefix: "hermes-"
+    agent_suffix: ".md"
     skill_prefix: "hermes-"
     skill_suffix: ".md"
 

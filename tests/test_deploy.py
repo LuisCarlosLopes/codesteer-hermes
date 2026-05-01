@@ -12,6 +12,8 @@ sys.path.insert(0, str(DEPLOY_DIR))
 
 import deploy  # noqa: E402
 
+from adapters.base import BaseAdapter  # noqa: E402
+
 
 class FakeAdapter:
     def __init__(self, ide_name, operation):
@@ -141,6 +143,42 @@ class DeployTests(unittest.TestCase):
             self.assertEqual(result["errors"], [])
             self.assertFalse(target_file.exists())
             self.assertEqual(result["operations"][0]["status"], "create")
+
+    def test_default_agent_filename_primary_hermes_avoids_double_prefix(self):
+        base = REPO_ROOT / "_codesteer-hermes"
+        adapter = BaseAdapter(
+            "cursor",
+            {
+                "agent_prefix": "hermes-",
+                "agent_suffix": ".mdc",
+                "skill_prefix": "hermes-",
+                "skill_suffix": ".mdc",
+                "agents_dir": ".cursor/agents",
+                "skills_dir": ".cursor/skills",
+            },
+            base,
+            REPO_ROOT,
+        )
+        self.assertEqual(adapter.default_agent_filename("hermes"), "hermes.mdc")
+        self.assertEqual(adapter.default_agent_filename("clarifier"), "hermes-clarifier.mdc")
+
+    def test_default_agent_filename_can_diverge_from_skill_suffix_for_copilot(self):
+        base = REPO_ROOT / "_codesteer-hermes"
+        adapter = BaseAdapter(
+            "copilot",
+            {
+                "agent_prefix": "hermes-",
+                "agent_suffix": ".agent.md",
+                "skill_prefix": "hermes-",
+                "skill_suffix": ".instructions.md",
+                "agents_dir": ".github/agents",
+                "skills_dir": ".github/skills",
+            },
+            base,
+            REPO_ROOT,
+        )
+        self.assertEqual(adapter.default_agent_filename("hermes"), "hermes.agent.md")
+        self.assertEqual(adapter.default_agent_filename("clarifier"), "hermes-clarifier.agent.md")
 
 
 if __name__ == "__main__":

@@ -56,9 +56,10 @@ Validação da instalação:
 npx codesteer-hermes validate
 ```
 
-no chat digite e inicie o fluxo: 
-````
-/hermes-conductor
+no chat digite e inicie o fluxo:
+
+```
+@hermes
 ```
 
 ### Pré-requisitos
@@ -98,7 +99,8 @@ Campos principais por target:
 - `enabled`: ativa ou desativa a IDE
 - `agents_dir`: destino dos agentes gerados
 - `skills_dir`: destino das skills
-- `skill_prefix` e `skill_suffix`: naming dos artefatos gerados
+- `agent_prefix` e `agent_suffix`: naming dos agentes gerados
+- `skill_prefix` e `skill_suffix`: naming das skills geradas
 
 ## Como utilizar
 

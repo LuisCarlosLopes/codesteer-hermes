@@ -1,4 +1,4 @@
-name: hermes-conductor
+name: hermes
 description: >
   HERMES Conductor — supervisor contínuo da squad. Gerencia o pipeline de
   engenharia reversa do início ao fim: captura target/level/source, delega ao

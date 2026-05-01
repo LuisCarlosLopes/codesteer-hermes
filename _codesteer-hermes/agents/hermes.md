@@ -130,7 +130,7 @@ Com base no `level`, ative os subagents correspondentes (registre em `agents_act
 
 | Agente           | L1         | L2           | L3           |
 | ---------------- | ---------- | ------------ | ------------ |
-| conductor        | ✅          | ✅            | ✅            |
+| hermes           | ✅          | ✅            | ✅            |
 | clarifier        | ✅          | ✅            | ✅            |
 | ui-scout         | ✅ (básico) | ✅ (profundo) | ✅ (profundo) |
 | code-scout       | ✅          | ✅            | ✅            |

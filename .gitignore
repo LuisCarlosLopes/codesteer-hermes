@@ -9,3 +9,4 @@ _codesteer-hermes/validation/__pycache__/
 _codesteer-hermes/.runtime/
 tests/__pycache__/
 .github/skills/
+_codesteer-hermes/deploy/adapters/__pycache__/

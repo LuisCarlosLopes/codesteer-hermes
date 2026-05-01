@@ -237,6 +237,19 @@ def process_target(adapter, agents, skills, args, log_payload):
         operation_reports.append(report)
 
     if not args.validate and not args.dry_run and not plan_only and not errors:
+        planned_paths = {op["path"] for op in operations}
+        for path in list(next_state.keys()):
+            if path in planned_paths:
+                continue
+            meta = next_state[path]
+            if meta.get("kind") != "agent":
+                continue
+            del next_state[path]
+            orphan = Path(path)
+            if orphan.is_file():
+                orphan.unlink()
+                print(f"[{adapter.ide_name}] REMOVE {relative_path(orphan)}")
+
         log_payload["targets"][adapter.ide_name]["files"] = next_state
         record_run(log_payload, adapter.ide_name, "force" if args.force else "deploy", results)
 

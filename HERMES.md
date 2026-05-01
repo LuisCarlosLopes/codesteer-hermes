@@ -152,7 +152,7 @@ source:
   path: ../projects/ecommerce-app
 created_at: 2026-05-01T14:32:00Z
 agents_active:
-  - conductor
+  - hermes
   - clarifier
   - ui-scout
   - code-scout
@@ -580,7 +580,7 @@ Todas as skills residem canonicamente em `_codesteer-hermes/skills/` e são dist
 ```
 _codesteer-hermes/
 ├── agents/                         ← corpos canônicos dos agentes (sem frontmatter)
-│   ├── conductor.md
+│   ├── hermes.md
 │   ├── clarifier.md
 │   ├── ui-scout.md
 │   ├── code-scout.md
@@ -630,7 +630,7 @@ _codesteer-hermes/
 ├── ide-configs/                    ← frontmatter configurável por IDE × agente
 │   ├── claude-code/
 │   │   ├── _defaults.yaml          ← defaults para todos os agents nesta IDE
-│   │   ├── conductor.yaml
+│   │   ├── hermes.yaml
 │   │   ├── clarifier.yaml
 │   │   ├── ui-scout.yaml
 │   │   └── [demais agentes]
@@ -800,6 +800,8 @@ targets:
     root: "../../"
     agents_dir: ".kiro/steering"
     skills_dir: ".kiro/steering"
+    agent_prefix: "hermes-"
+    agent_suffix: ".md"
     skill_prefix: "hermes-"
     skill_suffix: ".md"
 
@@ -808,6 +810,8 @@ targets:
     root: "../../"
     agents_dir: ".cursor/rules"
     skills_dir: ".cursor/rules"
+    agent_prefix: "hermes-"
+    agent_suffix: ".mdc"
     skill_prefix: "hermes-"
     skill_suffix: ".mdc"
 
@@ -816,6 +820,8 @@ targets:
     root: "../../"
     agents_dir: ".github/agents"
     skills_dir: ".github/instructions"
+    agent_prefix: "hermes-"
+    agent_suffix: ".agent.md"
     skill_prefix: "hermes-"
     skill_suffix: ".instructions.md"
 

@@ -63,7 +63,7 @@ test("update keeps selected IDEs in sync and removes deselected artifacts", () =
   );
   assert.deepEqual(manifest.selected_ides, ["codex"]);
   assert.equal(fs.existsSync(path.join(projectDir, ".codex")), true);
-  assert.equal(fs.existsSync(path.join(projectDir, ".cursor", "agents", "hermes-conductor.mdc")), false);
+  assert.equal(fs.existsSync(path.join(projectDir, ".cursor", "agents", "hermes.mdc")), false);
 });
 
 test("remove deletes managed files and preserves _hermes", () => {
@@ -76,7 +76,7 @@ test("remove deletes managed files and preserves _hermes", () => {
   runCli(projectDir, "remove");
 
   assert.equal(fs.existsSync(path.join(projectDir, "_codesteer-hermes")), false);
-  assert.equal(fs.existsSync(path.join(projectDir, ".codex", "agents", "hermes-conductor.md")), false);
+  assert.equal(fs.existsSync(path.join(projectDir, ".codex", "agents", "hermes.md")), false);
   assert.equal(fs.existsSync(path.join(projectDir, ".codesteer-hermes-install.json")), false);
   assert.equal(fs.existsSync(path.join(projectDir, "_hermes", "session-1", "scope.md")), true);
 });

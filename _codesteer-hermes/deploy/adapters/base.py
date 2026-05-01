@@ -43,8 +43,11 @@ class BaseAdapter:
         return os.path.relpath(source, destination_parent)
 
     def default_agent_filename(self, agent):
-        prefix = self.config.get("skill_prefix", "hermes-")
-        suffix = self.config.get("skill_suffix", ".md")
+        suffix = self.config.get("agent_suffix", self.config.get("skill_suffix", ".md"))
+        prefix = self.config.get("agent_prefix", self.config.get("skill_prefix", "hermes-"))
+        if agent == "hermes":
+            primary_name = self.config.get("primary_agent_name", "hermes")
+            return f"{primary_name}{suffix}"
         return f"{prefix}{agent}{suffix}"
 
     def agent_filename(self, agent):

@@ -1,6 +1,6 @@
 schema_version: 1
 contract_version: hermes-deploy-v1
-updated_at: '2026-05-01T21:18:19+00:00'
+updated_at: '2026-05-01T22:28:45+00:00'
 targets:
   claude-code:
     files:
@@ -20,10 +20,6 @@ targets:
         kind: agent
         source: _codesteer-hermes/agents/code-scout.md
         signature: eee218abd84dffb19f918342159b837d70bdfd4e40f3ae491deef72db51e7133
-      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.claude/agents/conductor.md:
-        kind: agent
-        source: _codesteer-hermes/agents/conductor.md
-        signature: a3b021d1372ec11b76e1296674bf2bc5c2fad0e1c4aabf105f190a24c77f1b60
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.claude/agents/data-scout.md:
         kind: agent
         source: _codesteer-hermes/agents/data-scout.md
@@ -47,7 +43,7 @@ targets:
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.claude/agents/synthesizer.md:
         kind: agent
         source: _codesteer-hermes/agents/synthesizer.md
-        signature: bedba1c08e6e22f6b8b897971506b2dd45b9c5ae2cc9c455abac79aeac99ba77
+        signature: 07af067c618be03dae00c478ee79983401892b5289ca7c4dcfa8a3d0497c11b7
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.claude/agents/ui-scout.md:
         kind: agent
         source: _codesteer-hermes/agents/ui-scout.md
@@ -94,8 +90,12 @@ targets:
         signature: b8c0a957eb8295abe1933f30f427be0cbbf0ae18a619c954562fe6dbe0083e8c
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/CLAUDE.md:
         kind: bootstrap
-        source: AGENTS.md
-        signature: a54ff182c7e8acf56acfd6e4b9c3ff41e2c41a31c9b211b2deb9df75d9a478f9
+        source: _codesteer-hermes/AGENTS.md
+        signature: d954cdf8a49e6b30a1631c6f398232761820c4534cc4dad8b533b37e919f8d6a
+      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.claude/agents/hermes.md:
+        kind: agent
+        source: _codesteer-hermes/agents/hermes.md
+        signature: 68bc93d11cfe2dd5e605c68b86620aa598c88ca5741d98760efa63743f644b83
   kiro:
     files:
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.kiro/steering/hermes-api-scout.md:
@@ -114,10 +114,6 @@ targets:
         kind: agent
         source: _codesteer-hermes/agents/code-scout.md
         signature: 78cd953e223b27e2601fcebf643b445a22dc73572c645900981f61043c187445
-      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.kiro/steering/hermes-conductor.md:
-        kind: agent
-        source: _codesteer-hermes/agents/conductor.md
-        signature: 5f7244eb4ddd7ead94eb5fcd032915a58fdd6ea3aa7f3245ef74cef50fd5158b
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.kiro/steering/hermes-data-scout.md:
         kind: agent
         source: _codesteer-hermes/agents/data-scout.md
@@ -141,7 +137,7 @@ targets:
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.kiro/steering/hermes-synthesizer.md:
         kind: agent
         source: _codesteer-hermes/agents/synthesizer.md
-        signature: 1332c5a4a98cf0645a3610877890731e0bd49b195f758bfc6b5b4493487d65e0
+        signature: c081f424d325e83147e763972623d71644c6fa99aa0ba4ec47e3c9814bf3ec22
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.kiro/steering/hermes-ui-scout.md:
         kind: agent
         source: _codesteer-hermes/agents/ui-scout.md
@@ -188,8 +184,12 @@ targets:
         signature: b8c0a957eb8295abe1933f30f427be0cbbf0ae18a619c954562fe6dbe0083e8c
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.kiro/AGENTS.md:
         kind: bootstrap
-        source: AGENTS.md
-        signature: 79909577a70fc4971a7fcfd3cbec6a1af7182ca2dadc87f2979dce5e28f93ca0
+        source: _codesteer-hermes/AGENTS.md
+        signature: 34af6e10a2470412e7a0230ef519feaebecb1d54308f3940c98a1291feee125a
+      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.kiro/steering/hermes.md:
+        kind: agent
+        source: _codesteer-hermes/agents/hermes.md
+        signature: 878ce2654b51e650bf03410beee76e38f6a30313b89ca53a64e00b1115d78ff3
   cursor:
     files:
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.cursor/agents/hermes-api-scout.mdc:
@@ -208,10 +208,6 @@ targets:
         kind: agent
         source: _codesteer-hermes/agents/code-scout.md
         signature: 0254ec11b7f220a8737cde93bc56988f7e5b27fe65226c4fc41ec4f130732b43
-      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.cursor/agents/hermes-conductor.mdc:
-        kind: agent
-        source: _codesteer-hermes/agents/conductor.md
-        signature: d8701f21c53a18a0cdd812a637d3a2ca7ede7c87a705462959131f200c80f624
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.cursor/agents/hermes-data-scout.mdc:
         kind: agent
         source: _codesteer-hermes/agents/data-scout.md
@@ -235,7 +231,7 @@ targets:
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.cursor/agents/hermes-synthesizer.mdc:
         kind: agent
         source: _codesteer-hermes/agents/synthesizer.md
-        signature: 146d827b4d71a3e4785c8f3711d018ce18e3f496fdc20edf72c9eeb0573db3e7
+        signature: 2be2ffc74119d4c670abb162f39b43d5355ac534b057437af68362197fb3eb08
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.cursor/agents/hermes-ui-scout.mdc:
         kind: agent
         source: _codesteer-hermes/agents/ui-scout.md
@@ -282,62 +278,14 @@ targets:
         signature: b8c0a957eb8295abe1933f30f427be0cbbf0ae18a619c954562fe6dbe0083e8c
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.cursor/AGENTS.md:
         kind: bootstrap
-        source: AGENTS.md
-        signature: 79909577a70fc4971a7fcfd3cbec6a1af7182ca2dadc87f2979dce5e28f93ca0
+        source: _codesteer-hermes/AGENTS.md
+        signature: 34af6e10a2470412e7a0230ef519feaebecb1d54308f3940c98a1291feee125a
+      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.cursor/agents/hermes.mdc:
+        kind: agent
+        source: _codesteer-hermes/agents/hermes.md
+        signature: 7173f54480e58ba8591760a5bfcb274de4e0dbf93694b075888bbb30cce1fef1
   copilot:
     files:
-      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-api-scout.instructions.md:
-        kind: agent
-        source: _codesteer-hermes/agents/api-scout.md
-        signature: 6cab18c7b0a4eaf99ae1b03f640358f444b562663ba800aa71a850f3f3603c66
-      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-br-analyst.instructions.md:
-        kind: agent
-        source: _codesteer-hermes/agents/br-analyst.md
-        signature: 61203d6a1689ee2d6ea61887f8bb68424e2a53771a0b44cd7a77de83121b8e70
-      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-clarifier.instructions.md:
-        kind: agent
-        source: _codesteer-hermes/agents/clarifier.md
-        signature: f550cb20fad31c92d6963e83d39eeb1950142c64e82246d029f6b4e29ef87b2e
-      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-code-scout.instructions.md:
-        kind: agent
-        source: _codesteer-hermes/agents/code-scout.md
-        signature: 8ca6a247f2e1289c0501115ddb1dc34e0432ed72a6d4e43a94e7895d6ce87c6d
-      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-conductor.instructions.md:
-        kind: agent
-        source: _codesteer-hermes/agents/conductor.md
-        signature: cf19bddd38f49b8cb3fcf787d2eabf8329fa192f2517bb07b389602d4feaa328
-      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-data-scout.instructions.md:
-        kind: agent
-        source: _codesteer-hermes/agents/data-scout.md
-        signature: 4502c5b5d117ffb144c2119bde6354b2b2abc9ac764cc2f21d23e978c18d6a4a
-      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-design-analyst.instructions.md:
-        kind: agent
-        source: _codesteer-hermes/agents/design-analyst.md
-        signature: 48da935523c7f8634d39ed9a7e1f18284a20b15c3cbb01b7433ec2de0781642c
-      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-sdd-writer.instructions.md:
-        kind: agent
-        source: _codesteer-hermes/agents/sdd-writer.md
-        signature: 28bdd0f4642677eb09a427275c0745457c0c4a5f98d176aebdc9dc795a3a65b8
-      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-security-analyst.instructions.md:
-        kind: agent
-        source: _codesteer-hermes/agents/security-analyst.md
-        signature: cd7ca90fcac1fcad56d3b4247badc2f8696ce3ffd760f8fef778e0cf4739e83c
-      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-state-analyst.instructions.md:
-        kind: agent
-        source: _codesteer-hermes/agents/state-analyst.md
-        signature: 4e3acac31b8c813e612d188c4866aa3ac936e7aac479b742ffb51ccc84434deb
-      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-synthesizer.instructions.md:
-        kind: agent
-        source: _codesteer-hermes/agents/synthesizer.md
-        signature: 647bbdabe1ec0c35ee954c619016fed783e96c7f78c41db0dcc16056db20de96
-      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-ui-scout.instructions.md:
-        kind: agent
-        source: _codesteer-hermes/agents/ui-scout.md
-        signature: 3b7510feb7fb6a0feca84f833d56df5387f72e34d1f5369725ba960db83a2b42
-      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-validator.instructions.md:
-        kind: agent
-        source: _codesteer-hermes/agents/validator.md
-        signature: cfedbaf2b1c17e419a99c8f9e98ba846df31c455fcbc2c55078c00b3fb0680ce
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/skills/hermes-skill-api-reverse:
         kind: skill
         source: _codesteer-hermes/skills/skill-api-reverse
@@ -376,8 +324,60 @@ targets:
         signature: b8c0a957eb8295abe1933f30f427be0cbbf0ae18a619c954562fe6dbe0083e8c
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/copilot-instructions.md:
         kind: bootstrap
-        source: AGENTS.md
-        signature: 79909577a70fc4971a7fcfd3cbec6a1af7182ca2dadc87f2979dce5e28f93ca0
+        source: _codesteer-hermes/AGENTS.md
+        signature: 34af6e10a2470412e7a0230ef519feaebecb1d54308f3940c98a1291feee125a
+      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-api-scout.agent.md:
+        kind: agent
+        source: _codesteer-hermes/agents/api-scout.md
+        signature: 6cab18c7b0a4eaf99ae1b03f640358f444b562663ba800aa71a850f3f3603c66
+      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-br-analyst.agent.md:
+        kind: agent
+        source: _codesteer-hermes/agents/br-analyst.md
+        signature: 61203d6a1689ee2d6ea61887f8bb68424e2a53771a0b44cd7a77de83121b8e70
+      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-clarifier.agent.md:
+        kind: agent
+        source: _codesteer-hermes/agents/clarifier.md
+        signature: f550cb20fad31c92d6963e83d39eeb1950142c64e82246d029f6b4e29ef87b2e
+      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-code-scout.agent.md:
+        kind: agent
+        source: _codesteer-hermes/agents/code-scout.md
+        signature: 8ca6a247f2e1289c0501115ddb1dc34e0432ed72a6d4e43a94e7895d6ce87c6d
+      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-data-scout.agent.md:
+        kind: agent
+        source: _codesteer-hermes/agents/data-scout.md
+        signature: 4502c5b5d117ffb144c2119bde6354b2b2abc9ac764cc2f21d23e978c18d6a4a
+      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-design-analyst.agent.md:
+        kind: agent
+        source: _codesteer-hermes/agents/design-analyst.md
+        signature: 48da935523c7f8634d39ed9a7e1f18284a20b15c3cbb01b7433ec2de0781642c
+      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes.agent.md:
+        kind: agent
+        source: _codesteer-hermes/agents/hermes.md
+        signature: f82d6ac2b63d46258966243951c54754a9e98bc24473afe2617d275bab12ccee
+      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-sdd-writer.agent.md:
+        kind: agent
+        source: _codesteer-hermes/agents/sdd-writer.md
+        signature: 28bdd0f4642677eb09a427275c0745457c0c4a5f98d176aebdc9dc795a3a65b8
+      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-security-analyst.agent.md:
+        kind: agent
+        source: _codesteer-hermes/agents/security-analyst.md
+        signature: cd7ca90fcac1fcad56d3b4247badc2f8696ce3ffd760f8fef778e0cf4739e83c
+      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-state-analyst.agent.md:
+        kind: agent
+        source: _codesteer-hermes/agents/state-analyst.md
+        signature: 4e3acac31b8c813e612d188c4866aa3ac936e7aac479b742ffb51ccc84434deb
+      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-synthesizer.agent.md:
+        kind: agent
+        source: _codesteer-hermes/agents/synthesizer.md
+        signature: f81b1c06ee29b457c345b47a40c38979a4293966d476ebb8405ae6a79d3ca4af
+      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-ui-scout.agent.md:
+        kind: agent
+        source: _codesteer-hermes/agents/ui-scout.md
+        signature: 3b7510feb7fb6a0feca84f833d56df5387f72e34d1f5369725ba960db83a2b42
+      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.github/agents/hermes-validator.agent.md:
+        kind: agent
+        source: _codesteer-hermes/agents/validator.md
+        signature: cfedbaf2b1c17e419a99c8f9e98ba846df31c455fcbc2c55078c00b3fb0680ce
   agent:
     files:
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.agent/agents/hermes-api-scout.md:
@@ -396,10 +396,6 @@ targets:
         kind: agent
         source: _codesteer-hermes/agents/code-scout.md
         signature: f61eb35e476e9a66312747bededa48ea220ea7bfe377991b4f24b6b3cb3d804c
-      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.agent/agents/hermes-conductor.md:
-        kind: agent
-        source: _codesteer-hermes/agents/conductor.md
-        signature: 99304cf568387ea5fa69af50d1583d13059257be6f87be4cbd5aed908e9f96da
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.agent/agents/hermes-data-scout.md:
         kind: agent
         source: _codesteer-hermes/agents/data-scout.md
@@ -423,7 +419,7 @@ targets:
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.agent/agents/hermes-synthesizer.md:
         kind: agent
         source: _codesteer-hermes/agents/synthesizer.md
-        signature: 130f8c9c9b36256b64f940b1cf559df818aade043ddb24e153a6e4c54e49a253
+        signature: 2cc9e3250ecfb4520787ecd8e91af9c2922a226a22c8500215948667689669fd
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.agent/agents/hermes-ui-scout.md:
         kind: agent
         source: _codesteer-hermes/agents/ui-scout.md
@@ -472,6 +468,10 @@ targets:
         kind: bootstrap
         source: _codesteer-hermes/AGENTS.md
         signature: 34af6e10a2470412e7a0230ef519feaebecb1d54308f3940c98a1291feee125a
+      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.agent/agents/hermes.md:
+        kind: agent
+        source: _codesteer-hermes/agents/hermes.md
+        signature: 91706542c07efce017c27006a087ea5d559ad011ac9959d0878d8a1fb586a0a6
   codex:
     files:
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.codex/agents/hermes-api-scout.md:
@@ -490,10 +490,6 @@ targets:
         kind: agent
         source: _codesteer-hermes/agents/code-scout.md
         signature: d7094d78a74dfcc5ea17955d1b1b072d28931a5646fb4e5993b6d072c6cad1f2
-      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.codex/agents/hermes-conductor.md:
-        kind: agent
-        source: _codesteer-hermes/agents/conductor.md
-        signature: 543c29d9065e5c78fc397265fb385d1fe8c969a990d2e68b23433ec8e8e95c39
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.codex/agents/hermes-data-scout.md:
         kind: agent
         source: _codesteer-hermes/agents/data-scout.md
@@ -517,7 +513,7 @@ targets:
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.codex/agents/hermes-synthesizer.md:
         kind: agent
         source: _codesteer-hermes/agents/synthesizer.md
-        signature: 9eeaca178a0bd1c301d80b5d6c0968609a769931495d06854693b67ed746476d
+        signature: 9c623edb82735a7f6093c04857f5529429611df6176170ccec3ef7e431f38c26
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.codex/agents/hermes-ui-scout.md:
         kind: agent
         source: _codesteer-hermes/agents/ui-scout.md
@@ -564,8 +560,12 @@ targets:
         signature: b8c0a957eb8295abe1933f30f427be0cbbf0ae18a619c954562fe6dbe0083e8c
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.codex/AGENTS.md:
         kind: bootstrap
-        source: AGENTS.md
-        signature: 79909577a70fc4971a7fcfd3cbec6a1af7182ca2dadc87f2979dce5e28f93ca0
+        source: _codesteer-hermes/AGENTS.md
+        signature: 34af6e10a2470412e7a0230ef519feaebecb1d54308f3940c98a1291feee125a
+      /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.codex/agents/hermes.md:
+        kind: agent
+        source: _codesteer-hermes/agents/hermes.md
+        signature: 609d13084db2f2f1a09f254092e6f302247dbd8289fd4ffb3b657bacb1cf4f49
 runs:
 - timestamp: '2026-05-01T19:21:45+00:00'
   ide: claude-code
@@ -741,3 +741,193 @@ runs:
   conflicted: 1
   drifted: 0
   status: warning
+- timestamp: '2026-05-01T22:21:35+00:00'
+  ide: claude-code
+  mode: force
+  created: 1
+  updated: 1
+  forced: 0
+  unchanged: 21
+  conflicted: 0
+  drifted: 0
+  status: ok
+- timestamp: '2026-05-01T22:21:35+00:00'
+  ide: kiro
+  mode: force
+  created: 1
+  updated: 1
+  forced: 0
+  unchanged: 21
+  conflicted: 0
+  drifted: 0
+  status: ok
+- timestamp: '2026-05-01T22:21:35+00:00'
+  ide: cursor
+  mode: force
+  created: 1
+  updated: 1
+  forced: 0
+  unchanged: 21
+  conflicted: 0
+  drifted: 0
+  status: ok
+- timestamp: '2026-05-01T22:21:35+00:00'
+  ide: copilot
+  mode: force
+  created: 1
+  updated: 1
+  forced: 0
+  unchanged: 21
+  conflicted: 0
+  drifted: 0
+  status: ok
+- timestamp: '2026-05-01T22:21:35+00:00'
+  ide: agent
+  mode: force
+  created: 1
+  updated: 0
+  forced: 0
+  unchanged: 22
+  conflicted: 0
+  drifted: 0
+  status: ok
+- timestamp: '2026-05-01T22:21:35+00:00'
+  ide: codex
+  mode: force
+  created: 1
+  updated: 1
+  forced: 0
+  unchanged: 21
+  conflicted: 0
+  drifted: 0
+  status: ok
+- timestamp: '2026-05-01T22:22:11+00:00'
+  ide: claude-code
+  mode: force
+  created: 0
+  updated: 0
+  forced: 0
+  unchanged: 23
+  conflicted: 0
+  drifted: 0
+  status: ok
+- timestamp: '2026-05-01T22:22:11+00:00'
+  ide: kiro
+  mode: force
+  created: 0
+  updated: 0
+  forced: 0
+  unchanged: 23
+  conflicted: 0
+  drifted: 0
+  status: ok
+- timestamp: '2026-05-01T22:22:11+00:00'
+  ide: cursor
+  mode: force
+  created: 0
+  updated: 0
+  forced: 0
+  unchanged: 23
+  conflicted: 0
+  drifted: 0
+  status: ok
+- timestamp: '2026-05-01T22:22:11+00:00'
+  ide: copilot
+  mode: force
+  created: 0
+  updated: 0
+  forced: 0
+  unchanged: 23
+  conflicted: 0
+  drifted: 0
+  status: ok
+- timestamp: '2026-05-01T22:22:11+00:00'
+  ide: agent
+  mode: force
+  created: 0
+  updated: 0
+  forced: 0
+  unchanged: 23
+  conflicted: 0
+  drifted: 0
+  status: ok
+- timestamp: '2026-05-01T22:22:11+00:00'
+  ide: codex
+  mode: force
+  created: 0
+  updated: 0
+  forced: 0
+  unchanged: 23
+  conflicted: 0
+  drifted: 0
+  status: ok
+- timestamp: '2026-05-01T22:25:11+00:00'
+  ide: claude-code
+  mode: deploy
+  created: 0
+  updated: 1
+  forced: 0
+  unchanged: 22
+  conflicted: 0
+  drifted: 0
+  status: ok
+- timestamp: '2026-05-01T22:25:11+00:00'
+  ide: kiro
+  mode: deploy
+  created: 0
+  updated: 1
+  forced: 0
+  unchanged: 22
+  conflicted: 0
+  drifted: 0
+  status: ok
+- timestamp: '2026-05-01T22:25:11+00:00'
+  ide: cursor
+  mode: deploy
+  created: 0
+  updated: 1
+  forced: 0
+  unchanged: 22
+  conflicted: 0
+  drifted: 0
+  status: ok
+- timestamp: '2026-05-01T22:25:11+00:00'
+  ide: copilot
+  mode: deploy
+  created: 0
+  updated: 1
+  forced: 0
+  unchanged: 22
+  conflicted: 0
+  drifted: 0
+  status: ok
+- timestamp: '2026-05-01T22:25:11+00:00'
+  ide: agent
+  mode: deploy
+  created: 0
+  updated: 1
+  forced: 0
+  unchanged: 22
+  conflicted: 0
+  drifted: 0
+  status: ok
+- timestamp: '2026-05-01T22:25:11+00:00'
+  ide: codex
+  mode: deploy
+  created: 0
+  updated: 1
+  forced: 0
+  unchanged: 22
+  conflicted: 0
+  drifted: 0
+  status: ok
+- timestamp: '2026-05-01T22:28:45+00:00'
+  ide: copilot
+  mode: deploy
+  created: 13
+  updated: 0
+  forced: 0
+  unchanged: 10
+  conflicted: 0
+  drifted: 0
+  status: ok
