@@ -1,0 +1,32 @@
+scope_slug: phase56-l3-security-and-pii
+target: "Fluxo de autenticação e perfil do cliente"
+target_type: flow
+level: L3
+source:
+  type: source_code
+  path: ../sample/customer-auth
+created_at: 2026-05-01T15:30:00Z
+agents_active:
+  - conductor
+  - clarifier
+  - ui-scout
+  - code-scout
+  - data-scout
+  - api-scout
+  - br-analyst
+  - design-analyst
+  - state-analyst
+  - security-analyst
+  - synthesizer
+  - validator
+  - sdd-writer
+phases_completed:
+  - intake
+  - exploration
+  - analysis
+  - synthesis
+  - validation
+current_phase: documentation
+hermes_root: _hermes/fixtures/phase56-l3-security-and-pii
+scope_path: _hermes/fixtures/phase56-l3-security-and-pii/scope.md
+glossary_path: _hermes/fixtures/phase56-l3-security-and-pii/glossary.md

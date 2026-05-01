@@ -162,8 +162,8 @@ Ao delegar para cada worker, forneça **apenas** o subconjunto de `_hermes/{scop
 | state-analyst | `scope.md` + artefatos raw relevantes de estrutura, stack e navegação + `_codesteer-hermes/contracts/artifact-contracts.md` |
 | security-analyst | `scope.md` + artefatos raw relevantes de auth, BR, DB e telas + `_codesteer-hermes/contracts/artifact-contracts.md` |
 | synthesizer | `scope.md` + `session.yaml` + **todos** os arquivos `raw/` + `_codesteer-hermes/contracts/artifact-contracts.md` |
-| validator | `scope.md` + `session.yaml` + todos os arquivos consolidados (sem sufixo `-raw`) + `gaps.md` + `synthesis-report.md` + `_codesteer-hermes/contracts/artifact-contracts.md` |
-| sdd-writer | `scope.md` + `session.yaml` + todos os arquivos consolidados + `validation-report.md` |
+| validator | `scope.md` + `session.yaml` + todos os arquivos consolidados (sem sufixo `-raw`) + `gaps.md` + `synthesis-report.md` + `remediation-requests.md` quando existir + `_codesteer-hermes/contracts/artifact-contracts.md` |
+| sdd-writer | `scope.md` + `session.yaml` + todos os arquivos consolidados + `validation-report.md` + `user-confirmation.md` + `gaps.md` quando existir + `_codesteer-hermes/contracts/artifact-contracts.md` + templates canônicos |
 
 ---
 
@@ -245,6 +245,28 @@ Sessão: {scope-slug}  |  Nível: {level}
 ```
 
 Ao receber confirmação do usuário em qualquer gate, atualize `current_phase` em `session.yaml`.
+No gate da FASE 5:
+
+- se o usuário aprovar, atualize `_hermes/{scope-slug}/user-confirmation.md` para `Status: approved`
+- se o usuário pedir revisão, atualize para `Status: needs_revision`
+- registre a resposta literal do usuário no arquivo
+
+### Entrega Final da FASE 6
+Após o `SDD-Writer` concluir, apresente:
+
+```text
+HERMES ENTREGA FINAL — SDD GERADO
+Sessão: {scope-slug}  |  Nível: {level}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Pacote final gerado em: _hermes/{scope-slug}/sdd/
+✅ Índice principal: _hermes/{scope-slug}/sdd/sdd-index.md
+✅ Documentos finais: {N}
+⚠️  Pendências marcadas no pacote: {N}
+
+→ Deseja encerrar a sessão como concluída? [Sim / Revisar SDD primeiro]
+```
+
+Se o usuário aprovar, marque `current_phase: completed` e finalize a sessão.
 
 ---
 
@@ -267,6 +289,9 @@ O `Synthesizer` identifica e formaliza pedidos. O `Conductor` decide se executa 
 Para fins de FASE 5 e FASE 6, considere "arquivo consolidado" qualquer artefato promovido pelo `Synthesizer`
 de `raw/` para `_hermes/{scope-slug}/`, obedecendo o mapeamento definido em
 `_codesteer-hermes/contracts/artifact-contracts.md`.
+
+Para fins editoriais, o pacote final de documentação vive exclusivamente em `_hermes/{scope-slug}/sdd/`.
+Essa camada final pode reorganizar o conteúdo, mas nunca substituir a base consolidada.
 
 ---
 

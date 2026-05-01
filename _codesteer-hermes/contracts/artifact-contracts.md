@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Este documento define o contrato canonico dos artefatos produzidos nas FASES 2, 3 e 4 da HERMES.
+Este documento define o contrato canonico dos artefatos produzidos nas FASES 2, 3, 4, 5 e 6 da HERMES.
 Ele existe para evitar que cada agente escreva em um formato diferente e para permitir que `Synthesizer`,
 `Validator` e `SDD-Writer` operem sobre arquivos previsiveis.
 
@@ -11,6 +11,8 @@ Regra geral:
 - FASE 2 escreve somente em `_hermes/{scope-slug}/raw/`
 - FASE 3 escreve somente em `_hermes/{scope-slug}/raw/`
 - FASE 4 escreve somente em `_hermes/{scope-slug}/`
+- FASE 5 escreve somente em `_hermes/{scope-slug}/`
+- FASE 6 escreve somente em `_hermes/{scope-slug}/sdd/`
 - nenhum agente altera o codebase original do usuario
 
 ## 1. Secoes obrigatorias
@@ -261,3 +263,73 @@ Valores de `status`:
 ```
 
 O `Validator` pode criar o arquivo com `Status: pending`. O `Conductor` e quem atualiza a resposta real do usuario.
+
+## 12. Camada final `sdd/`
+
+A raiz de `_hermes/{scope-slug}/` e a base consolidada e auditavel da sessao.
+O diretorio `_hermes/{scope-slug}/sdd/` e a camada editorial final entregue ao usuario.
+
+Regras:
+
+- o `Synthesizer` nunca escreve em `sdd/`
+- o `Validator` valida a base consolidada, nao a redacao final do `sdd/`
+- o `SDD-Writer` le apenas a base consolidada e gera o pacote final
+
+## 13. Artefatos finais por nível
+
+Todo pacote final em `sdd/` deve conter:
+
+- `sdd-index.md`
+
+### L1
+
+- `architecture-overview.md`
+- `screen-inventory.md`
+- `db-schema-outline.md`
+- `main-flows.md`
+- `tech-stack.md`
+
+### L2
+
+Além de `L1`:
+
+- `component-map.md`
+- `business-rules.md`
+- `api-contracts.md`
+- `state-map.md`
+- `design-overview.md`
+
+### L3
+
+Além de `L2`:
+
+- `design-tokens.md`
+- `db-complete.md`
+- `security-model.md`
+- `error-catalog.md`
+- `performance-notes.md`
+- `test-strategy.md`
+
+## 14. Mapeamento consolidado -> pacote final
+
+| Consolidado | Documento final |
+|---|---|
+| `architecture-patterns.md` + `code-structure.md` + `tech-stack.md` | `architecture-overview.md` |
+| `screen-inventory.md` | `screen-inventory.md` |
+| `navigation-graph.md` + `business-rules.md` + `api-contracts.md` | `main-flows.md` |
+| `db-schema.md` + `db-relations.md` | `db-schema-outline.md` |
+| `db-schema.md` + `db-relations.md` + `data-types.md` | `db-complete.md` |
+| `tech-stack.md` | `tech-stack.md` |
+| `component-map.md` | `component-map.md` |
+| `business-rules.md` + `open-questions-br.md` | `business-rules.md` |
+| `api-contracts.md` + `auth-patterns.md` | `api-contracts.md` |
+| `state-map.md` + `data-flow.md` | `state-map.md` |
+| `design-overview.md` | `design-overview.md` |
+| `design-tokens.md` | `design-tokens.md` |
+| `security-model.md` + `pii-map.md` + `auth-patterns.md` | `security-model.md` |
+| `ui-states-catalog.md` + `gaps.md` | `error-catalog.md` |
+| `tech-stack.md` + `tech-debt.md` + `gaps.md` | `performance-notes.md` |
+| `validation-report.md` + `gaps.md` + artefatos consolidados | `test-strategy.md` |
+
+O `SDD-Writer` pode combinar mais fontes do que as listadas acima, mas nunca pode ignorar a base consolidada
+obrigatoria de cada documento.

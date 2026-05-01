@@ -19,11 +19,21 @@ Carregue esta skill quando:
 ## Regras Base
 
 - leia `session.yaml` antes de escolher templates
+- confirme em `validation-report.md` que a recomendação permite seguir
+- confirme em `user-confirmation.md` que o usuário aprovou a transição para FASE 6
 - use apenas artefatos consolidados da raiz de `_hermes/{scope-slug}/`
 - não consuma `raw/` diretamente
 - marque itens de baixa certeza com `REQUER VALIDAÇÃO`
+- escreva apenas em `_hermes/{scope-slug}/sdd/`
+- trate `db-schema.md` como base intermediária para `db-schema-outline.md` e `db-complete.md`
 
 ## Mapeamento por Nível
+
+### Universal
+
+Sempre gere:
+
+- `sdd-index.md`
 
 ### L1
 
@@ -55,17 +65,32 @@ Além de `L2`, gere:
 - `error-catalog.md`
 - `performance-notes.md`
 - `test-strategy.md`
-- `sdd-index.md`
 
 ## Estratégia de Escrita
 
-1. usar o template do nível
+1. usar o template do nível e preservar sua estrutura mínima
 2. preencher apenas com evidência consolidada
-3. inserir cross-references entre telas, BRs, entidades e endpoints
-4. se faltar dado, explicitar insuficiência e apontar para `gaps.md`
+3. inserir cross-references entre telas, BRs, entidades, endpoints, componentes e controles de segurança quando houver base
+4. se faltar dado, explicitar insuficiência e apontar para `gaps.md`, `open-questions-br.md` ou `validation-report.md`
+5. gerar `sdd-index.md` por último, após o pacote final estar completo
+
+## Convenções de Composição
+
+- o pacote `sdd/` é editorial: pode reorganizar e resumir, mas não pode contradizer a base consolidada
+- preserve IDs e nomes de referência já consolidados, como `BR-001`, nomes de telas, rotas e entidades
+- não replique arquivos consolidados linha a linha quando uma síntese rastreável for suficiente
+- quando um documento final derivar de múltiplas fontes, explicite isso em uma seção de rastreabilidade
+
+## Cross-References Mínimos
+
+- cada fluxo principal deve apontar para telas, regras e integrações envolvidas
+- cada regra de negócio deve apontar para pelo menos uma tela, endpoint ou entidade quando houver evidência
+- cada documento de segurança deve apontar para roles, endpoints e dados sensíveis relacionados
+- cada documento final deve indicar de quais artefatos consolidados se origina
 
 ## Anti-padrões
 
 - usar linguagem especulativa
 - puxar dado diretamente de `raw/`
 - omitir lacuna para "fechar" a seção
+- copiar artefatos consolidados para `sdd/` sem transformação editorial

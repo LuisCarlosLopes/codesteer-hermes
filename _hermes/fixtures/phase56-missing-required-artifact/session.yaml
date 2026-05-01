@@ -1,0 +1,26 @@
+scope_slug: phase56-missing-required-artifact
+target: "Fluxo mínimo de cadastro"
+target_type: flow
+level: L1
+source:
+  type: source_code
+  path: ../sample/signup
+created_at: 2026-05-01T15:45:00Z
+agents_active:
+  - conductor
+  - clarifier
+  - ui-scout
+  - code-scout
+  - data-scout
+  - synthesizer
+  - validator
+  - sdd-writer
+phases_completed:
+  - intake
+  - exploration
+  - analysis
+  - synthesis
+current_phase: validation
+hermes_root: _hermes/fixtures/phase56-missing-required-artifact
+scope_path: _hermes/fixtures/phase56-missing-required-artifact/scope.md
+glossary_path: _hermes/fixtures/phase56-missing-required-artifact/glossary.md

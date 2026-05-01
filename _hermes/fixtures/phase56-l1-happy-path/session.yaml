@@ -1,0 +1,27 @@
+scope_slug: phase56-l1-happy-path
+target: "Módulo web de catálogo de produtos"
+target_type: module
+level: L1
+source:
+  type: source_code
+  path: ../sample/catalog-web
+created_at: 2026-05-01T15:00:00Z
+agents_active:
+  - conductor
+  - clarifier
+  - ui-scout
+  - code-scout
+  - data-scout
+  - synthesizer
+  - validator
+  - sdd-writer
+phases_completed:
+  - intake
+  - exploration
+  - analysis
+  - synthesis
+  - validation
+current_phase: documentation
+hermes_root: _hermes/fixtures/phase56-l1-happy-path
+scope_path: _hermes/fixtures/phase56-l1-happy-path/scope.md
+glossary_path: _hermes/fixtures/phase56-l1-happy-path/glossary.md

@@ -1,0 +1,30 @@
+scope_slug: phase56-l2-endpoint-context
+target: "Módulo de relatórios administrativos"
+target_type: module
+level: L2
+source:
+  type: source_code
+  path: ../sample/admin-reports
+created_at: 2026-05-01T15:15:00Z
+agents_active:
+  - conductor
+  - clarifier
+  - ui-scout
+  - code-scout
+  - data-scout
+  - api-scout
+  - br-analyst
+  - design-analyst
+  - state-analyst
+  - synthesizer
+  - validator
+  - sdd-writer
+phases_completed:
+  - intake
+  - exploration
+  - analysis
+  - synthesis
+current_phase: validation
+hermes_root: _hermes/fixtures/phase56-l2-endpoint-context
+scope_path: _hermes/fixtures/phase56-l2-endpoint-context/scope.md
+glossary_path: _hermes/fixtures/phase56-l2-endpoint-context/glossary.md

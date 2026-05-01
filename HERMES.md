@@ -51,6 +51,7 @@ O usuário escolhe o nível no início da sessão, na Fase 1. O Conductor usa es
 **Agentes ativos:** Conductor, Clarifier, UI-Scout (modo básico), Code-Scout, Data-Scout, Synthesizer, Validator, SDD-Writer.
 
 **Artefatos gerados:**
+- `sdd-index.md` — Índice do pacote final SDD com navegação entre documentos
 - `architecture-overview.md` — Stack, camadas, dependências críticas
 - `screen-inventory.md` — Lista de telas com descrição de propósito
 - `db-schema-outline.md` — Tabelas principais e relações essenciais
@@ -91,7 +92,7 @@ O usuário escolhe o nível no início da sessão, na Fase 1. O Conductor usa es
 - `error-catalog.md` — Estados de erro por tela e por operação
 - `performance-notes.md` — Pontos críticos de performance identificados
 - `test-strategy.md` — Cobertura existente, gaps, estratégia sugerida
-- `sdd-index.md` — Índice mestre com referências cruzadas entre todos os artefatos
+- `sdd-index.md` — Índice mestre com referências cruzadas entre todos os artefatos do pacote final
 
 **Estimativa de consumo:** ~400–800k tokens por sessão completa.
 
@@ -463,12 +464,13 @@ O Synthesizer é o único agente que lê **todos** os arquivos `_hermes/{scope-s
 1. Lê todos os arquivos `_hermes/{scope-slug}/raw/`
 2. Cruza referências: cada tela do UI-Scout deve ter ao menos uma BR correspondente (L2+); cada entidade do DB deve aparecer em ao menos um model do Code-Scout
 3. Lista inconsistências e gaps
-4. Para cada gap: determina se pode ser resolvido com exploração adicional (dispara mini-task para worker específico) ou precisa de pergunta ao usuário
+4. Para cada gap: determina se pode ser resolvido com exploração adicional (registrando pedido estruturado para o Conductor) ou se precisa de pergunta ao usuário
 5. Produz versão consolidada dos arquivos reconciliados (escreve em `_hermes/{scope-slug}/`, sem sufixo `-raw`)
 
 **Outputs produzidos:**
 - `_hermes/{scope-slug}/gaps.md` — inconsistências e itens não resolvidos
 - `_hermes/{scope-slug}/synthesis-report.md` — resumo executivo para checkpoint HITL
+- `_hermes/{scope-slug}/remediation-requests.md` — pedidos estruturados de remediação para decisão do Conductor, quando aplicável
 - Versões consolidadas de todos os arquivos raw (sem sufixo `-raw`)
 
 **Guardrails:**
@@ -491,7 +493,7 @@ Aplica uma checklist determinística sobre os artefatos do Synthesizer antes de 
 **Checklist de consistência (automatizada):**
 - [ ] Toda tela do `screen-inventory.md` tem pelo menos um item em `navigation-graph.md`
 - [ ] Toda BR de certeza "Alta" tem evidência referenciada
-- [ ] Todo endpoint em `api-contracts.md` aparece em ao menos um fluxo de tela
+- [ ] Todo endpoint em `api-contracts.md` aparece em ao menos um fluxo, regra, tela ou contexto explícito do escopo
 - [ ] Toda tabela em `db-schema.md` tem ao menos um model no `code-structure.md`
 - [ ] `open-questions-br.md` está vazio ou foi revisado pelo usuário
 
@@ -525,13 +527,13 @@ Sessão: app-ecommerce-checkout-20260501  |  Nível: L2
 **Single Responsibility:** Transformar os artefatos validados em documentos SDD formatados, organizados e referenciados cruzadamente, conforme o nível selecionado.
 
 **Missão:**
-SDD-Writer é o único agente que produz os artefatos finais entregues ao usuário. Lê exclusivamente os arquivos consolidados do Synthesizer — nunca os arquivos `raw/`. Segue os templates de `_codesteer-hermes/templates/{l1|l2|l3}/` para garantir consistência de formato entre sessões. Gera um `sdd-index.md` com referências cruzadas entre todos os documentos.
+SDD-Writer é o único agente que produz os artefatos finais entregues ao usuário. Lê exclusivamente os arquivos consolidados do Synthesizer — nunca os arquivos `raw/`. Segue os templates de `_codesteer-hermes/templates/{l1|l2|l3}/` para garantir consistência de formato entre sessões. Escreve o pacote final em `_hermes/{scope-slug}/sdd/`, preservando a raiz de `_hermes/{scope-slug}/` como base consolidada auditável. Gera um `sdd-index.md` com referências cruzadas entre todos os documentos do pacote final.
 
 **Protocolo de escrita:**
 1. Lê `_hermes/{scope-slug}/session.yaml` para confirmar nível e artefatos esperados
-2. Para cada artefato do nível: lê fonte(s) correspondente(s), aplica template de `_codesteer-hermes/templates/`, escreve documento final em `_hermes/{scope-slug}/sdd/`
+2. Para cada artefato do nível: lê fonte(s) consolidada(s) correspondente(s), aplica template de `_codesteer-hermes/templates/`, escreve documento final em `_hermes/{scope-slug}/sdd/`
 3. Insere referências cruzadas (ex: BR-042 referencia Tabela `orders`, Tela `checkout`)
-4. Gera `sdd-index.md` com sumário de todos os documentos, número de itens por seção e links
+4. Gera `sdd-index.md` em todos os níveis com sumário de todos os documentos, número de itens por seção e links
 5. Apresenta ao usuário o índice completo para aprovação final
 
 **Guardrails:**
@@ -608,6 +610,7 @@ _codesteer-hermes/
 │
 ├── templates/                      ← templates SDD por nível de detalhe
 │   ├── l1/
+│   │   ├── sdd-index.md
 │   │   ├── architecture-overview.md
 │   │   ├── screen-inventory.md
 │   │   ├── db-schema-outline.md
@@ -939,10 +942,11 @@ _hermes/
     ├── user-confirmation.md          ← resposta do usuário ao checkpoint
     │
     └── sdd/                          ← artefatos SDD finais
-        ├── sdd-index.md              ← índice mestre com referências cruzadas (L3)
+        ├── sdd-index.md              ← índice mestre com referências cruzadas
         ├── architecture-overview.md
         ├── screen-inventory.md
-        ├── db-schema.md
+        ├── db-schema-outline.md      ← L1
+        ├── db-complete.md            ← L3
         ├── main-flows.md
         ├── tech-stack.md
         └── [demais artefatos conforme nível]

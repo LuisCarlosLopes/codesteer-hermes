@@ -41,20 +41,30 @@ Você recebe do Conductor:
    - `L2`: `L1` + `api-contracts.md`, `business-rules.md`, `component-map.md`, `state-map.md`, `design-overview.md`
    - `L3`: `L2` + `security-model.md`, `pii-map.md`, `design-tokens.md`
 4. Verifique presença, estrutura mínima e rastreabilidade de evidência.
-5. Rode a checklist lógica:
-   - toda tela em `screen-inventory.md` aparece em ao menos uma transição ou está marcada como isolada
+5. Antes da checklist lógica, leia `target_type` e aplique o escopo correto:
+   - `app`, `screen`, `flow`: cobertura de UI e navegação é obrigatória
+   - `module`: cobertura de UI pode ser parcial se o módulo não expuser telas próprias
+   - `api`: itens ligados a tela podem ser `NÃO APLICÁVEL` quando o escopo não tiver superfície visual
+6. Rode a checklist lógica:
+   - toda tela em `screen-inventory.md` aparece em ao menos uma transição, fluxo ou está marcada como isolada
    - toda BR `Alta` possui evidência localizável
-   - todo endpoint documentado aparece em fluxo, regra ou contexto explícito
-   - toda entidade crítica em `db-schema.md` aparece em ao menos um fluxo, regra ou contrato
+   - todo endpoint documentado aparece em fluxo, regra, tela ou contexto explícito do escopo
+   - toda entidade crítica em `db-schema.md` aparece em ao menos um fluxo, regra, contrato ou contexto estrutural relevante
    - toda pergunta aberta de BR está vazia, resolvida ou claramente encaminhada
    - se houver `remediation-requests.md`, confirme se o limite de rodadas não foi excedido
-6. Classifique cada item como:
+7. Classifique cada item como:
    - `OK`
    - `ALERTA`
    - `FALHA`
    - `NÃO APLICÁVEL`
-7. Se houver `FALHA`, recomende revisão antes do checkpoint.
-8. Escreva:
+8. Regras de severidade:
+   - arquivo obrigatório ausente = `FALHA`
+   - evidência parcial mas utilizável = `ALERTA`
+   - check fora do escopo pelo `target_type` = `NÃO APLICÁVEL`
+   - inconsistência que inviabiliza o SDD final = `FALHA`
+9. Se houver `FALHA`, recomende revisão antes do checkpoint.
+10. Se só houver `ALERTA`, permita checkpoint apenas se os riscos residuais estiverem explícitos.
+11. Escreva:
    - `validation-report.md`
    - `user-confirmation.md` com status inicial `pending`
 
@@ -73,6 +83,7 @@ Categorias mínimas da checklist:
 - coerência entre UI, regras, API e dados
 - pendências abertas
 - estado de remediação
+- prontidão para FASE 6
 
 ### `user-confirmation.md`
 
@@ -93,7 +104,8 @@ Quem atualiza a resposta real do usuário é o `Conductor` após o gate.
 2. Não ignorar falha estrutural por conveniência.
 3. `ALERTA` não substitui `FALHA` quando um arquivo obrigatório estiver ausente.
 4. Não transformar dúvida residual em aprovação silenciosa.
-5. Escreva apenas em `_hermes/{scope-slug}/`.
+5. Considere `db-schema.md` como base consolidada intermediária para a documentação final de banco.
+6. Escreva apenas em `_hermes/{scope-slug}/`.
 
 ---
 
