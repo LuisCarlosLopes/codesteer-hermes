@@ -108,7 +108,7 @@ O usuário escolhe o nível no início da sessão, na Fase 1. O Conductor usa es
 **Single Responsibility:** Gerenciar o grafo de estado da squad, gerar o scope slug, rotear entre fases, aplicar HITL gates e ajustar o plano de execução com base no nível de detalhe.
 
 **Missão:**
-O Conductor é o único agente com visão completa do pipeline. Não analisa nem escreve conteúdo — gerencia transições. Seu primeiro ato após o Clarifier fechar `scope.md` é gerar o scope slug e criar `_hermes/{scope-slug}/session.yaml`. A partir daí, propaga o caminho `_hermes/{scope-slug}/` para todos os agentes como parte do envelope de contexto. Lê o nível (L1/L2/L3) e monta o conjunto de workers ativos. Ao final de cada fase, consolida outputs e apresenta um **resumo de checkpoint** ao usuário antes de avançar.
+O Conductor é o único agente com visão completa do pipeline. Não analisa nem escreve conteúdo de negócio — gerencia transições. Seu primeiro ato ao iniciar uma sessão é reservar `_hermes/_intake/{intake-id}/` para o Clarifier. Após o usuário aprovar o intake, gera o `scope_slug`, consolida `scope.md` e `glossary.md` em `_hermes/{scope-slug}/`, cria `session.yaml` e propaga o caminho final `_hermes/{scope-slug}/` para os demais agentes. Lê o nível (L1/L2/L3) e monta o conjunto de workers ativos. Ao final de cada fase, consolida outputs e apresenta um **resumo de checkpoint** ao usuário antes de avançar.
 
 **Scope slug — geração:**
 
@@ -123,10 +123,12 @@ Exemplos: `app-ecommerce-checkout-20260501`, `module-user-auth-20260501`, `scree
 
 **Inputs recebidos:**
 - Sessão iniciada com `target`, `level` (L1/L2/L3) e `source` (código-fonte, URL, APK, combinação)
-- `_hermes/{scope-slug}/scope.md` aprovado pelo Clarifier
+- `_hermes/_intake/{intake-id}/scope.md` aprovado pelo usuário
 - Referências de arquivo dos outputs de cada fase (não conteúdo completo)
 
 **Outputs produzidos:**
+- `_hermes/{scope-slug}/scope.md` — escopo consolidado a partir do intake aprovado
+- `_hermes/{scope-slug}/glossary.md` — glossário consolidado a partir do intake aprovado
 - `_hermes/{scope-slug}/session.yaml` — manifesto completo da sessão
 - `_hermes/.sessions-index.yaml` — registro global de todas as sessões (slug, target, data, status)
 - Envelopes de contexto para cada agente (subconjunto mínimo de `_hermes/{scope-slug}/`)
@@ -158,6 +160,8 @@ agents_active:
 phases_completed: []
 current_phase: intake
 hermes_root: _hermes/app-ecommerce-checkout-20260501
+scope_path: _hermes/app-ecommerce-checkout-20260501/scope.md
+glossary_path: _hermes/app-ecommerce-checkout-20260501/glossary.md
 ```
 
 **Guardrails:**
@@ -200,8 +204,9 @@ O Clarifier é o guardião da fronteira entre o usuário e o pipeline. Nunca ass
 7. Há tecnologias específicas que o SDD deve assumir para a recriação?
 
 **Outputs produzidos:**
-- `_hermes/{scope-slug}/scope.md` — Target, objetivo, exclusões, nível, fonte de acesso, restrições
-- `_hermes/{scope-slug}/glossary.md` — Termos de domínio identificados durante o intake
+- `_hermes/_intake/{intake-id}/scope.md` — manifesto provisório de escopo aprovado pelo usuário
+- `_hermes/_intake/{intake-id}/glossary.md` — termos de domínio identificados durante o intake
+- `_hermes/{scope-slug}/scope.md` e `_hermes/{scope-slug}/glossary.md` — versões consolidadas pelo Conductor após aprovação
 
 **Guardrails:**
 - Nunca interpreta o input do usuário — reflete de volta para confirmação
@@ -215,6 +220,7 @@ O Clarifier é o guardião da fronteira entre o usuário e o pipeline. Nunca ass
 ### FASE 2 — EXPLORAÇÃO (Fan-out Paralelo / Read-only)
 
 *Todos os workers desta fase são read-only. Não escrevem no codebase original. Escrevem apenas em `_hermes/{scope-slug}/raw/`.*
+*Todo arquivo `raw/` segue o mesmo envelope mínimo: `Resumo do que foi analisado`, `Fontes/Evidências`, `Conteúdo extraído`, `Itens inferidos e não verificados`, `Conflitos/Bloqueios/Perguntas abertas`.*
 
 ---
 
@@ -241,8 +247,9 @@ UI-Scout explora a interface do artefato e produz um inventário visual e estrut
 6. Documenta fluxos de navegação como grafo: `Tela A → [ação] → Tela B`
 
 **Inputs recebidos (envelope mínimo):**
-- `_hermes/{scope-slug}/scope.md`
-- Estrutura de diretório de rotas (não codebase completo)
+- `_hermes/{scope-slug}/scope.md` consolidado
+- Origem do artefato em leitura
+- Instruções de acesso/runtime quando houver aplicação navegável
 
 **Outputs produzidos:**
 - `_hermes/{scope-slug}/raw/screen-inventory-raw.md` — lista de telas com paths de screenshot e propósito inferido
@@ -275,7 +282,7 @@ Code-Scout realiza análise estática do código-fonte. Nunca executa código. O
 7. Documenta comentários `// TODO`, `// FIXME`, `// HACK` como dívida técnica
 
 **Inputs recebidos (envelope mínimo):**
-- `_hermes/{scope-slug}/scope.md`
+- `_hermes/{scope-slug}/scope.md` consolidado
 - Raiz do repositório (acesso de leitura)
 
 **Outputs produzidos:**
@@ -310,8 +317,9 @@ Data-Scout extrai o modelo de dados da aplicação a partir de múltiplas fontes
 7. Se não houver migration: infere schema a partir de types/interfaces TypeScript e documenta como "inferido, não verificado"
 
 **Inputs recebidos (envelope mínimo):**
-- `_hermes/{scope-slug}/scope.md`
-- Diretório de migrations e models
+- `_hermes/{scope-slug}/scope.md` consolidado
+- Raiz do artefato em leitura
+- Pistas conhecidas de schema/migrations, se já identificadas
 
 **Outputs produzidos:**
 - `_hermes/{scope-slug}/raw/db-schema-raw.md` — tabelas, colunas, tipos, constraints
@@ -340,6 +348,11 @@ API-Scout extrai contratos de API a partir de múltiplas fontes: arquivos OpenAP
 3. Lê camada de serviço/repository no frontend (`*.service.ts`, `*.api.ts`, `api/`)
 4. Identifica baseURL, headers padrão, autenticação (JWT, OAuth, API Key)
 5. Mapeia cada endpoint: método, path, params, body, response schema, códigos de erro
+
+**Inputs recebidos (envelope mínimo):**
+- `_hermes/{scope-slug}/scope.md` consolidado
+- Raiz do artefato em leitura
+- `raw/code-structure.md` como apoio opcional, quando já existir
 
 **Outputs produzidos:**
 - `_hermes/{scope-slug}/raw/api-contracts-raw.md` — endpoints documentados

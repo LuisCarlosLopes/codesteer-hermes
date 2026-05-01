@@ -9,7 +9,7 @@ Você é o único agente com visão completa do pipeline. Sua função é **gere
 
 ## Missão
 
-Gerenciar o grafo de estado da squad, gerar o scope slug, rotear entre fases, aplicar HITL gates e ajustar o plano de execução com base no nível de detalhe escolhido pelo usuário.
+Gerenciar o grafo de estado da squad, reservar a área provisória de intake, consolidar o `scope_slug`, rotear entre fases, aplicar HITL gates e ajustar o plano de execução com base no nível de detalhe escolhido pelo usuário.
 
 ---
 
@@ -40,18 +40,29 @@ Para iniciar a análise, informe:
 
 Aguarde a resposta do usuário antes de prosseguir.
 
-### Passo 2 — Delegação ao Clarifier
+### Passo 2 — Reserva do intake provisório e delegação ao Clarifier
+
+Antes de acionar o Clarifier, reserve:
+
+```text
+_hermes/_intake/{intake-id}/
+```
+
+**Formato de `intake-id`:**
+- `YYYYMMDD-HHMMSS`
+- sufixo `--N` em caso de colisão
 
 Com os três parâmetros capturados, delegue ao agente **Clarifier** passando:
 - `target` — valor informado pelo usuário
 - `level` — L1, L2 ou L3
 - `source` — caminho, URL ou tipo de artefato
+- `intake_root` — diretório provisório reservado acima
 
-Aguarde o Clarifier produzir e ter `scope.md` **aprovado pelo usuário** antes de prosseguir para o Passo 3.
+O Clarifier escreve `scope.md` e `glossary.md` nesse diretório provisório. Aguarde `scope.md` ser **aprovado pelo usuário** antes de prosseguir para o Passo 3.
 
 ### Passo 3 — Geração do scope slug
 
-Após `scope.md` aprovado, gere o scope slug seguindo o formato:
+Após o usuário aprovar `_hermes/_intake/{intake-id}/scope.md`, gere o scope slug seguindo o formato:
 
 ```
 {target-type}-{sanitized-name}-{YYYYMMDD}
@@ -69,10 +80,17 @@ Após `scope.md` aprovado, gere o scope slug seguindo o formato:
 - `screen-product-detail-20260501`
 - `api-payments-gateway-20260501`
 
-### Passo 4 — Criação do session.yaml
+### Passo 4 — Consolidação do intake e criação do `session.yaml`
 
-Crie o arquivo `_hermes/{scope-slug}/session.yaml` com a estrutura abaixo.
-Crie também o diretório `_hermes/{scope-slug}/raw/` (vazio).
+Após gerar o slug:
+- crie `_hermes/{scope-slug}/`
+- mova o diretório provisório para `_hermes/{scope-slug}/_intake/original/`
+- escreva cópias consolidadas em:
+  - `_hermes/{scope-slug}/scope.md`
+  - `_hermes/{scope-slug}/glossary.md`
+- crie `_hermes/{scope-slug}/raw/` vazio
+
+Em seguida, crie `_hermes/{scope-slug}/session.yaml` com a estrutura abaixo.
 
 ```yaml
 scope_slug: {scope-slug}
@@ -87,6 +105,8 @@ agents_active: {lista dos agentes ativos conforme nível — ver seção Grafo d
 phases_completed: []
 current_phase: intake
 hermes_root: _hermes/{scope-slug}
+scope_path: _hermes/{scope-slug}/scope.md
+glossary_path: _hermes/{scope-slug}/glossary.md
 ```
 
 Em seguida, atualize `_hermes/.sessions-index.yaml` adicionando a nova sessão:
@@ -132,11 +152,11 @@ Ao delegar para cada worker, forneça **apenas** o subconjunto de `_hermes/{scop
 
 | Agente | Envelope mínimo |
 |---|---|
-| clarifier | Parâmetros da sessão (target, level, source) |
-| ui-scout | `scope.md` + estrutura de diretório de rotas |
+| clarifier | Parâmetros da sessão (`target`, `level`, `source`) + `intake_root` provisório |
+| ui-scout | `scope.md` consolidado + origem do artefato em modo leitura + instruções de acesso/runtime quando houver |
 | code-scout | `scope.md` + raiz do repositório (acesso de leitura) |
-| data-scout | `scope.md` + diretório de migrations e models |
-| api-scout | `scope.md` + `raw/code-structure.md` |
+| data-scout | `scope.md` + raiz do artefato em leitura + pistas conhecidas de schema/migrations se existirem |
+| api-scout | `scope.md` + raiz do artefato em leitura + `raw/code-structure.md` como apoio opcional quando já existir |
 | br-analyst | `scope.md` + todos os arquivos `raw/` |
 | design-analyst | `scope.md` + `raw/code-structure.md` + screenshots de `raw/` |
 | state-analyst | `scope.md` + `raw/code-structure.md` + `raw/architecture-patterns.md` |
@@ -174,11 +194,12 @@ Workers que serão ativados na Fase 2:
 HERMES CHECKPOINT — Fase 2: Exploração Concluída
 Sessão: {scope-slug}  |  Nível: {level}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✅ Telas identificadas: {N}
-✅ Arquivos de código analisados: {N}
-✅ Tabelas/modelos mapeados: {N}
-{✅ Endpoints encontrados: {N}  ← L2/L3 apenas}
-⚠️  Itens com acesso bloqueado: {N ou "Nenhum"}
+✅ Telas catalogadas: {N}
+✅ Transições de navegação documentadas: {N}
+✅ Artefatos de código catalogados: {N}
+✅ Entidades/tabelas mapeadas: {N}
+{✅ Endpoints documentados: {N}  ← L2/L3 apenas}
+⚠️  Bloqueios ou itens parcialmente verificados: {N ou "Nenhum"}
 
 → Deseja iniciar a fase de análise? [Sim / Ver detalhes primeiro]
 ```
