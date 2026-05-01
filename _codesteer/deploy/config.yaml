@@ -1,0 +1,55 @@
+targets:
+  claude-code:
+    enabled: true
+    root: "../../"
+    agents_dir: ".claude/agents"
+    skills_strategy: symlink
+    skills_dir: ".claude/skills"
+    skill_prefix: "hermes-"
+    skill_suffix: ".md"
+
+  kiro:
+    enabled: true
+    root: "../../"
+    agents_dir: ".kiro/steering"
+    skills_dir: ".kiro/skills"
+    skill_prefix: "hermes-"
+    skill_suffix: ".md"
+
+  cursor:
+    enabled: true
+    root: "../../"
+    agents_dir: ".cursor/agents"
+    skills_dir: ".cursor/skills"
+    skill_prefix: "hermes-"
+    skill_suffix: ".mdc"
+
+  copilot:
+    enabled: true
+    root: "../../"
+    agents_dir: ".github/agents"
+    skills_dir: ".github/skills"
+    skill_prefix: "hermes-"
+    skill_suffix: ".instructions.md"
+
+  agent:
+    enabled: true
+    root: "../../"
+    agents_dir: ".agent/agents"
+    skills_dir: ".agent/skills"
+    skill_prefix: "hermes-"
+    skill_suffix: ".md"
+
+  codex:
+    enabled: true
+    root: "../../"
+    agents_dir: ".codex/agents"
+    skills_dir: ".codex/skill"
+    skill_prefix: "hermes-"
+    skill_suffix: ".md"
+
+
+agents_canonical_dir: "../agents"
+skills_canonical_dir: "../skills"
+templates_canonical_dir: "../templates"
+ide_configs_dir: "../ide-configs"
