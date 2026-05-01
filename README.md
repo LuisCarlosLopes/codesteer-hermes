@@ -120,6 +120,35 @@ Campos principais por target:
 - `skills_dir`: destino das skills
 - `skill_prefix` e `skill_suffix`: naming dos artefatos gerados
 
+## Como utilizar
+
+Uso recomendado da HERMES como squad do Code Steer:
+
+1. Defina o alvo da análise.
+   Pode ser `app`, `module`, `screen`, `api` ou `flow`.
+
+2. Defina o nível de detalhe.
+   Use `L1` para visão macro, `L2` para visão funcional e `L3` para documentação completa.
+
+3. Garanta o acesso ao artefato.
+   O fluxo pode partir de código-fonte, URL, APK/IPA ou combinação, conforme o escopo.
+
+4. Rode a sessão pela IDE com os agentes HERMES disponíveis.
+   O `Conductor` conduz intake, exploração, análise, síntese, validação e geração do pacote final.
+
+5. Revise os checkpoints HITL ao fim de cada fase.
+   A progressão correta da squad depende de aprovação explícita do usuário.
+
+6. Consulte os artefatos gerados em `_hermes/{scope-slug}/`.
+   Ali ficam `scope.md`, `session.yaml`, `raw/`, artefatos consolidados, `validation-report.md` e o pacote final `sdd/`.
+
+Exemplo de uso esperado:
+
+- alvo: `módulo de autenticação`
+- nível: `L2`
+- fonte: `código-fonte no repositório`
+- saída: `_hermes/module-user-auth-YYYYMMDD/`
+
 ## Artefatos por sessão
 
 Cada sessão deve gravar apenas em `_hermes/{scope-slug}/`.
