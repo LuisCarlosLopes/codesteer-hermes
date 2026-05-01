@@ -25,6 +25,7 @@ O ideal é seguir com o working tree limpo ou entender exatamente quais mudança
 Execute a suíte completa:
 
 ```bash
+python3 -m pip install -r requirements-dev.txt
 npm test
 ```
 

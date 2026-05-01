@@ -139,6 +139,7 @@ Guia de versionamento e release:
 Executar a suíte local:
 
 ```bash
+python3 -m pip install -r requirements-dev.txt
 npm test
 ```
 
