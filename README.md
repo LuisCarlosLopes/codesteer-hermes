@@ -86,6 +86,74 @@ As FASES 5 e 6 já têm contrato canônico, agente e templates editoriais. As FA
 
 ## Como usar hoje
 
+### Instalação via `npx`
+
+Pré-requisitos:
+
+- Node.js 18+
+- Python 3
+
+Instalação interativa com multi-seleção de IDEs:
+
+```bash
+npx codesteer-hermes install
+```
+
+Instalação não interativa:
+
+```bash
+npx codesteer-hermes install --ides codex,cursor --yes
+```
+
+Atualização da instalação existente:
+
+```bash
+npx codesteer-hermes@latest update
+```
+
+Remoção apenas dos arquivos gerenciados pelo pacote:
+
+```bash
+npx codesteer-hermes remove --yes
+```
+
+Validação da instalação:
+
+```bash
+npx codesteer-hermes validate
+```
+
+O CLI:
+
+- instala `_codesteer-hermes/` na raiz do projeto
+- faz bootstrap de um runtime local Python em `_codesteer-hermes/.runtime/venv`
+- preserva `_hermes/` na remoção
+- não sobrescreve `AGENTS.md` ou `CLAUDE.md` preexistentes não gerenciados; registra conflito e segue
+
+### Desenvolvimento local do pacote
+
+Guia de versionamento e release:
+
+- [RELEASE.md](/Users/luiscarloslopesjr/GitHub/codesteer-hermes/RELEASE.md)
+
+Executar a suíte local:
+
+```bash
+npm test
+```
+
+Validar allowlist do pacote:
+
+```bash
+npm run pack:check
+```
+
+Smoke test do tarball local:
+
+```bash
+npm run smoke:pack
+```
+
 ### Pré-requisitos
 
 - Python 3

@@ -91,6 +91,57 @@ class DeployTests(unittest.TestCase):
             self.assertEqual(target_file.read_text(encoding="utf-8"), "manual change")
             self.assertTrue(any("diverge do último deploy conhecido" in issue for issue in issues))
 
+    def test_process_target_marks_unmanaged_file_as_conflict(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            target_file = root / "AGENTS.md"
+            target_file.write_text("manual file", encoding="utf-8")
+
+            adapter = FakeAdapter(
+                "codex",
+                {
+                    "kind": "bootstrap",
+                    "path": str(target_file),
+                    "source": "_codesteer-hermes/AGENTS.md",
+                    "signature": deploy.sha256_text("../_codesteer-hermes/AGENTS.md"),
+                    "link_target": "../_codesteer-hermes/AGENTS.md",
+                },
+            )
+            args = SimpleNamespace(force=False, validate=False, dry_run=False, plan_only=False)
+            log_payload = {"targets": {}, "runs": []}
+
+            with mock.patch.object(deploy, "ROOT_DIR", root):
+                result = deploy.process_target(adapter, [], [], args, log_payload)
+
+            self.assertEqual(result["errors"], [])
+            self.assertEqual(len(result["warnings"]), 1)
+            self.assertEqual(result["operations"][0]["status"], "conflict")
+
+    def test_process_target_can_emit_plan_without_writing(self):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            root = Path(tmp_dir)
+            target_file = root / ".codex" / "agents" / "hermes-test.md"
+            content = "hello hermes"
+            adapter = FakeAdapter(
+                "codex",
+                {
+                    "kind": "agent",
+                    "path": str(target_file),
+                    "source": "_codesteer-hermes/agents/test.md",
+                    "signature": deploy.sha256_text(content),
+                    "content": content,
+                },
+            )
+            args = SimpleNamespace(force=False, validate=False, dry_run=False, plan_only=True)
+            log_payload = {"targets": {}, "runs": []}
+
+            with mock.patch.object(deploy, "ROOT_DIR", root):
+                result = deploy.process_target(adapter, [], [], args, log_payload)
+
+            self.assertEqual(result["errors"], [])
+            self.assertFalse(target_file.exists())
+            self.assertEqual(result["operations"][0]["status"], "create")
+
 
 if __name__ == "__main__":
     unittest.main()

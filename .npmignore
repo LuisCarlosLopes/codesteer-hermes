@@ -1,0 +1,13 @@
+tests/
+scripts/
+_hermes/
+.agent/
+.claude/
+.codex/
+.cursor/
+.github/agents/
+.kiro/
+.deploy-log.yaml
+.env
+_codesteer-hermes/.runtime/
+**/__pycache__/

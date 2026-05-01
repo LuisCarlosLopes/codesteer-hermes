@@ -1,6 +1,6 @@
 schema_version: 1
 contract_version: hermes-deploy-v1
-updated_at: '2026-05-01T19:21:45+00:00'
+updated_at: '2026-05-01T21:18:19+00:00'
 targets:
   claude-code:
     files:
@@ -470,8 +470,8 @@ targets:
         signature: b8c0a957eb8295abe1933f30f427be0cbbf0ae18a619c954562fe6dbe0083e8c
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.agent/AGENTS.md:
         kind: bootstrap
-        source: AGENTS.md
-        signature: 79909577a70fc4971a7fcfd3cbec6a1af7182ca2dadc87f2979dce5e28f93ca0
+        source: _codesteer-hermes/AGENTS.md
+        signature: 34af6e10a2470412e7a0230ef519feaebecb1d54308f3940c98a1291feee125a
   codex:
     files:
       /Users/luiscarloslopesjr/GitHub/codesteer-hermes/.codex/agents/hermes-api-scout.md:
@@ -621,3 +621,123 @@ runs:
   unchanged: 9
   drifted: 0
   status: ok
+- timestamp: '2026-05-01T21:18:08+00:00'
+  ide: claude-code
+  mode: deploy
+  created: 0
+  updated: 0
+  forced: 0
+  unchanged: 23
+  conflicted: 1
+  drifted: 0
+  status: warning
+- timestamp: '2026-05-01T21:18:08+00:00'
+  ide: kiro
+  mode: deploy
+  created: 0
+  updated: 0
+  forced: 0
+  unchanged: 23
+  conflicted: 1
+  drifted: 0
+  status: warning
+- timestamp: '2026-05-01T21:18:08+00:00'
+  ide: cursor
+  mode: deploy
+  created: 0
+  updated: 0
+  forced: 0
+  unchanged: 23
+  conflicted: 1
+  drifted: 0
+  status: warning
+- timestamp: '2026-05-01T21:18:08+00:00'
+  ide: copilot
+  mode: deploy
+  created: 0
+  updated: 0
+  forced: 0
+  unchanged: 23
+  conflicted: 1
+  drifted: 0
+  status: warning
+- timestamp: '2026-05-01T21:18:08+00:00'
+  ide: agent
+  mode: deploy
+  created: 0
+  updated: 1
+  forced: 0
+  unchanged: 22
+  conflicted: 0
+  drifted: 0
+  status: ok
+- timestamp: '2026-05-01T21:18:08+00:00'
+  ide: codex
+  mode: deploy
+  created: 0
+  updated: 0
+  forced: 0
+  unchanged: 23
+  conflicted: 1
+  drifted: 0
+  status: warning
+- timestamp: '2026-05-01T21:18:19+00:00'
+  ide: claude-code
+  mode: deploy
+  created: 0
+  updated: 0
+  forced: 0
+  unchanged: 23
+  conflicted: 1
+  drifted: 0
+  status: warning
+- timestamp: '2026-05-01T21:18:19+00:00'
+  ide: kiro
+  mode: deploy
+  created: 0
+  updated: 0
+  forced: 0
+  unchanged: 23
+  conflicted: 1
+  drifted: 0
+  status: warning
+- timestamp: '2026-05-01T21:18:19+00:00'
+  ide: cursor
+  mode: deploy
+  created: 0
+  updated: 0
+  forced: 0
+  unchanged: 23
+  conflicted: 1
+  drifted: 0
+  status: warning
+- timestamp: '2026-05-01T21:18:19+00:00'
+  ide: copilot
+  mode: deploy
+  created: 0
+  updated: 0
+  forced: 0
+  unchanged: 23
+  conflicted: 1
+  drifted: 0
+  status: warning
+- timestamp: '2026-05-01T21:18:19+00:00'
+  ide: agent
+  mode: deploy
+  created: 0
+  updated: 0
+  forced: 0
+  unchanged: 23
+  conflicted: 0
+  drifted: 0
+  status: ok
+- timestamp: '2026-05-01T21:18:19+00:00'
+  ide: codex
+  mode: deploy
+  created: 23
+  updated: 0
+  forced: 0
+  unchanged: 0
+  conflicted: 1
+  drifted: 0
+  status: warning

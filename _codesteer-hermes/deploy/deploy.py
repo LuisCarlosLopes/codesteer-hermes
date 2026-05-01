@@ -1,6 +1,7 @@
 import argparse
 import hashlib
 import importlib
+import json
 import os
 import sys
 from datetime import datetime, timezone
@@ -135,6 +136,9 @@ def classify_operation(operation, target_state, force):
     if force:
         return "force", actual
 
+    if previous_entry is None:
+        return "conflict", actual
+
     return "drift", actual
 
 
@@ -167,38 +171,62 @@ def record_run(log_payload, ide_name, mode, results):
         "updated": results.count("update"),
         "forced": results.count("force"),
         "unchanged": results.count("unchanged"),
+        "conflicted": results.count("conflict"),
         "drifted": results.count("drift"),
-        "status": "error" if "drift" in results else "ok",
+        "status": "error" if "drift" in results else ("warning" if "conflict" in results else "ok"),
     }
     log_payload["runs"].append(summary)
     log_payload["runs"] = log_payload["runs"][-50:]
     log_payload["updated_at"] = summary["timestamp"]
 
 
-def deploy_target(adapter, agents, skills, args, log_payload):
+def process_target(adapter, agents, skills, args, log_payload):
+    plan_only = getattr(args, "plan_only", False)
     operations = adapter.plan_operations(agents, skills)
     target_state = log_payload.setdefault("targets", {}).setdefault(adapter.ide_name, {}).setdefault("files", {})
 
     results = []
-    issues = []
+    errors = []
+    warnings = []
     next_state = dict(target_state)
+    operation_reports = []
 
     for operation in operations:
         status, actual = classify_operation(operation, target_state, args.force)
         results.append(status)
 
         label = f"[{adapter.ide_name}] {status.upper()} {relative_path(Path(operation['path']))}"
+        report = {
+            "status": status,
+            "kind": operation["kind"],
+            "path": operation["path"],
+            "source": operation["source"],
+            "signature": operation["signature"],
+            "actual_signature": actual["signature"] if actual else None,
+            "previous_signature": target_state.get(operation["path"], {}).get("signature"),
+        }
         if status == "drift":
-            previous_signature = target_state.get(operation["path"], {}).get("signature")
-            issues.append(
+            report["message"] = (
                 f"{label} — conteúdo atual diverge do último deploy conhecido"
-                f" (anterior={previous_signature}, atual={actual['signature']}, desejado={operation['signature']})."
+                f" (anterior={report['previous_signature']}, atual={actual['signature']}, desejado={operation['signature']})."
             )
+            errors.append(report["message"])
             print(label)
+            operation_reports.append(report)
+            continue
+
+        if status == "conflict":
+            report["message"] = (
+                f"{label} — arquivo preexistente não gerenciado foi preservado"
+                f" (atual={actual['signature']}, desejado={operation['signature']})."
+            )
+            warnings.append(report["message"])
+            print(label)
+            operation_reports.append(report)
             continue
 
         print(label)
-        if not args.validate:
+        if not args.validate and not plan_only:
             apply_operation(operation, status, args.dry_run)
 
         next_state[operation["path"]] = {
@@ -206,23 +234,35 @@ def deploy_target(adapter, agents, skills, args, log_payload):
             "source": operation["source"],
             "signature": operation["signature"],
         }
+        operation_reports.append(report)
 
-    if not args.validate and not args.dry_run and not issues:
+    if not args.validate and not args.dry_run and not plan_only and not errors:
         log_payload["targets"][adapter.ide_name]["files"] = next_state
         record_run(log_payload, adapter.ide_name, "force" if args.force else "deploy", results)
 
     if args.validate:
         record_run(log_payload, adapter.ide_name, "validate", results)
 
-    return issues
+    return {
+        "ide": adapter.ide_name,
+        "operations": operation_reports,
+        "errors": errors,
+        "warnings": warnings,
+    }
+
+
+def deploy_target(adapter, agents, skills, args, log_payload):
+    return process_target(adapter, agents, skills, args, log_payload)["errors"]
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--dry-run", action="store_true")
-    parser.add_argument("--ide", type=str)
+    parser.add_argument("--ide", action="append")
     parser.add_argument("--validate", action="store_true")
     parser.add_argument("--force", action="store_true")
+    parser.add_argument("--plan-only", action="store_true")
+    parser.add_argument("--summary-json", type=str)
     args = parser.parse_args()
 
     sys.path.append(str(BASE_DIR / "deploy"))
@@ -243,7 +283,8 @@ def main():
     skills = sorted(d.name for d in (BASE_DIR / "skills").iterdir() if d.is_dir())
     log_payload = load_deploy_log()
 
-    target_names = [args.ide] if args.ide else [name for name, conf in targets.items() if conf.get("enabled")]
+    target_names = args.ide if args.ide else [name for name, conf in targets.items() if conf.get("enabled")]
+    target_results = []
 
     for ide_name in target_names:
         if ide_name not in targets:
@@ -261,11 +302,31 @@ def main():
         if validation_errors:
             continue
 
-        issues.extend(deploy_target(adapter, agents, skills, args, log_payload))
+        result = process_target(adapter, agents, skills, args, log_payload)
+        target_results.append(result)
+        issues.extend(result["errors"])
 
-    if not args.validate and not args.dry_run and not issues:
+    if not args.validate and not args.dry_run and not args.plan_only and not issues:
         dump_yaml(DEPLOY_LOG_PATH, log_payload)
         print(f"[Hermes] Deploy log atualizado em {relative_path(DEPLOY_LOG_PATH)}")
+
+    if args.summary_json:
+        Path(args.summary_json).parent.mkdir(parents=True, exist_ok=True)
+        with open(args.summary_json, "w", encoding="utf-8") as handle:
+            json.dump(
+                {
+                    "schema_version": DEPLOY_SCHEMA_VERSION,
+                    "contract_version": DEPLOY_CONTRACT_VERSION,
+                    "root_dir": str(ROOT_DIR),
+                    "mode": "plan"
+                    if args.plan_only
+                    else ("validate" if args.validate else ("dry-run" if args.dry_run else "deploy")),
+                    "targets": target_results,
+                },
+                handle,
+                ensure_ascii=False,
+                indent=2,
+            )
 
     if issues:
         print("Deploy finalizado com pendências.")

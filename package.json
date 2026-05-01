@@ -1,0 +1,33 @@
+{
+  "name": "codesteer-hermes",
+  "version": "0.1.0",
+  "description": "NPX installer and lifecycle CLI for the CodeSteer HERMES squad.",
+  "license": "MIT",
+  "bin": {
+    "codesteer-hermes": "bin/codesteer-hermes.js"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "_codesteer-hermes",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test tests/test_cli.mjs && python3 -m unittest discover -s tests -p 'test_*.py'",
+    "test:node": "node --test tests/test_cli.mjs",
+    "test:python": "python3 -m unittest discover -s tests -p 'test_*.py'",
+    "pack:check": "node scripts/check-packlist.js",
+    "smoke:pack": "node scripts/smoke-pack.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "codesteer",
+    "hermes",
+    "npx",
+    "agents",
+    "ide"
+  ]
+}

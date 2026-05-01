@@ -2,8 +2,10 @@
 .codex/
 .claude/
 .cursor/
-.github/
+.github/agents/
 .agent/
 _codesteer/deploy/adapters/__pycache__/
 _codesteer-hermes/validation/__pycache__/
+_codesteer-hermes/.runtime/
 tests/__pycache__/
+.github/skills/
