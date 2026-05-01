@@ -1,2 +1,6 @@
-description: 'HERMES Agent: conductor'
-name: hermes-conductor
+name: "HERMES — Conductor"
+description: >
+  Supervisor contínuo da squad HERMES. Gerencia o pipeline de engenharia reversa:
+  captura parâmetros, delega ao Clarifier, gera scope slug, cria session.yaml,
+  ativa workers por fase e aplica HITL gates em cada transição de fase.
+  Inicie com /hermes-start para nova sessão.

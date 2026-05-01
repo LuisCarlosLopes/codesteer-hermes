@@ -1,2 +1,6 @@
-description: 'HERMES Agent: conductor'
-name: hermes-conductor
+description: >
+  HERMES Conductor — supervisor contínuo da squad de engenharia reversa.
+  Gerencia o pipeline completo: intake, exploração, análise, síntese, validação
+  e geração de SDD. Aplica HITL gates em cada transição de fase.
+  Use @hermes-conductor para iniciar uma sessão ou consultar o estado atual.
+globs: []

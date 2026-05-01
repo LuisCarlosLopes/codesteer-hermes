@@ -17,7 +17,9 @@ class BaseAdapter:
 
     def generate_frontmatter(self, defaults, specific):
         merged = {**defaults, **specific}
-        return f"---\n{yaml.dump(merged)}---\n"
+        # Remove newlines residuais de block scalars YAML (ex: description com `>`)
+        cleaned = {k: v.strip() if isinstance(v, str) else v for k, v in merged.items()}
+        return f"---\n{yaml.dump(cleaned, allow_unicode=True)}---\n"
 
     def validate(self):
         if not (self.base_dir / 'agents').exists():
@@ -81,7 +83,25 @@ class BaseAdapter:
 
     def create_main_symlinks(self, dry_run=False):
         pass
-        
+
+    def create_hermes_skeleton(self, dry_run=False):
+        """Garante que _hermes/ e .sessions-index.yaml existam na raiz do projeto."""
+        hermes_dir = self.root_dir / '_hermes'
+        sessions_index = hermes_dir / '.sessions-index.yaml'
+
+        if not dry_run:
+            # Cria _hermes/ se não existir
+            hermes_dir.mkdir(parents=True, exist_ok=True)
+
+            # Inicializa .sessions-index.yaml vazio se não existir
+            if not sessions_index.exists():
+                sessions_index.write_text('sessions: []\n')
+                print(f"  [Hermes] Criado {sessions_index.relative_to(self.root_dir)}")
+            else:
+                print(f"  [Hermes] {sessions_index.relative_to(self.root_dir)} já existe — mantido.")
+        else:
+            print(f"  [DRY-RUN] Criaria _hermes/ e _hermes/.sessions-index.yaml se não existissem.")
+
     def deploy(self, agents, skills, dry_run=False):
         print(f"Deploying for IDE: {self.ide_name}")
         if not self.validate(): return

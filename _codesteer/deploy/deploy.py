@@ -22,6 +22,20 @@ def get_adapter(ide_name, ide_config):
         print(f"Erro ao carregar adapter para {ide_name}: {e}")
         return None
 
+def ensure_hermes_root(dry_run=False):
+    """Garante que _hermes/ e .sessions-index.yaml existam uma única vez no deploy."""
+    hermes_dir = ROOT_DIR / '_hermes'
+    sessions_index = hermes_dir / '.sessions-index.yaml'
+    if dry_run:
+        print(f"[DRY-RUN] Verificaria _hermes/ e _hermes/.sessions-index.yaml.")
+        return
+    hermes_dir.mkdir(parents=True, exist_ok=True)
+    if not sessions_index.exists():
+        sessions_index.write_text('sessions: []\n')
+        print(f"[Hermes] Criado _hermes/.sessions-index.yaml")
+    else:
+        print(f"[Hermes] _hermes/.sessions-index.yaml já existe — mantido.")
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--dry-run", action="store_true")
@@ -36,6 +50,9 @@ def main():
     print("Iniciando deploy HERMES...")
     if args.dry_run:
         print("[DRY-RUN] Nenhuma alteração será escrita no disco.")
+
+    # Garante estrutura _hermes/ antes de qualquer deploy de IDE
+    ensure_hermes_root(args.dry_run)
 
     config = load_yaml(BASE_DIR / 'deploy' / 'config.yaml')
     targets = config.get('targets', {})
