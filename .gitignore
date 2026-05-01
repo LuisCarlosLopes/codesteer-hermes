@@ -1,0 +1,7 @@
+.kiro/
+.codex/
+.claude/
+.cursor/
+.github/
+.agent/
+_codesteer/deploy/adapters/__pycache__/
