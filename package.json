@@ -18,7 +18,8 @@
     "test:node": "node --test tests/test_cli.mjs",
     "test:python": "python3 -m unittest discover -s tests -p 'test_*.py'",
     "pack:check": "node scripts/check-packlist.js",
-    "smoke:pack": "node scripts/smoke-pack.js"
+    "smoke:pack": "node scripts/smoke-pack.js",
+    "release:bump": "bash scripts/deploy-npm-bump.sh"
   },
   "engines": {
     "node": ">=18"

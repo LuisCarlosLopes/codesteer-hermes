@@ -56,51 +56,50 @@ Validação da instalação:
 npx codesteer-hermes validate
 ```
 
-no chat digite e inicie o fluxo:
+Depois do `install`, abra o agente orquestrador **HERMES** na sua IDE (nome varia por plataforma). Onde o deploy configurar comando slash, use **`/hermes-start`** para uma nova sessão. O fluxo segue as fases da squad com checkpoints HITL entre elas.
 
+## Workflow da squad
+
+O **HERMES** (supervisor) conduz a sessão do intake ao pacote SDD. Nas fases 2 e 3, os workers rodam em *fan-out* paralelo e somente em modo leitura; síntese, validação e escrita do SDD são sequenciais. Em **L1**, após a exploração o grafo segue direto para o **Synthesizer** (sem os workers de análise da fase 3). Em **L2** entram API-Scout, BR Analyst, Design Analyst e State Analyst; em **L3** entra também **Security Analyst**.
+
+```mermaid
+flowchart TB
+  H[HERMES — orquestração contínua e HITL]
+
+  H --> F1[Fase 1 — Clarifier]
+  F1 -->|scope.md e glossary aprovados| F2[Fase 2 — Exploração paralela]
+
+  subgraph EXPLORACAO[Fase 2 — read-only sobre o artefato]
+    direction LR
+    UI[UI-Scout]
+    CC[Code-Scout]
+    DD[Data-Scout]
+  end
+
+  F2 --> EXPLORACAO
+  EXPLORACAO --> LEVEL{Nível L2 ou L3?}
+
+  LEVEL -->|não — L1| F4[Fase 4 — Synthesizer]
+  LEVEL -->|sim| F3[Fase 3 — Análise paralela]
+
+  subgraph ANALISE[Fase 3 — read-only sobre raw/]
+    direction LR
+    AP[API-Scout]
+    BR[BR Analyst]
+    DE[Design Analyst]
+    ST[State Analyst]
+    SEC[Security Analyst — só L3]
+  end
+
+  F3 --> ANALISE
+  ANALISE --> F4
+  F4 --> F5[Fase 5 — Validator]
+  F5 --> F6[Fase 6 — SDD-Writer]
+  F6 --> OUT["_hermes/{scope-slug}/ — sdd/ e consolidados"]
+
+  H -.->|envelopes e checkpoints| EXPLORACAO
+  H -.->|roteamento| LEVEL
 ```
-@hermes
-```
-
-### Pré-requisitos
-
-- Python 3
-
-### Deploy básico
-
-Rodar para todas as IDEs habilitadas em [_codesteer-hermes/deploy/config.yaml](/Users/luiscarloslopesjr/GitHub/codesteer-hermes/_codesteer-hermes/deploy/config.yaml:1):
-
-```bash
-python _codesteer-hermes/deploy/deploy.py
-```
-
-Simular sem escrita:
-
-```bash
-python _codesteer-hermes/deploy/deploy.py --dry-run
-```
-
-Rodar para uma IDE específica:
-
-```bash
-python _codesteer-hermes/deploy/deploy.py --ide cursor
-```
-
-Observação importante:
-
-- `--validate` e `--force` existem na CLI, mas ainda não têm comportamento completo implementado
-
-### Configuração dos targets
-
-Edite [_codesteer-hermes/deploy/config.yaml](/Users/luiscarloslopesjr/GitHub/codesteer-hermes/_codesteer-hermes/deploy/config.yaml:1).
-
-Campos principais por target:
-
-- `enabled`: ativa ou desativa a IDE
-- `agents_dir`: destino dos agentes gerados
-- `skills_dir`: destino das skills
-- `agent_prefix` e `agent_suffix`: naming dos agentes gerados
-- `skill_prefix` e `skill_suffix`: naming das skills geradas
 
 ## Como utilizar
 
@@ -115,8 +114,8 @@ Uso recomendado da HERMES como squad do Code Steer:
 3. Garanta o acesso ao artefato.
    O fluxo pode partir de código-fonte, URL, APK/IPA ou combinação, conforme o escopo.
 
-4. Rode a sessão pela IDE com os agentes HERMES disponíveis.
-   O `Conductor` conduz intake, exploração, análise, síntese, validação e geração do pacote final.
+4. Rode a sessão pela IDE com os subagentes HERMES instalados via `npx codesteer-hermes`.
+   O agente **HERMES** conduz intake, exploração, análise, síntese, validação e geração do pacote final.
 
 5. Revise os checkpoints HITL ao fim de cada fase.
    A progressão correta da squad depende de aprovação explícita do usuário.
@@ -148,4 +147,4 @@ Estrutura esperada em alto nível:
 
 ## Licença
 
-O repositório já contém [LICENSE](/Users/luiscarloslopesjr/GitHub/codesteer-hermes/LICENSE:1).
+Veja o arquivo [LICENSE](LICENSE) na raiz do repositório.

@@ -1,1 +1,0 @@
-_codesteer-hermes/AGENTS.md

@@ -104,9 +104,9 @@ class DeployTests(unittest.TestCase):
                 {
                     "kind": "bootstrap",
                     "path": str(target_file),
-                    "source": "_codesteer-hermes/AGENTS.md",
-                    "signature": deploy.sha256_text("../_codesteer-hermes/AGENTS.md"),
-                    "link_target": "../_codesteer-hermes/AGENTS.md",
+                    "source": "_codesteer-hermes/deploy/config.yaml",
+                    "signature": deploy.sha256_text("../_codesteer-hermes/deploy/config.yaml"),
+                    "link_target": "../_codesteer-hermes/deploy/config.yaml",
                 },
             )
             args = SimpleNamespace(force=False, validate=False, dry_run=False, plan_only=False)

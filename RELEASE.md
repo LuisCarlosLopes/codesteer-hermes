@@ -186,8 +186,7 @@ Isso indica que o pacote empacotado não está conseguindo executar o ciclo real
 
 # Release
 ```
-git tag -d v0.1.2
 git fetch origin --tags --force
-npm version 0.1.3
+npm version 0.1.4
 git push origin main --follow-tags
 ```

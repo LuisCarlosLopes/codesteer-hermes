@@ -652,8 +652,6 @@ _codesteer-hermes/
 │       ├── kiro.py
 │       ├── cursor.py
 │       └── copilot.py
-│
-└── AGENTS.md                       ← contexto canônico da squad (carregado a cada turno)
 ```
 
 **Invariante garantida:** qualquer arquivo fora de `_codesteer-hermes/` que pertença à squad HERMES é um artefato gerado — nunca editado manualmente. O `deploy.py` detecta edições manuais nos arquivos de destino via hash check e emite `⚠️ arquivo modificado fora do deploy script`.
@@ -770,14 +768,7 @@ Skills não têm frontmatter IDE-específico — o `SKILL.md` é auto-contido. A
 | Cursor | `_codesteer-hermes/skills/{skill}/SKILL.md` → `.cursor/rules/hermes-{skill}.mdc` |
 | Copilot | `_codesteer-hermes/skills/{skill}/SKILL.md` → `.github/instructions/hermes-{skill}.instructions.md` |
 
-**`AGENTS.md` e `CLAUDE.md`:**
-```
-[raiz do repo]
-├── AGENTS.md  →  symlink para _codesteer-hermes/AGENTS.md
-└── CLAUDE.md  →  symlink para AGENTS.md
-```
-
-Regra de mão única: edita-se `_codesteer-hermes/AGENTS.md`, nunca `AGENTS.md` ou `CLAUDE.md` diretamente.
+**Contexto da squad (raiz e IDEs):** não há mais arquivos `AGENTS.md` / `CLAUDE.md` na raiz nem bootstrap de symlinks para eles no `deploy`. O contexto canônico está em [`HERMES.md`](HERMES.md) neste repositório, em [`README.md`](README.md) para consumidores do pacote, e nos corpos em `_codesteer-hermes/agents/` após o deploy para cada IDE.
 
 ---
 
@@ -843,7 +834,7 @@ Cada `adapters/{ide}.py`:
 1. `validate()` — verifica que canonical files existem e são válidos; aborta se não
 2. `deploy_agent(agent_name)` — merge de `_defaults.yaml` + `{agent}.yaml` → frontmatter → concatena com `agents/{agent}.md` → escreve no destino
 3. `deploy_skill(skill_name)` — cria ou atualiza symlink de `skills/{skill}/SKILL.md` para o destino IDE
-4. `create_main_symlinks()` — `AGENTS.md → _codesteer-hermes/AGENTS.md`; `CLAUDE.md → AGENTS.md`
+4. `plan_bootstrap_operations()` — hoje vazio em todos os adapters (não cria mais symlinks `AGENTS.md` / `CLAUDE.md` na raiz nem cópias equivalentes por IDE)
 5. `update_settings()` — para Claude Code: atualiza `.claude/settings.json` com `skillsPath` e lista de agents
 
 **Ciclo de atualização:**
@@ -901,7 +892,6 @@ Engenharia reversa é intrinsecamente custosa em tokens — o artefato inteiro p
 
 ```
 _codesteer-hermes/
-├── AGENTS.md                         ← contexto canônico; symlinked ← raiz/AGENTS.md ← raiz/CLAUDE.md
 ├── agents/                           ← 13 corpos canônicos de agente
 ├── skills/                           ← 9 skill folders (agentskills.io standard)
 ├── templates/l1|l2|l3/               ← templates SDD por nível
@@ -984,11 +974,10 @@ Sequência para onboarding de um novo repositório na squad HERMES:
 4. Executar o deploy
    python _codesteer-hermes/deploy/deploy.py
    → cria estrutura em .claude/, .cursor/, .kiro/, .github/ (IDEs habilitadas)
-   → cria AGENTS.md e CLAUDE.md como symlinks
    → atualiza .claude/settings.json com skillsPath e lista de agents
 
 5. Commitar no git
-   git add _codesteer-hermes/ AGENTS.md CLAUDE.md .claude/ .cursor/ .kiro/ .github/
+   git add _codesteer-hermes/ .claude/ .cursor/ .kiro/ .github/
    git commit -m "feat: setup HERMES squad v2"
 
 6. Primeira sessão
@@ -1051,6 +1040,4 @@ _codesteer-hermes/skills/{skill}/SKILL.md ── symlink ──> .claude/ (via s
                                    ── symlink ──> .kiro/steering/hermes-{skill}.md
                                    ── symlink ──> .cursor/rules/hermes-{skill}.mdc
                                    ── symlink ──> .github/instructions/hermes-{skill}.instructions.md
-
-_codesteer-hermes/AGENTS.md ── symlink ──> [raiz]/AGENTS.md ── symlink ──> [raiz]/CLAUDE.md
 ```
