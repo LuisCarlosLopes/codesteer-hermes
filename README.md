@@ -39,7 +39,7 @@ npx codesteer-hermes install --ides codex,cursor --yes
 
 Depois do `install`, abra o agente orquestrador **HERMES** na IDE. Onde existir comando slash configurado, use **`/hermes`** para iniciar uma nova sessão.
 
-**IDEs suportadas pelo instalador** (entre outras): Claude Code, Kiro, Cursor, GitHub Copilot, agent, Codex. Detalhes de compatibilidade: [HERMES.md](HERMES.md) — seção “Compatibilidade por IDE”.
+**IDEs suportadas pelo instalador** (entre outras): Claude Code, Kiro, Cursor, GitHub Copilot, agent, Codex. Detalhes de compatibilidade: [HERMES.md](_codesteer-hermes/docs/HERMES.md)) — seção “Compatibilidade por IDE”.
 
 ---
 
@@ -53,7 +53,7 @@ Escolhidos no início da sessão; definem quais agentes entram e quais artefatos
 | **L2** | Funcionalidade específica, handoff entre times |
 | **L3** | Recriação total, auditoria, migração (inclui Security Analyst e exploração mais profunda) |
 
-Listas de artefatos por nível: [HERMES.md](HERMES.md) — “Níveis de Detalhe”.
+Listas de artefatos por nível: [HERMES.md](_codesteer-hermes/docs/HERMES.md) — “Níveis de Detalhe”.
 
 ---
 
