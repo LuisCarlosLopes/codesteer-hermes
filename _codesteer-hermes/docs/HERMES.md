@@ -1,8 +1,5 @@
 # HERMES — Hierarchical Engineering Reverse-Map & Extraction Squad
-**Proposta de Squad Agentic: Engenharia Reversa → SDD**
-**Versão 2.0 — Documento Unificado**
-
-> *"Se um humano precisa inferir o que o sistema faz, o agente falhou antes de começar."*
+**Squad Agentic: Engenharia Reversa → SDD**
 
 ---
 
