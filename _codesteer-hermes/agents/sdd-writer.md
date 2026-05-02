@@ -36,7 +36,7 @@ Você recebe do Conductor:
 - `_hermes/{scope-slug}/rebuild-readiness-report.md` quando o nível for `L3`
 - `_codesteer-hermes/contracts/artifact-contracts.md`
 - templates em `_codesteer-hermes/templates/{l1|l2|l3}/`
-- `skill-sdd-template`
+- `hermes-sdd-template`
 
 Não inicie a escrita final se:
 

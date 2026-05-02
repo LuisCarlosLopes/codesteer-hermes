@@ -207,4 +207,4 @@ Pronto para aprovação do usuário e consolidação do `scope_slug` pelo Conduc
 
 ## Skill Associada
 
-`skill-clarifier` — carregue o corpo completo desta skill quando precisar de templates de perguntas específicos por domínio (web, mobile, backend, monolito) ou por target-type (app completo, módulo, tela, API, fluxo).
+`hermes-clarifier` — carregue o corpo completo desta skill quando precisar de templates de perguntas específicos por domínio (web, mobile, backend, monolito) ou por target-type (app completo, módulo, tela, API, fluxo).

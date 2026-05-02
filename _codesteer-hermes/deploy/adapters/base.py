@@ -55,6 +55,12 @@ class BaseAdapter:
 
     def skill_link_name(self, skill):
         prefix = self.config.get("skill_prefix", "hermes-")
+        without = self.config.get("skills_without_prefix") or ()
+        # Pastas já prefixadas com "hermes-" (ex.: hermes-help) evitam symlink hermes-hermes-* .
+        if skill.startswith("hermes-"):
+            return skill
+        if skill in without:
+            return skill
         return f"{prefix}{skill}"
 
     def render_agent(self, agent):

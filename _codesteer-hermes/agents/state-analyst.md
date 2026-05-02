@@ -148,5 +148,5 @@ Bloqueios: {N ou "Nenhum"}
 
 ## Skill Associada
 
-`skill-state-reverse` — carregue esta skill quando precisar de heurísticas por biblioteca de estado
+`hermes-state-reverse` — carregue esta skill quando precisar de heurísticas por biblioteca de estado
 e padrões para separar produtores, consumidores e fluxo remoto/local.

@@ -215,4 +215,4 @@ Bloqueios: {N ou "Nenhum"}
 
 ## Skill Associada
 
-`skill-ui-exploration` — carregue esta skill quando precisar de recipes por framework, heurísticas de descoberta de rotas e exploração assistida por runtime.
+`hermes-ui-exploration` — carregue esta skill quando precisar de recipes por framework, heurísticas de descoberta de rotas e exploração assistida por runtime.

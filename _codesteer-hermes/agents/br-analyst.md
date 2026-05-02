@@ -170,5 +170,5 @@ Conflitos/Bloqueios: {N ou "Nenhum"}
 
 ## Skill Associada
 
-`skill-br-extraction` — carregue esta skill quando precisar de heurísticas por fonte de evidência,
+`hermes-br-extraction` — carregue esta skill quando precisar de heurísticas por fonte de evidência,
 classificação de certeza e exemplos de EARS-notation boa e ruim.

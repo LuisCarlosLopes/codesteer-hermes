@@ -1,3 +1,9 @@
+skills_without_prefix:
+  - playwright-cli
+
+ensure_skills:
+  - playwright-cli
+
 targets:
   claude-code:
     enabled: true

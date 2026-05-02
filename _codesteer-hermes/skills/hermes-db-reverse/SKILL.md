@@ -1,12 +1,12 @@
 ---
-name: skill-db-reverse
+name: hermes-db-reverse
 description: >
   HERMES / Data-Scout: recipes para engenharia reversa de schema e persistência a partir de migrations,
   ORMs, entities, models e tipos auxiliares. Use quando precisar mapear tabelas, campos, constraints,
   relações, enums e seeds sem acessar banco em runtime, preservando a hierarquia formal de evidência.
 ---
 
-# skill-db-reverse
+# hermes-db-reverse
 
 ## Quando Carregar Esta Skill
 

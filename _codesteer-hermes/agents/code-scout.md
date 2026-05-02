@@ -217,4 +217,4 @@ Bloqueios: {N ou "Nenhum"}
 
 ## Skill Associada
 
-`skill-code-static-analysis` — carregue esta skill quando precisar de recipes por stack, padrões de leitura eficiente e heurísticas para entrypoints, arquitetura e dívida técnica.
+`hermes-code-static-analysis` — carregue esta skill quando precisar de recipes por stack, padrões de leitura eficiente e heurísticas para entrypoints, arquitetura e dívida técnica.

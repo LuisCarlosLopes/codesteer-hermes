@@ -1,12 +1,12 @@
 ---
-name: skill-ui-exploration
+name: hermes-ui-exploration
 description: >
   HERMES / UI-Scout: recipes de exploração de UI por framework, combinando descoberta estática de rotas
   com navegação em runtime quando disponível. Use quando precisar mapear telas, fluxos, estados visuais,
   screenshots e grafos de navegação para web ou mobile baseado em código-fonte, URL local ou ambiente demo.
 ---
 
-# skill-ui-exploration
+# hermes-ui-exploration
 
 ## Quando Carregar Esta Skill
 

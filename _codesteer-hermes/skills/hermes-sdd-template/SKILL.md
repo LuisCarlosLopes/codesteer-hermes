@@ -1,12 +1,12 @@
 ---
-name: skill-sdd-template
+name: hermes-sdd-template
 description: >
   HERMES / SDD-Writer: orientação para transformar artefatos consolidados em documentos finais usando os
   templates por nível, mantendo rastreabilidade, seções obrigatórias e marcação explícita de itens que ainda
   requerem validação. Use quando precisar gerar o SDD final a partir da saída do Synthesizer e Validator.
 ---
 
-# skill-sdd-template
+# hermes-sdd-template
 
 ## Quando Carregar Esta Skill
 

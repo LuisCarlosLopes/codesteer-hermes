@@ -183,4 +183,4 @@ Conflitos/Bloqueios: {N ou "Nenhum"}
 
 ## Skill Associada
 
-`skill-db-reverse` — carregue esta skill quando precisar de recipes por ORM/framework e heurísticas para distinguir fonte formal de inferência.
+`hermes-db-reverse` — carregue esta skill quando precisar de recipes por ORM/framework e heurísticas para distinguir fonte formal de inferência.

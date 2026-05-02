@@ -175,5 +175,5 @@ Bloqueios: {N ou "Nenhum"}
 
 ## Skill Associada
 
-`skill-design-audit` — carregue esta skill quando precisar de heurísticas para detectar tokens,
+`hermes-design-audit` — carregue esta skill quando precisar de heurísticas para detectar tokens,
 variantes, composição e padrões visuais em diferentes stacks.

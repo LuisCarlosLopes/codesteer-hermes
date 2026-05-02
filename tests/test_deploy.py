@@ -180,6 +180,43 @@ class DeployTests(unittest.TestCase):
         self.assertEqual(adapter.default_agent_filename("hermes"), "hermes.agent.md")
         self.assertEqual(adapter.default_agent_filename("clarifier"), "hermes-clarifier.agent.md")
 
+    def test_skill_link_name_avoids_double_hermes_prefix(self):
+        base = REPO_ROOT / "_codesteer-hermes"
+        adapter = BaseAdapter(
+            "cursor",
+            {
+                "skill_prefix": "hermes-",
+                "skill_suffix": ".mdc",
+                "agents_dir": ".cursor/agents",
+                "skills_dir": ".cursor/skills",
+            },
+            base,
+            REPO_ROOT,
+        )
+        self.assertEqual(adapter.skill_link_name("hermes-help"), "hermes-help")
+        self.assertEqual(adapter.skill_link_name("hermes-api-reverse"), "hermes-api-reverse")
+
+    def test_skill_link_name_skills_without_prefix(self):
+        base = REPO_ROOT / "_codesteer-hermes"
+        adapter = BaseAdapter(
+            "cursor",
+            {
+                "skill_prefix": "hermes-",
+                "skills_without_prefix": ["playwright-cli"],
+                "agents_dir": ".cursor/agents",
+                "skills_dir": ".cursor/skills",
+            },
+            base,
+            REPO_ROOT,
+        )
+        self.assertEqual(adapter.skill_link_name("playwright-cli"), "playwright-cli")
+        self.assertEqual(adapter.skill_link_name("api-reverse"), "hermes-api-reverse")
+
+    def test_canonical_skills_list_includes_ensure_skills(self):
+        skills = deploy.canonical_skills_list(REPO_ROOT / "_codesteer-hermes", ["playwright-cli"])
+        self.assertIn("playwright-cli", skills)
+        self.assertIn("hermes-help", skills)
+
 
 if __name__ == "__main__":
     unittest.main()

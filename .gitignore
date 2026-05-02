@@ -11,3 +11,10 @@ tests/__pycache__/
 .github/skills/
 _codesteer-hermes/deploy/adapters/__pycache__/
 _codesteer-hermes/deploy/__pycache__/
+_codesteer-hermes/deploy/adapters/__pycache__/agent.cpython-313.pyc
+_codesteer-hermes/deploy/adapters/__pycache__/base.cpython-313.pyc
+_codesteer-hermes/deploy/adapters/__pycache__/claude_code.cpython-313.pyc
+_codesteer-hermes/deploy/adapters/__pycache__/codex.cpython-313.pyc
+_codesteer-hermes/deploy/adapters/__pycache__/copilot.cpython-313.pyc
+_codesteer-hermes/deploy/adapters/__pycache__/cursor.cpython-313.pyc
+_codesteer-hermes/deploy/adapters/__pycache__/kiro.cpython-313.pyc

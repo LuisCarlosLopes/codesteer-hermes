@@ -1,12 +1,12 @@
 ---
-name: skill-code-static-analysis
+name: hermes-code-static-analysis
 description: >
   HERMES / Code-Scout: recipes de análise estática em camadas para mapear stack, estrutura de código,
   entrypoints, padrões arquiteturais e dívida técnica com leitura mínima necessária. Use quando precisar
   explorar codebases sem execução, priorizando manifests, configs, árvores de diretório e evidência estrutural.
 ---
 
-# skill-code-static-analysis
+# hermes-code-static-analysis
 
 ## Quando Carregar Esta Skill
 

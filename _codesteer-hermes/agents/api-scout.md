@@ -157,4 +157,4 @@ Bloqueios: {N ou "Nenhum"}
 
 ## Skill Associada
 
-`skill-api-reverse` — carregue esta skill quando precisar de recipes por framework, heurísticas de rotas e leitura de clients/mocks sem spec formal.
+`hermes-api-reverse` — carregue esta skill quando precisar de recipes por framework, heurísticas de rotas e leitura de clients/mocks sem spec formal.

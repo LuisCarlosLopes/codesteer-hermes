@@ -1,5 +1,5 @@
 ---
-name: skill-clarifier
+name: hermes-clarifier
 description: >
   HERMES / Squad Clarifier: templates de perguntas por domínio (web, mobile, API/backend, monolito, full-stack)
   e por rodada de intake (1, 2, 3), além de frases de confirmação pós-rodada. Use sempre que você for o Clarifier
@@ -9,7 +9,7 @@ description: >
   antes de engenharia reversa" — mesmo sem citar HERMES ou Clarifier.
 ---
 
-# skill-clarifier
+# hermes-clarifier
 
 ## Descrição
 

@@ -1,12 +1,12 @@
 ---
-name: skill-br-extraction
+name: hermes-br-extraction
 description: >
   HERMES / Business-Rules Analyst: heurísticas para extrair regras de negócio a partir de UI, DB, API,
   navegação e estrutura de código, com EARS-notation adaptada, classificação de certeza e perguntas abertas
   derivadas de evidência fraca. Use quando precisar transformar sinais dispersos em BRs rastreáveis.
 ---
 
-# skill-br-extraction
+# hermes-br-extraction
 
 ## Quando Carregar Esta Skill
 

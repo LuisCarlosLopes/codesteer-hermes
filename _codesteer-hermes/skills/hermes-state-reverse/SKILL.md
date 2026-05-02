@@ -1,12 +1,12 @@
 ---
-name: skill-state-reverse
+name: hermes-state-reverse
 description: >
   HERMES / State Analyst: heurísticas para mapear estado global, local e remoto, identificando stores,
   providers, caches, queries, produtores e consumidores a partir de artefatos de estrutura e navegação.
   Use quando precisar documentar fluxo de dados sem reler o codebase original.
 ---
 
-# skill-state-reverse
+# hermes-state-reverse
 
 ## Quando Carregar Esta Skill
 

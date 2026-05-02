@@ -220,7 +220,7 @@ O Clarifier é o guardião da fronteira entre o usuário e o pipeline. Nunca ass
 - Se a resposta for ambígua, parafraseia e pergunta "Entendi corretamente que...?"
 - Máximo de 3 rodadas; se ainda houver ambiguidade, documenta como "item aberto" no `scope.md` e avança com o que foi clarificado
 
-**Skill associada:** `skill-clarifier`
+**Skill associada:** `hermes-clarifier`
 
 ---
 
@@ -268,7 +268,7 @@ UI-Scout explora a interface do artefato e produz um inventário visual e estrut
 - Se Playwright-CLI falhar em uma rota, documenta o erro e continua — não para o pipeline
 - Não tenta adivinhar o propósito de telas sem pelo menos um elemento identificador
 
-**Skill associada:** `skill-ui-exploration`
+**Skill associada:** `hermes-ui-exploration`
 
 ---
 
@@ -303,7 +303,7 @@ Code-Scout realiza análise estática do código-fonte. Nunca executa código. O
 - Arquivos >500 linhas: lê apenas as primeiras 80 (imports + estrutura principal) e registra para análise posterior se necessário
 - Não infere propósito de módulo sem pelo menos 2 evidências no código
 
-**Skill associada:** `skill-code-static-analysis`
+**Skill associada:** `hermes-code-static-analysis`
 
 ---
 
@@ -338,7 +338,7 @@ Data-Scout extrai o modelo de dados da aplicação a partir de múltiplas fontes
 - Nunca acessa banco de dados em produção — apenas arquivos de schema
 - Se dois arquivos conflitam (model desatualizado vs migration), documenta o conflito e pergunta ao usuário antes de avançar
 
-**Skill associada:** `skill-db-reverse`
+**Skill associada:** `hermes-db-reverse`
 
 ---
 
@@ -369,7 +369,7 @@ API-Scout extrai contratos de API a partir de múltiplas fontes: arquivos OpenAP
 - Read-only de código — nunca faz chamadas reais à API durante a análise
 - Documenta endpoints sem spec formal como "inferido de código — requer validação"
 
-**Skill associada:** `skill-api-reverse`
+**Skill associada:** `hermes-api-reverse`
 
 ---
 
@@ -401,7 +401,7 @@ Certeza: Alta (extraído de código) | Média (inferido de validação UI) | Bai
 - Toda regra de certeza "Baixa" vai para `open-questions-br.md` — não entra no SDD sem validação do usuário
 - Máximo de 10 perguntas abertas ao usuário por rodada de validação
 
-**Skill associada:** `skill-br-extraction`
+**Skill associada:** `hermes-br-extraction`
 
 ---
 
@@ -423,7 +423,7 @@ Analisa os screenshots capturados pelo UI-Scout e os arquivos de estilo do Code-
 - `_hermes/{scope-slug}/raw/design-tokens.md` — cores, tipografia, espaçamento, sombras com valores (L3)
 - `_hermes/{scope-slug}/raw/component-map.md` — árvore de componentes com props inferidas
 
-**Skill associada:** `skill-design-audit`
+**Skill associada:** `hermes-design-audit`
 
 ---
 
@@ -438,7 +438,7 @@ Lê os artefatos do Code-Scout focados em gerenciamento de estado (Redux, Zustan
 - `_hermes/{scope-slug}/raw/state-map.md` — stores, slices, atoms, contextos com responsabilidades
 - `_hermes/{scope-slug}/raw/data-flow.md` — quem produz, quem consome cada estado
 
-**Skill associada:** `skill-state-reverse`
+**Skill associada:** `hermes-state-reverse`
 
 ---
 
@@ -547,7 +547,7 @@ SDD-Writer é o único agente que produz os artefatos finais entregues ao usuár
 - Itens com certeza "Baixa" são marcados com `⚠️ REQUER VALIDAÇÃO` no SDD
 - Se um artefato esperado não tem dados suficientes, escreve seção vazia com nota "Dados insuficientes — ver `gaps.md#item-X`"
 
-**Skill associada:** `skill-sdd-template`
+**Skill associada:** `hermes-sdd-template`
 
 ---
 
@@ -557,15 +557,19 @@ Todas as skills residem canonicamente em `_codesteer-hermes/skills/` e são dist
 
 | Skill | Agente Principal | Conteúdo Central |
 |---|---|---|
-| `skill-clarifier` | Clarifier | Templates de perguntas por domínio (web, mobile, backend, monolito) |
-| `skill-ui-exploration` | UI-Scout | Padrões Playwright-CLI por framework (Next.js, Expo, React, Angular) |
-| `skill-code-static-analysis` | Code-Scout | Padrões de leitura eficiente por stack (grepping patterns, ast-grep queries) |
-| `skill-db-reverse` | Data-Scout | Extração por ORM (Prisma, Drizzle, Django, Laravel, TypeORM) |
-| `skill-api-reverse` | API-Scout | Leitura de rotas por framework (Express, FastAPI, NestJS, Laravel) |
-| `skill-br-extraction` | BR Analyst | EARS-notation, heurísticas de extração de BR a partir de código |
-| `skill-design-audit` | Design Analyst | Leitura de tokens por sistema (Tailwind, styled-components, NativeWind) |
-| `skill-state-reverse` | State Analyst | Padrões por biblioteca (Zustand, Redux, Jotai, TanStack Query) |
-| `skill-sdd-template` | SDD-Writer | Templates de artefato por nível (L1/L2/L3) com seções obrigatórias |
+| `hermes-clarifier` | Clarifier | Templates de perguntas por domínio (web, mobile, backend, monolito) |
+| `hermes-ui-exploration` | UI-Scout | Padrões Playwright-CLI por framework (Next.js, Expo, React, Angular) |
+| `hermes-code-static-analysis` | Code-Scout | Padrões de leitura eficiente por stack (grepping patterns, ast-grep queries) |
+| `hermes-db-reverse` | Data-Scout | Extração por ORM (Prisma, Drizzle, Django, Laravel, TypeORM) |
+| `hermes-api-reverse` | API-Scout | Leitura de rotas por framework (Express, FastAPI, NestJS, Laravel) |
+| `hermes-br-extraction` | BR Analyst | EARS-notation, heurísticas de extração de BR a partir de código |
+| `hermes-design-audit` | Design Analyst | Leitura de tokens por sistema (Tailwind, styled-components, NativeWind) |
+| `hermes-state-reverse` | State Analyst | Padrões por biblioteca (Zustand, Redux, Jotai, TanStack Query) |
+| `hermes-sdd-template` | SDD-Writer | Templates de artefato por nível (L1/L2/L3) com seções obrigatórias |
+| `hermes-help` | (fluxo / qualquer papel) | Guia de fases, níveis, pastas `_hermes/`, CLI e remissões aos contratos |
+| `playwright-cli` | UI-Scout (exploração) | Automação de browser via Playwright CLI; no deploy mantém o nome sem prefixo `hermes-` |
+
+**Pasta canônica = `name` em `SKILL.md`:** skills HERMES usam prefixo `hermes-`; `playwright-cli` e outras vendor listadas em `skills_without_prefix` no [`deploy/config.yaml`](../deploy/config.yaml) preservam o id original no destino (`symlink` → `playwright-cli`, não `hermes-playwright-cli`).
 
 **Princípio de carregamento (progressive disclosure):** Apenas `name` + `description` de cada skill (~100 tokens) são pré-carregados no contexto do agente. O corpo completo (~2–3k tokens) é carregado somente quando o agente detecta relevância — reduz custo de tokens em sessões onde um worker encontra uma stack não-contemplada.
 
@@ -595,23 +599,27 @@ _codesteer-hermes/
 │   └── sdd-writer.md
 │
 ├── skills/                         ← estrutura padrão agentskills.io
-│   ├── skill-clarifier/
+│   ├── hermes-clarifier/
 │   │   └── SKILL.md
-│   ├── skill-ui-exploration/
+│   ├── hermes-ui-exploration/
 │   │   └── SKILL.md
-│   ├── skill-code-static-analysis/
+│   ├── hermes-code-static-analysis/
 │   │   └── SKILL.md
-│   ├── skill-db-reverse/
+│   ├── hermes-db-reverse/
 │   │   └── SKILL.md
-│   ├── skill-api-reverse/
+│   ├── hermes-api-reverse/
 │   │   └── SKILL.md
-│   ├── skill-br-extraction/
+│   ├── hermes-br-extraction/
 │   │   └── SKILL.md
-│   ├── skill-design-audit/
+│   ├── hermes-design-audit/
 │   │   └── SKILL.md
-│   ├── skill-state-reverse/
+│   ├── playwright-cli/
 │   │   └── SKILL.md
-│   └── skill-sdd-template/
+│   ├── hermes-help/
+│   │   └── SKILL.md
+│   ├── hermes-state-reverse/
+│   │   └── SKILL.md
+│   └── hermes-sdd-template/
 │       └── SKILL.md
 │
 ├── templates/                      ← templates SDD por nível de detalhe
@@ -768,7 +776,7 @@ Skills não têm frontmatter IDE-específico — o `SKILL.md` é auto-contido. A
 | Cursor | `_codesteer-hermes/skills/{skill}/SKILL.md` → `.cursor/rules/hermes-{skill}.mdc` |
 | Copilot | `_codesteer-hermes/skills/{skill}/SKILL.md` → `.github/instructions/hermes-{skill}.instructions.md` |
 
-**Contexto da squad (raiz e IDEs):** não há mais arquivos `AGENTS.md` / `CLAUDE.md` na raiz nem bootstrap de symlinks para eles no `deploy`. O contexto canônico está em [`HERMES.md`](HERMES.md) neste repositório, em [`README.md`](README.md) para consumidores do pacote, e nos corpos em `_codesteer-hermes/agents/` após o deploy para cada IDE.
+**Nome do symlink:** o adapter prefixa `hermes-` quando o nome da pasta canônica ainda não começa com `hermes-`, exceto para ids listados em `skills_without_prefix` no `config.yaml` (hoje `playwright-cli`). O destino real segue `skills_dir` por IDE (ex.: `.cursor/skills/`, `.claude/skills/`). não há mais arquivos `AGENTS.md` / `CLAUDE.md` na raiz nem bootstrap de symlinks para eles no `deploy`. O contexto canônico está em [`HERMES.md`](HERMES.md) neste repositório, em [`README.md`](README.md) para consumidores do pacote, e nos corpos em `_codesteer-hermes/agents/` após o deploy para cada IDE.
 
 ---
 
@@ -893,7 +901,7 @@ Engenharia reversa é intrinsecamente custosa em tokens — o artefato inteiro p
 ```
 _codesteer-hermes/
 ├── agents/                           ← 13 corpos canônicos de agente
-├── skills/                           ← 9 skill folders (agentskills.io standard)
+├── skills/                           ← 10 skill folders (agentskills.io standard)
 ├── templates/l1|l2|l3/               ← templates SDD por nível
 ├── ide-configs/claude-code|kiro|cursor|copilot/   ← frontmatter por IDE × agente
 └── deploy/

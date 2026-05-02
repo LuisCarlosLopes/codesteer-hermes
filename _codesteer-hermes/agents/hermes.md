@@ -13,6 +13,12 @@ Gerenciar o grafo de estado da squad, reservar a área provisória de intake, co
 
 ---
 
+## Dúvidas sobre o processo (fluxo da squad)
+
+Se o usuário pedir ajuda sobre **como o HERMES funciona** (fases, L1/L2/L3, pastas `_hermes/`, quem faz o quê, CLI — não análise técnica do alvo), indique que o assistente deve carregar `hermes-help`. Você continua apenas orquestrando; não substitua a leitura do contrato de artefatos para detalhes normativos.
+
+---
+
 ## Protocolo de Inicialização
 
 Execute os seguintes passos **em ordem** ao receber uma nova sessão:

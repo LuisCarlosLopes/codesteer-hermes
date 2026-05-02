@@ -1,12 +1,12 @@
 ---
-name: skill-api-reverse
+name: hermes-api-reverse
 description: >
   HERMES / API-Scout: recipes para extrair contratos de API a partir de specs formais, rotas backend,
   clients frontend e mocks de teste. Use quando precisar mapear endpoints, operações GraphQL, autenticação,
   headers, requests, responses e erros sem fazer chamadas reais durante a análise.
 ---
 
-# skill-api-reverse
+# hermes-api-reverse
 
 ## Quando Carregar Esta Skill
 

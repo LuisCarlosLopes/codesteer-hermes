@@ -1,12 +1,12 @@
 ---
-name: skill-design-audit
+name: hermes-design-audit
 description: >
   HERMES / Design Analyst: heurísticas para identificar padrões visuais, tokens, variantes e composição
   de componentes a partir de screenshots e pistas estruturais já extraídas. Use quando precisar documentar
   design system observável sem reler o codebase original.
 ---
 
-# skill-design-audit
+# hermes-design-audit
 
 ## Quando Carregar Esta Skill
 

@@ -162,6 +162,23 @@ def apply_operation(operation, status, dry_run):
     path.write_text(operation["content"], encoding="utf-8")
 
 
+def merge_ide_config(global_config, target_conf):
+    merged = dict(target_conf)
+    for key in ("skills_without_prefix", "ensure_skills"):
+        if key not in merged and key in global_config:
+            merged[key] = global_config[key]
+    return merged
+
+
+def canonical_skills_list(base_dir, ensure_skills):
+    skills_root = base_dir / "skills"
+    names = {d.name for d in skills_root.iterdir() if d.is_dir()}
+    for name in ensure_skills or []:
+        if (skills_root / name).is_dir():
+            names.add(name)
+    return sorted(names)
+
+
 def record_run(log_payload, ide_name, mode, results):
     summary = {
         "timestamp": utc_now(),
@@ -242,11 +259,11 @@ def process_target(adapter, agents, skills, args, log_payload):
             if path in planned_paths:
                 continue
             meta = next_state[path]
-            if meta.get("kind") != "agent":
+            if meta.get("kind") not in {"agent", "skill"}:
                 continue
             del next_state[path]
             orphan = Path(path)
-            if orphan.is_file():
+            if orphan.is_symlink() or orphan.is_file():
                 orphan.unlink()
                 print(f"[{adapter.ide_name}] REMOVE {relative_path(orphan)}")
 
@@ -293,7 +310,7 @@ def main():
     config = load_yaml(BASE_DIR / "deploy" / "config.yaml")
     targets = config.get("targets", {})
     agents = sorted(f.stem for f in (BASE_DIR / "agents").glob("*.md"))
-    skills = sorted(d.name for d in (BASE_DIR / "skills").iterdir() if d.is_dir())
+    skills = canonical_skills_list(BASE_DIR, config.get("ensure_skills"))
     log_payload = load_deploy_log()
 
     target_names = args.ide if args.ide else [name for name, conf in targets.items() if conf.get("enabled")]
@@ -305,7 +322,7 @@ def main():
             continue
 
         try:
-            adapter = get_adapter(ide_name, targets[ide_name])
+            adapter = get_adapter(ide_name, merge_ide_config(config, targets[ide_name]))
         except Exception as exc:
             issues.append(f"Erro ao carregar adapter para {ide_name}: {exc}")
             continue
