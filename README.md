@@ -1,4 +1,4 @@
-# codesteer-hermes
+# Code Steer - HERMES
 
 **HERMES** (Hierarchical Engineering Reverse-Map & Extraction Squad) é uma squad agentic do [Code Steer](https://codesteer.vercel.app) para engenharia reversa de software e geração de **SDDs** (Software Design Documents) rastreáveis.
 
@@ -12,8 +12,6 @@ Este repositório contém o **pacote npm** (`npx codesteer-hermes`) e a **fonte 
 - **O artefato analisado não é alterado:** toda saída fica em `_hermes/{scope-slug}/`.
 - **Uma fonte de verdade:** agentes, skills, templates e deploy vivem em `_codesteer-hermes/`. Pastas de IDE (`.cursor/`, `.claude/`, etc.) são **destino de deploy**, não origem.
 - **Sessões isoladas:** cada análise usa um diretório com slug determinístico, permitindo paralelismo e auditoria no Git.
-
-Guia completo para operar a squad: [_codesteer-hermes/docs/onboarding-hermes.md](_codesteer-hermes/docs/onboarding-hermes.md).
 
 ---
 
@@ -99,7 +97,7 @@ Transições de fase devem ter **aprovação explícita** do usuário (HITL).
 
 Contrato de pastas e nomes `raw/` → consolidado: [_codesteer-hermes/contracts/artifact-contracts.md](_codesteer-hermes/contracts/artifact-contracts.md).
 
-Especificação unificada da squad: [HERMES.md](HERMES.md).
+Especificação unificada da squad: [HERMES.md](_codesteer-hermes/docs/HERMES.md).
 
 ---
 
@@ -107,11 +105,24 @@ Especificação unificada da squad: [HERMES.md](HERMES.md).
 
 **Pré-requisitos:** Node.js 18+, Python 3.x (para `_codesteer-hermes/deploy/deploy.py`).
 
-```bash
-npm test
-```
+### Como enviar uma contribuição (Pull Request)
 
-Checklist típico ao mudar a squad:
+1. No clone local, **atualize `main`** e **crie um branch descritivo**, por exemplo: `git checkout main && git pull && git checkout -b fix/validator-edge-case` ou `feat/clarifier-rodada-2`.
+2. **Instale dependências** do pacote, se ainda não fez: `npm install` na raiz do repositório.
+3. **Faça as alterações** seguindo o checklist abaixo e mantendo o escopo do PR focado (uma mudança lógica por PR, quando possível).
+4. **Rode os testes** antes de abrir o PR:
+
+   ```bash
+   npm test
+   ```
+
+5. **Commit** com mensagens claras (o que mudou e por quê, em uma linha ou parágrafo curto).
+6. **Push** do branch para o remoto e abra um **Pull Request** para `main`.
+7. No **PR**, descreva: objetivo da mudança, como validar (comandos ou cenário), e referências a issues ou discussões, se houver. Se tocar em contratos ou formato de artefatos, mencione explicitamente.
+
+Revisões costumam verificar se os testes passam e se a mudança está alinhada aos contratos em `_codesteer-hermes/contracts/`.
+
+### Checklist típico ao mudar a squad
 
 1. Instruções do agente: `_codesteer-hermes/agents/<agente>.md`
 2. Frontmatter por IDE: `_codesteer-hermes/ide-configs/<ide>/<agente>.yaml` se necessário
