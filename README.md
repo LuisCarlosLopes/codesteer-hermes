@@ -1,150 +1,126 @@
-# HERMES — Hierarchical Engineering Reverse-Map & Extraction Squad
+# codesteer-hermes
 
-HERMES é uma squad agentic do Code Steer para engenharia reversa de artefatos de software e geração de SDDs rastreáveis.
+**HERMES** (Hierarchical Engineering Reverse-Map & Extraction Squad) é uma squad agentic do [Code Steer](https://codesteer.vercel.app) para engenharia reversa de software e geração de **SDDs** (Software Design Documents) rastreáveis.
 
-- Site do Code Steer: [codesteer.vercel.app](https://codesteer.vercel.app)
+Este repositório contém o **pacote npm** (`npx codesteer-hermes`) e a **fonte canônica** da squad em `_codesteer-hermes/`.
 
+---
 
-## Visão geral
+## O que é a HERMES
 
-A HERMES não é um produto separado do ecossistema. Ela é uma squad do Code Steer especializada em engenharia reversa e documentação técnica rastreável.
+- **Zero inferência:** lacunas viram perguntas ou pendências explícitas — sem suposição silenciosa.
+- **O artefato analisado não é alterado:** toda saída fica em `_hermes/{scope-slug}/`.
+- **Uma fonte de verdade:** agentes, skills, templates e deploy vivem em `_codesteer-hermes/`. Pastas de IDE (`.cursor/`, `.claude/`, etc.) são **destino de deploy**, não origem.
+- **Sessões isoladas:** cada análise usa um diretório com slug determinístico, permitindo paralelismo e auditoria no Git.
 
-O projeto segue quatro invariantes centrais:
+Guia completo para operar a squad: [_codesteer-hermes/docs/onboarding-hermes.md](_codesteer-hermes/docs/onboarding-hermes.md).
 
-- Zero inferência: quando falta evidência, a saída correta é pergunta estruturada ou pendência explícita.
-- Não modifica o artefato analisado: toda saída vai para `_hermes/{scope-slug}/`.
-- Fonte canônica única: agentes, skills, contratos e templates vivem em `_codesteer-hermes/`.
-- Sessões isoladas: cada análise mantém seus próprios artefatos e memória auditável.
+---
 
+## Uso no seu projeto (consumidor)
 
-## Como usar hoje
+**Pré-requisitos:** Node.js 18+.
 
-### Instalação via `npx`
-
-Pré-requisitos:
-
-- Node.js 18+
-- Python 3
-
-Instalação interativa com multi-seleção de IDEs:
+Na raiz do repositório que você vai analisar:
 
 ```bash
 npx codesteer-hermes install
 ```
 
-Instalação não interativa:
+Modo não interativo (exemplo):
 
 ```bash
 npx codesteer-hermes install --ides codex,cursor --yes
 ```
 
-Atualização da instalação existente:
+| Comando | Uso |
+|--------|-----|
+| `npx codesteer-hermes@latest update` | Atualizar instalação existente |
+| `npx codesteer-hermes remove --yes` | Remover apenas arquivos gerenciados pelo pacote |
+| `npx codesteer-hermes validate` | Validar instalação |
 
-```bash
-npx codesteer-hermes@latest update
-```
+Depois do `install`, abra o agente orquestrador **HERMES** na IDE. Onde existir comando slash configurado, use **`/hermes`** para iniciar uma nova sessão.
 
-Remoção apenas dos arquivos gerenciados pelo pacote:
+**IDEs suportadas pelo instalador** (entre outras): Claude Code, Kiro, Cursor, GitHub Copilot, agent, Codex. Detalhes de compatibilidade: [HERMES.md](HERMES.md) — seção “Compatibilidade por IDE”.
 
-```bash
-npx codesteer-hermes remove --yes
-```
+---
 
-Validação da instalação:
+## Níveis L1, L2 e L3
 
-```bash
-npx codesteer-hermes validate
-```
+Escolhidos no início da sessão; definem quais agentes entram e quais artefatos compõem o SDD.
 
-Depois do `install`, abra o agente orquestrador **HERMES** na sua IDE (nome varia por plataforma). Onde o deploy configurar comando slash, use **`/hermes-start`** para uma nova sessão. O fluxo segue as fases da squad com checkpoints HITL entre elas.
+| Nível | Uso típico |
+|-------|------------|
+| **L1** | Visão macro, onboarding, due diligence rápida |
+| **L2** | Funcionalidade específica, handoff entre times |
+| **L3** | Recriação total, auditoria, migração (inclui Security Analyst e exploração mais profunda) |
 
-## Workflow da squad
+Listas de artefatos por nível: [HERMES.md](HERMES.md) — “Níveis de Detalhe”.
 
-O **HERMES** (supervisor) conduz a sessão do intake ao pacote SDD. Nas fases 2 e 3, os workers rodam em *fan-out* paralelo e somente em modo leitura; síntese, validação e escrita do SDD são sequenciais. Em **L1**, após a exploração o grafo segue direto para o **Synthesizer** (sem os workers de análise da fase 3). Em **L2** entram API-Scout, BR Analyst, Design Analyst e State Analyst; em **L3** entra também **Security Analyst**.
+---
+
+## Fluxo de fases (resumo)
 
 ```mermaid
 flowchart TB
-  H[HERMES — orquestração contínua e HITL]
-
+  H[HERMES — orquestração]
   H --> F1[Fase 1 — Clarifier]
-  F1 -->|scope.md e glossary aprovados| F2[Fase 2 — Exploração paralela]
-
-  subgraph EXPLORACAO[Fase 2 — read-only sobre o artefato]
-    direction LR
-    UI[UI-Scout]
-    CC[Code-Scout]
-    DD[Data-Scout]
-  end
-
-  F2 --> EXPLORACAO
-  EXPLORACAO --> LEVEL{Nível L2 ou L3?}
-
-  LEVEL -->|não — L1| F4[Fase 4 — Synthesizer]
-  LEVEL -->|sim| F3[Fase 3 — Análise paralela]
-
-  subgraph ANALISE[Fase 3 — read-only sobre raw/]
-    direction LR
-    AP[API-Scout]
-    BR[BR Analyst]
-    DE[Design Analyst]
-    ST[State Analyst]
-    SEC[Security Analyst — só L3]
-  end
-
-  F3 --> ANALISE
-  ANALISE --> F4
+  F1 --> F2[Fase 2 — Exploração paralela]
+  F2 --> LEVEL{L2 ou L3?}
+  LEVEL -->|Não L1| F4[Fase 4 — Synthesizer]
+  LEVEL -->|Sim| F3[Fase 3 — Análise paralela]
+  F3 --> F4
   F4 --> F5[Fase 5 — Validator]
   F5 --> F6[Fase 6 — SDD-Writer]
-  F6 --> OUT["_hermes/{scope-slug}/ — sdd/ e consolidados"]
-
-  H -.->|envelopes e checkpoints| EXPLORACAO
-  H -.->|roteamento| LEVEL
+  F6 --> OUT["_hermes/{scope-slug}/sdd/"]
 ```
 
-## Como utilizar
+- **Fase 1 — Clarifier:** sequencial; define escopo antes da exploração custosa.
+- **Fase 2 — Exploração:** paralela e somente leitura no artefato; escrita em `_hermes/{scope-slug}/raw/`.
+- **Fase 3 — Análise:** paralela sobre `raw/` (L2/L3).
+- **Fases 4–6 — Synthesizer, Validator, SDD-Writer:** sequenciais.
 
-Uso recomendado da HERMES como squad do Code Steer:
+Transições de fase devem ter **aprovação explícita** do usuário (HITL).
 
-1. Defina o alvo da análise.
-   Pode ser `app`, `module`, `screen`, `api` ou `flow`.
+---
 
-2. Defina o nível de detalhe.
-   Use `L1` para visão macro, `L2` para visão funcional e `L3` para documentação completa.
+## Estrutura do repositório
 
-3. Garanta o acesso ao artefato.
-   O fluxo pode partir de código-fonte, URL, APK/IPA ou combinação, conforme o escopo.
+| Caminho | Conteúdo |
+|---------|----------|
+| `_codesteer-hermes/agents/` | Corpos Markdown dos agentes |
+| `_codesteer-hermes/skills/` | Skills (padrão agentskills.io) |
+| `_codesteer-hermes/templates/` (`l1`, `l2`, `l3`) | Modelos SDD por nível |
+| `_codesteer-hermes/ide-configs/<ide>/` | Frontmatter por IDE × agente |
+| `_codesteer-hermes/deploy/` | `deploy.py`, `config.yaml`, adapters |
+| `_codesteer-hermes/contracts/` | Contratos dos artefatos |
+| `_codesteer-hermes/validation/` | Validação (ex.: `artifact_validator.py`) |
+| `_hermes/` | Memória de sessão no projeto consumidor (e fixtures de teste neste repo) |
 
-4. Rode a sessão pela IDE com os subagentes HERMES instalados via `npx codesteer-hermes`.
-   O agente **HERMES** conduz intake, exploração, análise, síntese, validação e geração do pacote final.
+Contrato de pastas e nomes `raw/` → consolidado: [_codesteer-hermes/contracts/artifact-contracts.md](_codesteer-hermes/contracts/artifact-contracts.md).
 
-5. Revise os checkpoints HITL ao fim de cada fase.
-   A progressão correta da squad depende de aprovação explícita do usuário.
+Especificação unificada da squad: [HERMES.md](HERMES.md).
 
-6. Consulte os artefatos gerados em `_hermes/{scope-slug}/`.
-   Ali ficam `scope.md`, `session.yaml`, `raw/`, artefatos consolidados, `validation-report.md` e o pacote final `sdd/`.
+---
 
-Exemplo de uso esperado:
+## Desenvolvimento e contribuição
 
-- alvo: `módulo de autenticação`
-- nível: `L2`
-- fonte: `código-fonte no repositório`
-- saída: `_hermes/module-user-auth-YYYYMMDD/`
+**Pré-requisitos:** Node.js 18+, Python 3.x (para `_codesteer-hermes/deploy/deploy.py`).
 
-## Artefatos por sessão
+```bash
+npm test
+```
 
-Cada sessão deve gravar apenas em `_hermes/{scope-slug}/`.
+Checklist típico ao mudar a squad:
 
-Estrutura esperada em alto nível:
+1. Instruções do agente: `_codesteer-hermes/agents/<agente>.md`
+2. Frontmatter por IDE: `_codesteer-hermes/ide-configs/<ide>/<agente>.yaml` se necessário
+3. Rodar `deploy.py` ou `npx codesteer-hermes update` no fluxo do pacote
+4. Se mudar formato de artefatos: atualizar `contracts/artifact-contracts.md` e validadores
+5. `npm test` (Node + Python)
 
-- `scope.md`
-- `glossary.md`
-- `session.yaml`
-- `raw/`
-- artefatos consolidados na raiz
-- `validation-report.md`
-- `user-confirmation.md`
-- `sdd/`
+Licença: MIT (ver [LICENSE](LICENSE)).
 
-## Licença
+---
 
-Veja o arquivo [LICENSE](LICENSE) na raiz do repositório.
+*Em dúvida de escopo antes de explorar código, o caminho é o **Clarifier** — não o achismo.*
