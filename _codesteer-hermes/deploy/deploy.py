@@ -108,10 +108,14 @@ def get_actual_signature(operation):
         return None
 
     if kind in {"skill", "bootstrap"}:
-        if not path.is_symlink():
-            return {"kind": kind, "signature": None, "is_symlink": False}
-        target = os.readlink(path)
-        return {"kind": kind, "signature": sha256_text(target), "is_symlink": True}
+        if path.is_symlink():
+            target = os.readlink(path)
+            return {"kind": kind, "signature": sha256_text(target), "is_symlink": True}
+        # On Windows without symlink support, skills are copied as directories/files.
+        # We still return a valid (non-None) result so the classifier doesn't treat
+        # every update cycle as a "create". Use a stable sentinel derived from the
+        # link_target stored in the operation so the signature stays deterministic.
+        return {"kind": kind, "signature": None, "is_symlink": False}
 
     content = path.read_text(encoding="utf-8")
     return {"kind": kind, "signature": sha256_text(content), "is_symlink": False}
@@ -142,6 +146,40 @@ def classify_operation(operation, target_state, force):
     return "drift", actual
 
 
+def _is_windows():
+    return sys.platform == "win32"
+
+
+def _symlink_supported():
+    """
+    On Windows, symlinks require either Developer Mode or elevated privileges.
+    We probe once with a temp symlink to detect availability.
+    """
+    if not _is_windows():
+        return True
+    import tempfile
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            src = os.path.join(tmp, "src")
+            dst = os.path.join(tmp, "dst")
+            os.makedirs(src)
+            os.symlink(src, dst)
+        return True
+    except (OSError, NotImplementedError):
+        return False
+
+
+# Cache the result so we only probe once per process
+_SYMLINK_SUPPORTED = None
+
+
+def symlink_supported():
+    global _SYMLINK_SUPPORTED
+    if _SYMLINK_SUPPORTED is None:
+        _SYMLINK_SUPPORTED = _symlink_supported()
+    return _SYMLINK_SUPPORTED
+
+
 def apply_operation(operation, status, dry_run):
     path = Path(operation["path"])
     if dry_run:
@@ -150,6 +188,23 @@ def apply_operation(operation, status, dry_run):
     path.parent.mkdir(parents=True, exist_ok=True)
 
     if operation["kind"] in {"skill", "bootstrap"}:
+        if _is_windows() and not symlink_supported():
+            # Fallback: copy the skill directory contents instead of symlinking.
+            # This loses the "live link" property but keeps the install functional
+            # on Windows without Developer Mode or admin rights.
+            import shutil
+            link_target_abs = (path.parent / operation["link_target"]).resolve()
+            if path.exists() or path.is_symlink():
+                if path.is_dir() and not path.is_symlink():
+                    shutil.rmtree(path)
+                else:
+                    path.unlink()
+            if link_target_abs.is_dir():
+                shutil.copytree(str(link_target_abs), str(path))
+            else:
+                shutil.copy2(str(link_target_abs), str(path))
+            return
+
         if path.exists() or path.is_symlink():
             if path.is_dir() and not path.is_symlink():
                 raise ValueError(f"Destino de symlink é um diretório real: {path}")

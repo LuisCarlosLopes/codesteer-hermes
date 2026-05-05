@@ -37,7 +37,7 @@ npx codesteer-hermes install --ides codex,cursor --yes
 | `npx codesteer-hermes remove --yes` | Remover apenas arquivos gerenciados pelo pacote |
 | `npx codesteer-hermes validate` | Validar instalação |
 
-Depois do `install`, abra o agente orquestrador **HERMES** na IDE. Onde existir comando slash configurado, use **`/hermes`** para iniciar uma nova sessão.
+Depois do `install`, abra o agente orquestrador **HERMES** na IDE. Onde existir comando slash configurado, use **`/hermes`** ou **`invoque o subagent hermes`** para iniciar uma nova sessão.
 
 **IDEs suportadas pelo instalador** (entre outras): Claude Code, Kiro, Cursor, GitHub Copilot, agent, Codex. Detalhes de compatibilidade: [HERMES.md](_codesteer-hermes/docs/HERMES.md)) — seção “Compatibilidade por IDE”.
 
