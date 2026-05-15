@@ -1,6 +1,6 @@
 {
   "name": "codesteer-hermes",
-  "version": "0.2.2",
+  "version": "1.0.0",
   "description": "NPX installer and lifecycle CLI for the CodeSteer HERMES squad.",
   "license": "MIT",
   "bin": {
