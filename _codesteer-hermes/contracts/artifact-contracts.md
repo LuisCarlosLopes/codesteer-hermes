@@ -104,6 +104,36 @@ Quando o `Synthesizer` promover um artefato, ele deve usar o nome abaixo:
 | `security-model.md` | `security-model.md` |
 | `pii-map.md` | `pii-map.md` |
 
+### 4.1 Artefatos consolidados obrigatorios por nivel
+
+Na raiz `_hermes/{scope-slug}/` apos a FASE 4, estes arquivos consolidados (sem sufixo `-raw`) sao **obrigatorios** por nivel de sessao, salvo quando a fase anterior registrou explicitamente **nao aplicavel** conforme escopo.
+
+**L1**
+
+- `screen-inventory.md`
+- `navigation-graph.md`
+- `tech-stack.md`
+- `code-structure.md`
+- `db-schema.md`
+
+**L2**
+
+- todos os de **L1**
+- `api-contracts.md`
+- `business-rules.md`
+- `component-map.md`
+- `state-map.md`
+- `design-overview.md`
+
+**L3**
+
+- todos os de **L2**
+- `security-model.md`
+- `pii-map.md`
+- `design-tokens.md`
+
+O `Validator` usa esta lista para presenca por nivel. O `Synthesizer` deriva a expectativa de promocoes `raw/` a partir dela e do mapeamento da secao 4.
+
 `Synthesizer` pode deixar de gerar um artefato apenas quando:
 
 - o nivel nao exige aquele arquivo
@@ -291,7 +321,7 @@ Valores de `status`:
 
 O validador automático da HERMES deve verificar no mínimo:
 
-- presença dos arquivos obrigatórios por nível
+- presença dos arquivos obrigatórios por nível (**§4.1** — Artefatos consolidados obrigatorios por nivel)
 - presença e ordem das seções obrigatórias
 - `session.yaml` com:
   - `schema_version`

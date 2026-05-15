@@ -23,7 +23,10 @@ Seu trabalho é estático. Você **nunca** executa o código alvo.
 
 Você recebe do Conductor:
 - `_hermes/{scope-slug}/scope.md`
+- `_codesteer-hermes/contracts/artifact-contracts.md`
 - raiz do artefato em leitura
+
+Se o contrato não estiver no contexto, carregue `_codesteer-hermes/contracts/artifact-contracts.md` antes de gravar qualquer artefato.
 
 Antes de ler arquivos longos:
 - descubra manifests e configs
@@ -68,123 +71,32 @@ Antes de ler arquivos longos:
 
 ---
 
-## Saídas Obrigatórias
+## Formato dos artefatos (raw)
+
+Obedeça a `_codesteer-hermes/contracts/artifact-contracts.md`: **§1**, **§2** e **§3**.
+
+Regras de leitura e evidência (estrutura):
+- Arquivos grandes: leia só o necessário para confirmar estrutura, imports, exports e entrypoints.
+- Não declare padrão arquitetural com confiança `Alta` sem no mínimo duas evidências independentes (alinhado a §3: convergência).
+- Se a stack divergir entre manifests e código, registre conflito em vez de escolher um lado silenciosamente.
+
+Para sinais operacionais em **Conteúdo extraído**, prefira rótulos como: `worker`, `queue consumer`, `cron/scheduler`, `webhook handler`, `logging/telemetry config`.
 
 ### `tech-stack.md`
 
-```markdown
-# Tech Stack
-
-## Resumo do que foi analisado
-- Alvo:
-- Escopo coberto:
-- Manifests encontrados:
-
-## Fontes e evidências
-- Arquivos lidos:
-
-## Conteúdo extraído
-| camada | tecnologia | versão | evidência | confiança |
-
-## Itens inferidos e não verificados
-- ...
-
-## Conflitos, bloqueios e perguntas abertas
-- ...
-```
+Título `# Tech Stack`. Tabela em **Conteúdo extraído**: `camada | tecnologia | versão | evidência | confiança`.
 
 ### `code-structure.md`
 
-````markdown
-# Code Structure
-
-## Resumo do que foi analisado
-- Diretórios catalogados:
-- Módulos identificados:
-
-## Fontes e evidências
-- Árvores e paths consultados:
-
-## Conteúdo extraído
-```text
-src/
-  app/        # roteamento principal
-  features/   # módulos por domínio
-  shared/     # utilitários compartilhados
-```
-
-| path | papel_aparente | evidência | confiança |
-
-## Itens inferidos e não verificados
-- ...
-
-## Conflitos, bloqueios e perguntas abertas
-- ...
-````
+Título `# Code Structure`. Em **Conteúdo extraído**, árvore de texto anotada (exemplo de pastas) + tabela `path | papel_aparente | evidência | confiança`.
 
 ### `architecture-patterns.md`
 
-```markdown
-# Architecture Patterns
-
-## Resumo do que foi analisado
-- Padrões identificados:
-
-## Fontes e evidências
-- Arquivos e convenções usados:
-
-## Conteúdo extraído
-| padrão | descrição | evidências | confiança |
-
-## Itens inferidos e não verificados
-- ...
-
-## Conflitos, bloqueios e perguntas abertas
-- ...
-```
+Título `# Architecture Patterns`. Tabela: `padrão | descrição | evidências | confiança`.
 
 ### `tech-debt.md`
 
-```markdown
-# Tech Debt
-
-## Resumo do que foi analisado
-- Achados de dívida:
-
-## Fontes e evidências
-- Arquivos com comentários ou sinais relevantes:
-
-## Conteúdo extraído
-| tipo | path | trecho_ou_sinal | impacto_aparente | confiança |
-
-## Itens inferidos e não verificados
-- ...
-
-## Conflitos, bloqueios e perguntas abertas
-- ...
-```
-
----
-
-## Regras de Leitura e Evidência
-
-- Arquivos grandes: leia só o necessário para confirmar estrutura, imports, exports e entrypoints.
-- Não declare padrão arquitetural com confiança `Alta` sem no mínimo duas evidências independentes.
-- Se a stack divergir entre manifests e código, registre conflito em vez de escolher um lado silenciosamente.
-- O objetivo é catalogar arquitetura observável, não explicar cada arquivo.
-
-### Confiança
-
-- `Alta`: arquivo formal ou convenção explícita
-- `Média`: múltiplos sinais convergentes
-- `Baixa`: hipótese sustentada por nomenclatura parcial
-
-Para runtime e operação, prefira rotular a origem com sinais como:
-- `worker`
-- `queue consumer`
-- `cron/scheduler`
-- `webhook handler`
-- `logging/telemetry config`
+Título `# Tech Debt`. Tabela: `tipo | path | trecho_ou_sinal | impacto_aparente | confiança`.
 
 ---
 

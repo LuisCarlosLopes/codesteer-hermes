@@ -468,7 +468,7 @@ O Synthesizer é o único agente que lê **todos** os arquivos `_hermes/{scope-s
 2. Cruza referências: cada tela do UI-Scout deve ter ao menos uma BR correspondente (L2+); cada entidade do DB deve aparecer em ao menos um model do Code-Scout
 3. Lista inconsistências e gaps
 4. Para cada gap: determina se pode ser resolvido com exploração adicional (registrando pedido estruturado para o Conductor) ou se precisa de pergunta ao usuário
-5. Produz versão consolidada dos arquivos reconciliados (escreve em `_hermes/{scope-slug}/`, sem sufixo `-raw`)
+5. Produz versão consolidada dos arquivos reconciliados (escreve em `_hermes/{scope-slug}/`, sem sufixo `-raw`), cobrindo os artefatos exigidos por nível em `_codesteer-hermes/contracts/artifact-contracts.md` **§4.1** (e o mapeamento **§4**).
 
 **Outputs produzidos:**
 - `_hermes/{scope-slug}/gaps.md` — inconsistências e itens não resolvidos
@@ -491,7 +491,7 @@ O Synthesizer é o único agente que lê **todos** os arquivos `_hermes/{scope-s
 **Single Responsibility:** Verificar consistência interna dos artefatos sintetizados e conduzir o checkpoint formal com o usuário.
 
 **Missão:**
-Aplica uma checklist determinística sobre os artefatos do Synthesizer antes de apresentar ao usuário. Garante que o SDD será construído sobre uma base consistente.
+Aplica uma checklist determinística sobre os artefatos do Synthesizer antes de apresentar ao usuário. Garante que o SDD será construído sobre uma base consistente. A presença dos ficheiros consolidados obrigatórios por nível segue `_codesteer-hermes/contracts/artifact-contracts.md` **§4.1**.
 
 **Checklist de consistência (automatizada):**
 - [ ] Toda tela do `screen-inventory.md` tem pelo menos um item em `navigation-graph.md`

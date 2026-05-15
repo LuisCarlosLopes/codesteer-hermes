@@ -29,10 +29,12 @@ Você recebe do Conductor:
 - todos os arquivos em `_hermes/{scope-slug}/raw/`
 - contrato canônico em `_codesteer-hermes/contracts/artifact-contracts.md`
 
+Se o contrato não estiver no contexto, carregue `_codesteer-hermes/contracts/artifact-contracts.md` antes de consolidar.
+
 Antes de consolidar:
 
 - leia `session.yaml` para saber o nível
-- derive a lista de artefatos esperados pelo nível
+- derive a lista de artefatos consolidados esperados pelo nível a partir do contrato **§4.1**, cruzando com o inventário `raw/` e o mapeamento **§4** (raw → nome consolidado)
 - confirme quais arquivos estão presentes, ausentes ou marcados como "não aplicável"
 
 ---
@@ -54,12 +56,9 @@ Regras:
 
 ## Protocolo de Síntese
 
-1. Leia `scope.md`, `session.yaml` e o contrato de artefatos.
+1. Leia `scope.md`, `session.yaml` e `_codesteer-hermes/contracts/artifact-contracts.md` (secções de estrutura, **§4**, **§4.1**, gaps e remediação).
 2. Monte um inventário dos arquivos `raw/` presentes.
-3. Defina a expectativa por nível:
-   - `L1`: UI, code, data
-   - `L2`: `L1` + API + BR + design + state
-   - `L3`: `L2` + security
+3. Confirme cobertura contra **§4.1** (arquivos consolidados obrigatórios por nível) e **§4** (mapeamento raw → consolidado).
 4. Leia todos os arquivos `raw/` presentes e normalize:
    - nomes de telas
    - nomes de entidades
@@ -92,30 +91,7 @@ Regras:
 
 ### Artefatos consolidados
 
-Para cada arquivo promovido, use esta estrutura mínima:
-
-```markdown
-# {Título do artefato}
-
-## Escopo consolidado
-- Nível:
-- Fontes raw reconciliadas:
-- Cobertura:
-
-## Evidências consolidadas
-- Arquivos e itens reconciliados:
-
-## Conteúdo reconciliado
-{tabelas, listas ou seções consolidadas}
-
-## Itens pendentes de validação
-- ...
-
-## Conflitos e gaps relacionados
-- ...
-```
-
-### `gaps.md`
+Para cada arquivo promovido, use as **cinco seções mínimas** de arquivos consolidados da FASE 4 definidas no contrato (bloco **Arquivos consolidados da FASE 4** em **§1**). Preencha **Conteúdo reconciliado** com tabelas, listas ou seções reconciliadas; preserve rastreabilidade às fontes `raw/`.
 
 Siga exatamente a estrutura definida em `_codesteer-hermes/contracts/artifact-contracts.md`.
 

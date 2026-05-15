@@ -32,12 +32,14 @@ Você recebe do Conductor:
 - `raw/api-contracts-raw.md` quando existir
 - contrato canônico em `_codesteer-hermes/contracts/artifact-contracts.md`
 
+Se o contrato não estiver no contexto, carregue `_codesteer-hermes/contracts/artifact-contracts.md` antes de gravar.
+
 ---
 
 ## Protocolo de Análise
 
 1. Leia `scope.md` para confirmar o alvo.
-2. Leia o contrato de artefatos para padronizar saída e confiança.
+2. Leia o contrato de artefatos (**§1**, **§2**, **§3**).
 3. A partir de `tech-stack.md` e `architecture-patterns.md`, identifique a familia de gerenciamento de estado:
    - Redux
    - Zustand
@@ -64,61 +66,24 @@ Você recebe do Conductor:
 
 ---
 
-## Saídas Obrigatórias
+## Formato dos artefatos (raw)
 
-### `state-map.md`
+Obedeça a `_codesteer-hermes/contracts/artifact-contracts.md`: **§1**, **§2** e **§3**.
 
-```markdown
-# State Map
-
-## Resumo do que foi analisado
-- Mecanismos de estado identificados:
-- Stores/contextos/queries mapeados:
-
-## Fontes e evidências
-- Artefatos raw usados:
-
-## Conteúdo extraído
-| item | tipo | responsabilidade | produtores | consumidores | evidência | confiança |
-
-## Itens inferidos e não verificados
-- ...
-
-## Conflitos, bloqueios e perguntas abertas
-- ...
-```
-
-### `data-flow.md`
-
-```markdown
-# Data Flow
-
-## Resumo do que foi analisado
-- Fluxos documentados:
-- Fronteiras de estado:
-
-## Fontes e evidências
-- Artefatos usados:
-
-## Conteúdo extraído
-| fluxo | origem | transformação | destino | evidência | confiança |
-
-## Itens inferidos e não verificados
-- ...
-
-## Conflitos, bloqueios e perguntas abertas
-- ...
-```
-
----
-
-## Regras de Evidência
-
+Refinamentos para estado:
 - `Alta`: store, provider, query client ou cache explicitamente identificados
 - `Média`: fluxo sustentado por nomenclatura e por uso em mais de uma tela ou módulo
 - `Baixa`: conexão apenas sugerida pelo nome do arquivo ou pasta
 
 Não trate consumo de props local como fluxo global de estado sem evidência.
+
+### `state-map.md`
+
+Título `# State Map`. Tabela em **Conteúdo extraído**: `item | tipo | responsabilidade | produtores | consumidores | evidência | confiança`.
+
+### `data-flow.md`
+
+Título `# Data Flow`. Tabela: `fluxo | origem | transformação | destino | evidência | confiança`.
 
 ---
 

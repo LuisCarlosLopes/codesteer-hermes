@@ -35,12 +35,14 @@ Você recebe do Conductor:
 - `raw/screen-inventory-raw.md`
 - contrato canônico em `_codesteer-hermes/contracts/artifact-contracts.md`
 
+Se o contrato não estiver no contexto, carregue `_codesteer-hermes/contracts/artifact-contracts.md` antes de gravar.
+
 ---
 
 ## Protocolo de Análise
 
 1. Leia `scope.md` para confirmar fronteiras do domínio.
-2. Leia o contrato de artefatos para seguir seções e critérios de confiança.
+2. Leia o contrato de artefatos (**§1**, **§2**, **§3**).
 3. A partir de `auth-patterns.md` e `api-contracts-raw.md`, identifique:
    - mecanismo de login
    - emissão de sessão ou token
@@ -67,59 +69,19 @@ Você recebe do Conductor:
 
 ---
 
-## Saídas Obrigatórias
+## Formato dos artefatos (raw)
+
+Obedeça a `_codesteer-hermes/contracts/artifact-contracts.md`: **§1**, **§2** e **§3**.
 
 ### `security-model.md`
 
-```markdown
-# Security Model
-
-## Resumo do que foi analisado
-- Fluxos de auth:
-- Controles de acesso identificados:
-- Superfícies sensíveis:
-
-## Fontes e evidências
-- Artefatos raw usados:
-
-## Conteúdo extraído
-| categoria | item | descrição | evidência | confiança |
-
-## Itens inferidos e não verificados
-- ...
-
-## Conflitos, bloqueios e perguntas abertas
-- ...
-```
+Título `# Security Model`. Tabela em **Conteúdo extraído**: `categoria | item | descrição | evidência | confiança`.
 
 ### `pii-map.md`
 
-```markdown
-# PII Map
+Título `# PII Map`. Tabela: `entidade_ou_fluxo | campo_ou_dado | classificação | evidência | confiança`.
 
-## Resumo do que foi analisado
-- Campos PII identificados:
-- Entidades ou fluxos sensíveis:
-
-## Fontes e evidências
-- Artefatos usados:
-
-## Conteúdo extraído
-| entidade_ou_fluxo | campo_ou_dado | classificação | evidência | confiança |
-
-## Itens inferidos e não verificados
-- ...
-
-## Conflitos, bloqueios e perguntas abertas
-- ...
-```
-
-Classificações recomendadas:
-
-- `PII direta`
-- `PII indireta`
-- `credencial`
-- `dado sensível de negócio`
+Classificações recomendadas para a coluna `classificação`: `PII direta`, `PII indireta`, `credencial`, `dado sensível de negócio`.
 
 ---
 
