@@ -29,6 +29,8 @@ Você recebe do Conductor:
 - `raw/architecture-patterns.md`
 - contrato canônico em `_codesteer-hermes/contracts/artifact-contracts.md`
 
+Se o contrato não estiver no contexto, carregue `_codesteer-hermes/contracts/artifact-contracts.md` antes de gravar.
+
 Se houver menção explícita a arquivos de tema ou tokens na saída do `Code-Scout`, use isso como evidência
 secundária. Não volte ao repositório original.
 
@@ -37,7 +39,7 @@ secundária. Não volte ao repositório original.
 ## Protocolo de Análise
 
 1. Leia `scope.md` para confirmar nível da sessão.
-2. Leia o contrato de artefatos para obedecer seções e convenções.
+2. Leia o contrato de artefatos (**§1**, **§2**, **§3**).
 3. A partir de `screen-inventory-raw.md` e `ui-states-catalog.md`, identifique:
    - hierarquia visual
    - padrão de layout
@@ -63,87 +65,28 @@ secundária. Não volte ao repositório original.
 
 ---
 
-## Saídas Obrigatórias
+## Formato dos artefatos (raw)
 
-### `design-overview.md`
+Obedeça a `_codesteer-hermes/contracts/artifact-contracts.md`: **§1**, **§2** e **§3**.
 
-```markdown
-# Design Overview
-
-## Resumo do que foi analisado
-- Nível:
-- Telas consideradas:
-- Padrões visuais identificados:
-
-## Fontes e evidências
-- Screenshots e artefatos raw usados:
-
-## Conteúdo extraído
-| categoria | padrão_observado | evidência | confiança |
-
-## Itens inferidos e não verificados
-- ...
-
-## Conflitos, bloqueios e perguntas abertas
-- ...
-```
-
-### `design-tokens.md` (`L3`)
-
-```markdown
-# Design Tokens
-
-## Resumo do que foi analisado
-- Famílias de tokens:
-- Cobertura:
-
-## Fontes e evidências
-- Artefatos usados:
-
-## Conteúdo extraído
-| token | valor | tipo | evidência | confiança |
-
-## Itens inferidos e não verificados
-- ...
-
-## Conflitos, bloqueios e perguntas abertas
-- ...
-```
-
-Se o nível for `L2`, não invente tokens específicos. Registre explicitamente que os valores detalhados
-não são exigidos no nível atual.
-
-### `component-map.md`
-
-```markdown
-# Component Map
-
-## Resumo do que foi analisado
-- Telas mapeadas:
-- Componentes recorrentes:
-
-## Fontes e evidências
-- Screenshots e referências estruturais:
-
-## Conteúdo extraído
-| screen_id | componente | papel_aparente | variantes | evidência | confiança |
-
-## Itens inferidos e não verificados
-- ...
-
-## Conflitos, bloqueios e perguntas abertas
-- ...
-```
-
----
-
-## Regras de Evidência
-
+Refinamentos para design:
 - `Alta`: valor explícito em artefato de design ou estado visual claramente observável
 - `Média`: repetição consistente em múltiplas telas e componentes
 - `Baixa`: inferência baseada em um único screenshot ou nomenclatura parcial
 
-Nunca trate cor, tipografia ou spacing como token concreto sem evidência suficiente.
+Nunca trate cor, tipografia ou spacing como token concreto sem evidência suficiente. Em `L2`, não invente tokens específicos; em `design-tokens.md` ou na secção correspondente, registre que valores detalhados não são exigidos no nível atual.
+
+### `design-overview.md`
+
+Título `# Design Overview`. Tabela em **Conteúdo extraído**: `categoria | padrão_observado | evidência | confiança`.
+
+### `design-tokens.md` (`L3`)
+
+Título `# Design Tokens`. Tabela: `token | valor | tipo | evidência | confiança`.
+
+### `component-map.md`
+
+Título `# Component Map`. Tabela: `screen_id | componente | papel_aparente | variantes | evidência | confiança`.
 
 ---
 

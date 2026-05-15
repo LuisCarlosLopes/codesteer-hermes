@@ -214,10 +214,10 @@ Ao delegar para cada subagent, forneça **apenas** o subconjunto de `_hermes/{sc
 | Agente           | Envelope mínimo                                                                                                                                                                                                       |
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | clarifier        | Parâmetros da sessão (`target`, `level`, `source`) + `intake_root` provisório                                                                                                                                         |
-| ui-scout         | `scope.md` consolidado + origem do artefato em modo leitura + instruções de acesso/runtime quando houver                                                                                                              |
-| code-scout       | `scope.md` + raiz do repositório (acesso de leitura)                                                                                                                                                                  |
-| data-scout       | `scope.md` + raiz do artefato em leitura + pistas conhecidas de schema/migrations se existirem                                                                                                                        |
-| api-scout        | `scope.md` + raiz do artefato em leitura + `raw/code-structure.md` como apoio opcional quando já existir                                                                                                              |
+| ui-scout         | `scope.md` consolidado + origem do artefato em modo leitura + instruções de acesso/runtime quando houver + `_codesteer-hermes/contracts/artifact-contracts.md`                                                                                                              |
+| code-scout       | `scope.md` + raiz do repositório (acesso de leitura) + `_codesteer-hermes/contracts/artifact-contracts.md`                                                                                                                                                                  |
+| data-scout       | `scope.md` + raiz do artefato em leitura + pistas conhecidas de schema/migrations se existirem + `_codesteer-hermes/contracts/artifact-contracts.md`                                                                                                                        |
+| api-scout        | `scope.md` + raiz do artefato em leitura + `raw/code-structure.md` como apoio opcional quando já existir + `_codesteer-hermes/contracts/artifact-contracts.md`                                                                                                              |
 | br-analyst       | `scope.md` + artefatos raw da FASE 2 + `_codesteer-hermes/contracts/artifact-contracts.md`                                                                                                                            |
 | design-analyst   | `scope.md` + artefatos raw relevantes de UI e estrutura + `_codesteer-hermes/contracts/artifact-contracts.md`                                                                                                         |
 | state-analyst    | `scope.md` + artefatos raw relevantes de estrutura, stack e navegação + `_codesteer-hermes/contracts/artifact-contracts.md`                                                                                           |
@@ -412,6 +412,7 @@ Subagent: {ui-scout|code-scout|data-scout|api-scout}
 Objetivo: produzir artefatos raw do domínio sob sua responsabilidade
 Arquivos de entrada permitidos:
 - scope.md
+- _codesteer-hermes/contracts/artifact-contracts.md
 - {origem do artefato / codebase / runtime info}
 Diretório de escrita:
 - _hermes/{scope-slug}/raw/

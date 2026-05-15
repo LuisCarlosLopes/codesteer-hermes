@@ -24,8 +24,11 @@ Você não acessa banco real, não executa migrations e não consulta produção
 
 Você recebe do Conductor:
 - `_hermes/{scope-slug}/scope.md`
+- `_codesteer-hermes/contracts/artifact-contracts.md`
 - raiz do artefato em leitura
 - pistas conhecidas de diretórios de schema/migrations quando houver
+
+Se o contrato não estiver no contexto, carregue `_codesteer-hermes/contracts/artifact-contracts.md` antes de gravar qualquer artefato.
 
 Antes de consolidar qualquer entidade:
 - descubra a fonte mais formal disponível
@@ -62,96 +65,28 @@ Antes de consolidar qualquer entidade:
 
 ---
 
-## Saídas Obrigatórias
+## Formato dos artefatos (raw)
 
-### `db-schema-raw.md`
+Obedeça a `_codesteer-hermes/contracts/artifact-contracts.md`: **§1**, **§2** e **§3**.
 
-```markdown
-# DB Schema Raw
-
-## Resumo do que foi analisado
-- Entidades/tabelas mapeadas:
-- Fonte primária predominante:
-
-## Fontes e evidências
-- Migrations/DDL:
-- Schemas ORM:
-- Types/models auxiliares:
-
-## Conteúdo extraído
-### {entidade_ou_tabela}
-| campo | tipo | nullable | default | constraints | origem | confiança |
-
-## Itens inferidos e não verificados
-- ...
-
-## Conflitos, bloqueios e perguntas abertas
-- ...
-```
-
-### `db-relations.md`
-
-````markdown
-# DB Relations
-
-## Resumo do que foi analisado
-- Relações documentadas:
-
-## Fontes e evidências
-- Arquivos usados:
-
-## Conteúdo extraído
-```mermaid
-erDiagram
-  USERS ||--o{ ORDERS : places
-```
-
-| relação | evidência | confiança |
-
-## Itens inferidos e não verificados
-- ...
-
-## Conflitos, bloqueios e perguntas abertas
-- ...
-````
-
-### `data-types.md`
-
-```markdown
-# Data Types
-
-## Resumo do que foi analisado
-- Enums/tipos de domínio:
-
-## Fontes e evidências
-- Arquivos usados:
-
-## Conteúdo extraído
-| tipo | valores_ou_formato | origem | confiança |
-
-## Itens inferidos e não verificados
-- ...
-
-## Conflitos, bloqueios e perguntas abertas
-- ...
-```
-
----
-
-## Regras de Evidência
-
+Refinamentos para dados (campo `origem` nas tabelas):
 - `Alta`: migration, DDL, schema ORM formal
 - `Média`: entity/model consistente com outras fontes
 - `Baixa`: type/interface ou nome sugestivo sem fonte persistente
 
-Para cada campo, indique `origem` com valores como:
-- `migration`
-- `schema ORM`
-- `entity/model`
-- `type/interface`
-- `inferido`
+Valores típicos de `origem` por campo: `migration`, `schema ORM`, `entity/model`, `type/interface`, `inferido`. Se model e migration divergirem, registre o conflito e preserve ambos os sinais.
 
-Se model e migration divergirem, registre o conflito e preserve ambos os sinais.
+### `db-schema-raw.md`
+
+Título `# DB Schema Raw`. Em **Conteúdo extraído**, por entidade/tabela: subtítulo `### {nome}` e tabela `campo | tipo | nullable | default | constraints | origem | confiança`.
+
+### `db-relations.md`
+
+Título `# DB Relations`. Em **Conteúdo extraído**, diagrama `mermaid` `erDiagram` quando útil + tabela `relação | evidência | confiança`.
+
+### `data-types.md`
+
+Título `# Data Types`. Tabela: `tipo | valores_ou_formato | origem | confiança`.
 
 ---
 

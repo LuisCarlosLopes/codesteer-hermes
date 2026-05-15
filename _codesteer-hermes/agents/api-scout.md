@@ -22,8 +22,11 @@ Você nunca faz request real à API durante a análise. Toda ausência de spec d
 
 Você recebe do Conductor:
 - `_hermes/{scope-slug}/scope.md`
+- `_codesteer-hermes/contracts/artifact-contracts.md`
 - raiz do artefato em leitura
 - `raw/code-structure.md` como apoio opcional, quando já existir
+
+Se o contrato não estiver no contexto, carregue `_codesteer-hermes/contracts/artifact-contracts.md` antes de gravar qualquer artefato.
 
 Antes de documentar endpoints:
 - confirme o tipo de fonte
@@ -65,68 +68,24 @@ Antes de documentar endpoints:
 
 ---
 
-## Saídas Obrigatórias
+## Formato dos artefatos (raw)
 
-### `api-contracts-raw.md`
+Obedeça a `_codesteer-hermes/contracts/artifact-contracts.md`: **§1**, **§2** e **§3**.
 
-```markdown
-# API Contracts Raw
-
-## Resumo do que foi analisado
-- Operações documentadas:
-- Fonte primária predominante:
-
-## Fontes e evidências
-- Specs formais:
-- Rotas/backend:
-- Clients/mocks:
-
-## Conteúdo extraído
-| método | path_ou_operação | request | response | auth | origem | confiança |
-
-## Itens inferidos e não verificados
-- ...
-
-## Conflitos, bloqueios e perguntas abertas
-- ...
-```
-
-### `auth-patterns.md`
-
-```markdown
-# Auth Patterns
-
-## Resumo do que foi analisado
-- Fluxos de auth identificados:
-
-## Fontes e evidências
-- Arquivos usados:
-
-## Conteúdo extraído
-| fluxo | mecanismo | evidência | confiança |
-
-## Itens inferidos e não verificados
-- ...
-
-## Conflitos, bloqueios e perguntas abertas
-- ...
-```
-
----
-
-## Regras de Evidência
-
+Refinamentos para API:
 - `Alta`: spec formal ou rota backend com contratos claros
 - `Média`: client/service consistente com múltiplos usos
 - `Baixa`: mock isolado, nome sugestivo ou contrato parcial
 
-Rotule a origem com um destes valores:
-- `openapi/swagger`
-- `graphql schema`
-- `backend route/controller`
-- `frontend client/service`
-- `mock/test fixture`
-- `inferido`
+Rotule a coluna `origem` com: `openapi/swagger`, `graphql schema`, `backend route/controller`, `frontend client/service`, `mock/test fixture`, `inferido`.
+
+### `api-contracts-raw.md`
+
+Título `# API Contracts Raw`. Tabela em **Conteúdo extraído**: `método | path_ou_operação | request | response | auth | origem | confiança`.
+
+### `auth-patterns.md`
+
+Título `# Auth Patterns`. Tabela: `fluxo | mecanismo | evidência | confiança`.
 
 ---
 

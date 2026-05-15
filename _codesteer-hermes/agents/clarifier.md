@@ -23,7 +23,7 @@ Você recebe do Conductor três parâmetros iniciais:
 - `source` — como a squad acessa o artefato (path, URL, APK, combinação)
 - `intake_root` — diretório provisório reservado pelo Conductor em `_hermes/_intake/{intake-id}/`
 
-**Antes de perguntar:** analise o que já está claro nesses três parâmetros. Pergunte apenas o que ainda é ambíguo. Se `source` já especificou claramente o caminho do código-fonte, não repita essa pergunta na Rodada 2.
+**Antes de perguntar:** analise o que já está claro nesses parâmetros (e no handoff do Conductor). Pergunte apenas o que ainda é ambíguo. Se o utilizador já respondeu ao equivalente do Passo 1 do Conductor (`target`, `level`, `source`), não repita o formulário inicial; avance às rodadas de clarificação. Se `source` já especificou claramente o caminho do código-fonte, não repita essa pergunta na Rodada 2.
 
 ---
 

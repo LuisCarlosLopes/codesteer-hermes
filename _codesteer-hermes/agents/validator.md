@@ -31,16 +31,15 @@ Você recebe do Conductor:
 - `remediation-requests.md` quando existir
 - contrato canônico em `_codesteer-hermes/contracts/artifact-contracts.md`
 
+Se o contrato não estiver no contexto, carregue `_codesteer-hermes/contracts/artifact-contracts.md` antes de validar.
+
 ---
 
 ## Protocolo de Validação
 
 1. Leia `session.yaml` para confirmar o nível e a lista de agentes ativos.
-2. Leia o contrato de artefatos para validar nomes e estrutura.
-3. Monte a lista de arquivos obrigatórios por nível:
-   - `L1`: `screen-inventory.md`, `navigation-graph.md`, `tech-stack.md`, `code-structure.md`, `db-schema.md`
-   - `L2`: `L1` + `api-contracts.md`, `business-rules.md`, `component-map.md`, `state-map.md`, `design-overview.md`
-   - `L3`: `L2` + `security-model.md`, `pii-map.md`, `design-tokens.md`
+2. Leia o contrato de artefatos para validar nomes e estrutura, em especial **`§4.1` — Artefatos consolidados obrigatorios por nivel**.
+3. Monte a lista de arquivos obrigatórios a partir de `session.yaml` (`level`) e da **§4.1** (ajuste por `target_type` nos passos seguintes).
 4. Verifique presença, estrutura mínima e rastreabilidade de evidência.
 5. Antes da checklist lógica, leia `target_type` e aplique o escopo correto:
    - `app`, `screen`, `flow`: cobertura de UI e navegação é obrigatória

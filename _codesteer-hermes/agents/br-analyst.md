@@ -30,6 +30,8 @@ Você recebe do Conductor:
 - artefatos da FASE 2 em `_hermes/{scope-slug}/raw/`
 - contrato canônico em `_codesteer-hermes/contracts/artifact-contracts.md`
 
+Se o contrato não estiver no contexto, carregue `_codesteer-hermes/contracts/artifact-contracts.md` antes de gravar.
+
 Entradas prioritárias:
 
 - `raw/screen-inventory-raw.md`
@@ -47,7 +49,7 @@ Entradas prioritárias:
 ## Protocolo de Análise
 
 1. Leia `scope.md` para confirmar domínio, exclusões e fronteiras do alvo.
-2. Leia o contrato de artefatos para obedecer nomenclatura, seções e critérios de confiança.
+2. Leia o contrato de artefatos (**§1** seções e ordem; **§2** evidência; **§3** confiança).
 3. Identifique domínios funcionais candidatos:
    - autenticação
    - cadastro
@@ -82,63 +84,24 @@ Certeza: Alta | Média | Baixa
 
 ---
 
-## Saídas Obrigatórias
+## Formato dos artefatos (raw)
 
-### `business-rules.md`
+Obedeça a `_codesteer-hermes/contracts/artifact-contracts.md`: **§1**, **§2** e **§3**.
 
-```markdown
-# Business Rules
-
-## Resumo do que foi analisado
-- Domínios cobertos:
-- Regras extraídas:
-- Distribuição de certeza:
-
-## Fontes e evidências
-- Arquivos raw usados:
-
-## Conteúdo extraído
-### {domínio}
-| rule_id | regra_ears | evidência | certeza |
-
-## Itens inferidos e não verificados
-- ...
-
-## Conflitos, bloqueios e perguntas abertas
-- ...
-```
-
-### `open-questions-br.md`
-
-```markdown
-# Open Questions BR
-
-## Resumo do que foi analisado
-- Perguntas abertas:
-- Regras de baixa certeza:
-
-## Fontes e evidências
-- Regras e arquivos de origem:
-
-## Conteúdo extraído
-| question_id | rule_id_relacionada | pergunta_ao_usuário | evidência_atual | motivo_da_dúvida |
-
-## Itens inferidos e não verificados
-- ...
-
-## Conflitos, bloqueios e perguntas abertas
-- ...
-```
-
----
-
-## Regras de Evidência
-
+Refinamentos para BR (além de §3):
 - `Alta`: constraint formal, rota com guarda explícita, mensagem de validação observada, schema formal
 - `Média`: duas evidências convergentes entre UI, API, DB ou estrutura de código
 - `Baixa`: nome de campo, label, placeholder, nomenclatura ou fluxo parcial sem confirmação adicional
 
-Se a regra existir apenas por nomenclatura, ela não deve entrar como fato consolidado.
+Se a regra existir apenas por nomenclatura, não a trate como fato; use `Baixa` e `open-questions-br.md`.
+
+### `business-rules.md`
+
+Título `# Business Rules`. Em **Conteúdo extraído**, por domínio: subtítulo `### {domínio}` e tabela `rule_id | regra_ears | evidência | certeza`.
+
+### `open-questions-br.md`
+
+Título `# Open Questions BR`. Tabela em **Conteúdo extraído**: `question_id | rule_id_relacionada | pergunta_ao_usuário | evidência_atual | motivo_da_dúvida`.
 
 ---
 
